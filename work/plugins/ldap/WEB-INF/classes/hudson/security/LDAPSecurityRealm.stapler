@@ -1,0 +1,2 @@
+#Mon Jun 11 08:46:25 PDT 2012
+constructor=server,rootDN,userSearchBase,userSearch,groupSearchBase,managerDN,managerPassword,inhibitInferRootDN

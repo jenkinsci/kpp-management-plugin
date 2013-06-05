@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: kohsuke
+Build-Jdk: 1.6.0_20
+Extension-Name: cvs
+Implementation-Title: cvs
+Implementation-Version: 1.6
+Group-Id: org.jenkins-ci.plugins
+Short-Name: cvs
+Long-Name: Jenkins CVS Plug-in
+Url: http://wiki.jenkins-ci.org/display/JENKINS/CVS+Plugin
+Plugin-Version: 1.6
+Hudson-Version: 1.400
+Plugin-Developers: Kohsuke Kawaguchi:kohsuke:
+

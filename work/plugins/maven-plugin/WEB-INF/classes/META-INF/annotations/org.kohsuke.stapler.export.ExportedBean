@@ -1,0 +1,4 @@
+hudson.maven.reporters.MavenAbstractArtifactRecord$Record
+hudson.maven.reporters.MavenAggregatedArtifactRecord
+hudson.maven.reporters.MavenArtifact
+hudson.maven.reporters.MavenArtifactRecord

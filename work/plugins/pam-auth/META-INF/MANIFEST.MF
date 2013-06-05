@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: kohsuke
+Build-Jdk: 1.6.0_26
+Extension-Name: pam-auth
+Implementation-Title: pam-auth
+Implementation-Version: 1.0
+Group-Id: org.jenkins-ci.plugins
+Short-Name: pam-auth
+Long-Name: pam-auth
+Url: http://wiki.jenkins-ci.org/display/JENKINS/PAM+Authentication+Plu
+ gin
+Plugin-Version: 1.0
+Hudson-Version: 1.468
+Jenkins-Version: 1.468
+Plugin-Developers: 
+

@@ -1,0 +1,1 @@
+smtpServer,adminAddress,useSMTPAuth,smtpAuthUserName,smtpAuthPassword,useSsl,smtpPort,charset,sendTestMailTo

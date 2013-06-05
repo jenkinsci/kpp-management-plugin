@@ -1,0 +1,29 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:entry title="${%Credentials}" field="credentialsId">
+      <f:select/>
+  </f:entry>
+
+  <f:advanced>
+      <f:entry title="${%Port}" field="port">
+          <f:textbox default="22" />
+      </f:entry>
+
+      <f:entry title="${%JavaPath}" field="javaPath">
+          <f:textbox />
+      </f:entry>
+
+      <f:entry title="${%JVM Options}" field="jvmOptions">
+          <f:textbox />
+      </f:entry>
+       
+      <f:entry title="${%Prefix Start Slave Command}" field="prefixStartSlaveCmd">
+          <f:textbox />
+      </f:entry>
+
+      <f:entry title="${%Suffix Start Slave Command}" field="suffixStartSlaveCmd">
+          <f:textbox />
+      </f:entry>
+
+  </f:advanced>
+</j:jelly>
