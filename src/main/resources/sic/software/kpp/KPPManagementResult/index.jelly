@@ -5,8 +5,8 @@
 
         <l:main-panel>
 
-            <f:form method="post" action="saveConfig" name="test">
-
+            <f:form method="post" action="saveConfig">
+                  <input type="file" name="myFile.file"/>
                 <f:block>
                     <f:submit value="${%Save}"/>
                 </f:block>
