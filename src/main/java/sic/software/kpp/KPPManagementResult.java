@@ -34,22 +34,16 @@ public class KPPManagementResult {
 
         byte[] data = file.get();
 
-        File toUploadFile = new File(Hudson.getInstance().getRootDir(), "myFileHamed.xml");
+        File pathToDirectory = new File(Hudson.getInstance().getRootDir() + "/kpp_upload");
+        pathToDirectory.mkdir();
+        File toUploadFile = new File(pathToDirectory, file.getName());
         OutputStream os = new FileOutputStream(toUploadFile);
         try {
             os.write(data);
         } finally {
             os.close();
         }
-
-        rsp.setContentType("text/html");
-        rsp.getWriter().println("Uploaded File! Size: " + data.length + ".");
-        // sleep 3 Seconds
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(KPPManagementResult.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         rsp.sendRedirect2("../manageZpp/");
     }
 }
