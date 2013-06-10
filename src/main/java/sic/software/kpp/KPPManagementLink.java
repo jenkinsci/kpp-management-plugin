@@ -13,10 +13,10 @@ import org.kohsuke.stapler.StaplerProxy;
  * @author michaelbar
  */
 @Extension
-public class KPPManagement extends ManagementLink implements StaplerProxy {
+public class KPPManagementLink extends ManagementLink implements StaplerProxy {
     
     @SuppressWarnings("unused")
-    public KPPManagement() {}
+    public KPPManagementLink() {}
 
     @Override
     public String getIconFileName() {
