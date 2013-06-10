@@ -2,3 +2,7 @@
 /work/
 *.hpl
 /work/plugins/kpp.hpl
+/work/updates/hudson.tools.JDKInstaller
+/work/updates/hudson.tasks.Maven.MavenInstaller
+/work/updates/hudson.tasks.Ant.AntInstaller
+/work/updates/default.json
