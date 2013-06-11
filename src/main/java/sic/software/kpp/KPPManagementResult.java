@@ -61,6 +61,7 @@ public class KPPManagementResult {
 
         FileItem file = req.getFileItem("myFile.file");
         String password = (String) req.getSubmittedForm().get("password");
+        
         String encryptedPassword = null;
 
         if (file == null) {

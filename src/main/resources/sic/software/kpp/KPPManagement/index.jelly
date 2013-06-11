@@ -1,21 +1,43 @@
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form">
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <l:layout permission="${app.ADMINISTER}" norefresh="true" title="test">
-
+        
         <st:include page="sidepanel.jelly"/>
-
+        
         <l:main-panel>
-            <p><b>Keychain upload</b></p>
-                <f:form method="post" action="saveConfig">
-                    <input type="file" name="myFile.file"/>
-                    <f:entry title="Password" field="password">
-                            <f:password />
+            <h1>${%KPP Management}</h1>
+            <h2>${%Manage Keychains}</h2>
+            <h3>${%Upload Keychain}</h3>
+            <f:form method="post" action="uploadKeychain">
+                <f:block>
+                    <input type="file" name="keychain.file"/>
+                </f:block>
+                <f:block>
+                    <f:submit value="${%Upload}"/>
+                </f:block>
+            </f:form>
+            <h3>${%Uploaded Keychains}</h3>
+            <f:repeatable name="keychain" var="keychain" items="${it.keychains}" minimum="0" noAddButton="true" header="${%Keychain}">
+                <table>
+                    <f:entry title="${%Filename}">
+                        <label>${keychain.fileName}</label>
+                        
                     </f:entry>
+                    <f:entry title="${%Password}" field="password">
+                        <f:password name="keychain.password" value="${keychain.password}"></f:password>
+                    </f:entry>
+                    <f:entry title="${%Certificates}"></f:entry>
                     <f:block>
-                        <f:submit value="${%Save}"/>
+                        <div align="right">
+                        <f:repeatableDeleteButton value="Delete"></f:repeatableDeleteButton>
+                        </div>
                     </f:block>
-                </f:form>
-                <br></br><br></br>
-                <p><b>Uploaded Keychains</b></p>
+                    
+                </table>
+            </f:repeatable>
+            <h2>${%Manage Provisioning Profiles}</h2>
         </l:main-panel>
+        
+        
     </l:layout>
 </j:jelly>
