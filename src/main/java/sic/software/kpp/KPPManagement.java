@@ -122,7 +122,7 @@ public class KPPManagement {
         // update stored keychains
         File[] keychainFiles = KPP_UPLOAD_DIRECTORY.listFiles(new KeychainFileNameFilter());
         for(File keychainFile : keychainFiles) {
-            KPPKeychain keychain = new KPPKeychain(keychainFile.getName(), null);
+            KPPKeychain keychain = new KPPKeychain(keychainFile.getName());
             addKeychain(keychain);
         }
     }

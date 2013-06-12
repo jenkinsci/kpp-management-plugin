@@ -14,24 +14,36 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class KPPKeychain {
     
     private final String fileName;
-    private final Secret password;
+    private Secret password;
+    private String description;
     
     @DataBoundConstructor
-    public KPPKeychain(String fileName, Secret password) {
+    public KPPKeychain(String fileName) {
         this.fileName = fileName;
-        this.password = password;
     }
     
     public String getFileName() {
         return fileName;
     }
     
-    public Secret getPasswordAsSecret() {
-        return password;
+    public void setPassword(String password) {
+        this.password = Secret.fromString(password);
     }
     
     public String getPassword() {
         return Secret.toString(password);
+    }
+    
+    public Secret getPasswordAsSecret() {
+        return password;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
     }
     
     @Override

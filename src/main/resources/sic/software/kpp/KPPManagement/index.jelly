@@ -6,25 +6,32 @@
         
         <l:main-panel>
             <h1>${%KPP Management}</h1>
-            <h2>${%Manage Keychains}</h2>
-            <h3>${%Upload Keychain}</h3>
-            <f:form method="post" action="uploadKeychain">
+            <table width="100%">
+                <f:section title="${%Upload Keychain or Provisioning Profile}"></f:section>
                 <f:block>
-                    <input type="file" name="keychain.file"/>
+                    <f:form method="post" action="uploadKeychain">
+                        <f:block>
+                            <input type="file" name="keychain.file"/>
+                        </f:block>
+                        <f:block>
+                            <f:submit value="${%Upload}"/>
+                        </f:block>
+                    </f:form>
                 </f:block>
-                <f:block>
-                    <f:submit value="${%Upload}"/>
-                </f:block>
-            </f:form>
-            <h3>${%Uploaded Keychains}</h3>
+            </table>
+            <table width="100%">
+                <f:section title="${%Keychains}"></f:section>
+            </table>
             <f:repeatable name="keychain" var="keychain" items="${it.keychains}" minimum="0" noAddButton="true" header="${%Keychain}">
                 <table>
                     <f:entry title="${%Filename}">
                         <label>${keychain.fileName}</label>
-                        
                     </f:entry>
                     <f:entry title="${%Password}" field="password">
                         <f:password name="keychain.password" value="${keychain.password}"></f:password>
+                    </f:entry>
+                    <f:entry title="${%Description}" field="description">
+                        <f:textbox></f:textbox>
                     </f:entry>
                     <f:entry title="${%Certificates}"></f:entry>
                     <f:block>
@@ -35,7 +42,11 @@
                     
                 </table>
             </f:repeatable>
-            <h2>${%Manage Provisioning Profiles}</h2>
+            <table width="100%">
+                <f:section title="${%Provisioning Profiles}"></f:section>
+                <f:entry title="Not implemented! -> TODO"></f:entry>
+            </table>
+            
         </l:main-panel>
         
         

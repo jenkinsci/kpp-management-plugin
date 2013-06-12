@@ -35,7 +35,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy {
 
     @Override
     public Object getTarget() {
-        //return KPPManagement.getInstance();
-        return new KPPManagementResult();
+        return KPPManagement.getInstance();
+        //return new KPPManagementResult();
     }
 }
