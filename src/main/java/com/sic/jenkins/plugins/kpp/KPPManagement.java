@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sic.software.kpp;
+package com.sic.jenkins.plugins.kpp;
 
 import hudson.XmlFile;
 import hudson.model.Hudson;
@@ -23,13 +23,16 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-import sic.software.kpp.model.KPPKeychain;
+import com.sic.jenkins.plugins.kpp.model.KPPKeychain;
+import hudson.Extension;
+import hudson.model.Describable;
+import hudson.model.Descriptor;
 
 /**
  *
  * @author michaelbar
  */
-public class KPPManagement {
+public class KPPManagement implements Describable<KPPManagement> {
     private final static Logger LOGGER = Logger.getLogger(KPPManagement.class.getName());
     private final static String CLASS_NAME = KPPManagement.class.getName();
     
@@ -38,6 +41,7 @@ public class KPPManagement {
     
     private static KPPManagement management;
     private List<KPPKeychain> keychains;
+    private final static DescriptorImpl DESCRIPTOR = new DescriptorImpl();
     
     
     /**
@@ -82,7 +86,13 @@ public class KPPManagement {
             ServletException,
             IOException,
             NoSuchAlgorithmException {
+        LOGGER.log(Level.INFO, "doSave");
         
+        JSONObject json;
+        
+        //KPPManagement.save(this);
+        
+        rsp.sendRedirect2("../manage"); //we go back on management page
     }
     
     public static void save(KPPManagement config) throws IOException {
@@ -145,6 +155,11 @@ public class KPPManagement {
         }
         getKeychains().add(keychain);
     }
+
+    
+    public Descriptor<KPPManagement> getDescriptor() {
+         return DESCRIPTOR;
+    }
     
     private class KeychainFileNameFilter implements FilenameFilter {
 
@@ -155,7 +170,58 @@ public class KPPManagement {
             }
             return ret;
         }
-        
     }
     
+    @Extension
+    public static final class DescriptorImpl extends Descriptor<KPPManagement> {
+
+        public DescriptorImpl() {
+            super();
+        }
+        
+        @Override
+        public String getDisplayName() {
+            return "KPP Management";
+        }
+        
+        @Override
+        public boolean configure(StaplerRequest req, JSONObject json) {
+            return true;
+        }
+        
+        @Override
+        public void load() {
+            LOGGER.log(Level.INFO, "load");
+        }
+        
+        @Override
+        public void save() {
+            LOGGER.entering(CLASS_NAME, "save");
+            //getConfigXML().write(config);
+            LOGGER.exiting(CLASS_NAME, "save");
+        }
+
+        @Override
+        protected XmlFile getConfigFile() {
+             return new XmlFile(new File(Hudson.getInstance().getRootDir(), CONFIG_XML));
+        }
+        
+        @Override
+        public String getConfigPage() {
+            return super.getConfigPage();
+        }
+        
+        @Override
+        public String getGlobalConfigPage() {
+            return getConfigPage();
+        }
+        
+        @Override
+        public String getDescriptorUrl() {
+            //String url = super.getDescriptorUrl();
+            //return url;
+            return "kppmanagment";
+        }
+    
+    }
 }

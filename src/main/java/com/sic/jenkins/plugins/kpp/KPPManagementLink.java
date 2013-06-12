@@ -2,10 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sic.software.kpp;
+package com.sic.jenkins.plugins.kpp;
 
 import hudson.Extension;
 import hudson.model.ManagementLink;
+import jenkins.model.Jenkins;
 import org.kohsuke.stapler.StaplerProxy;
 
 /**
@@ -20,22 +21,24 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy {
 
     @Override
     public String getIconFileName() {
-        return "document.gif";  //To change body of implemented methods use File | Settings | File Templates.
+        return "document.gif";
     }
 
     @Override
     public String getDisplayName() {
-        return "KPP Management";  //To change body of implemented methods use File | Settings | File Templates.
+        return "KPP Management";
     }
 
     @Override
     public String getUrlName() {
-        return "manageZpp";  //To change body of implemented methods use File | Settings | File Templates.
+        return "kppmanagment";
     }
 
     @Override
     public Object getTarget() {
-        return KPPManagement.getInstance();
+        return Jenkins.getInstance().getDescriptor(KPPManagement.class);
+        
+        //return KPPManagement.getInstance();
         //return new KPPManagementResult();
     }
 }

@@ -1,0 +1,57 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <l:layout permission="${app.ADMINISTER}" norefresh="true" title="test">
+        
+        <st:include page="sidepanel.jelly"/>
+        
+        <l:main-panel>
+            <h1>${%KPP Management}</h1>
+            <table width="100%">
+                <f:section title="${%Upload Keychain or Provisioning Profile}"></f:section>
+                <f:block>
+                    <f:form method="post" action="uploadKeychain">
+                        <f:block>
+                            <input type="file" name="keychain.file"/>
+                        </f:block>
+                        <f:block>
+                            <f:submit value="${%Upload}"/>
+                        </f:block>
+                    </f:form>
+                </f:block>
+            </table>
+            <f:form method="post" action="save">
+                <table width="100%">
+                    <f:section title="${%Keychains}"></f:section>
+                </table>
+                <f:repeatable name="keychain" var="keychain" items="${it.keychains}" minimum="0" noAddButton="true" header="${%Keychain}">
+                    <table>
+                        <f:entry title="${%Filename}">
+                            <label>${keychain.fileName}</label>
+                        </f:entry>
+                        <f:entry title="${%Password}" field="password">
+                            <f:password name="keychain.password" value="${keychain.password}"></f:password>
+                        </f:entry>
+                        <f:entry title="${%Description}" field="description">
+                            <f:textbox></f:textbox>
+                        </f:entry>
+                        <f:entry title="${%Certificates}"></f:entry>
+                        <f:block>
+                            <div align="right">
+                                <f:repeatableDeleteButton value="Delete"></f:repeatableDeleteButton>
+                            </div>
+                        </f:block>
+                    
+                    </table>
+                </f:repeatable>
+                <table width="100%">
+                    <f:section title="${%Provisioning Profiles}"></f:section>
+                    <f:entry title="Not implemented! -> TODO"></f:entry>
+                </table>
+                <f:submit value="${%Save}"></f:submit>
+            </f:form>
+            
+        </l:main-panel>
+        
+        
+    </l:layout>
+</j:jelly>

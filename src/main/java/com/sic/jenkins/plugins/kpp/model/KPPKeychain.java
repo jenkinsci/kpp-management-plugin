@@ -2,10 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sic.software.kpp.model;
+package com.sic.jenkins.plugins.kpp.model;
 
 import hudson.util.Secret;
-import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Represents an keychain.
@@ -14,10 +13,9 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class KPPKeychain {
     
     private final String fileName;
-    private Secret password;
     private String description;
+    private Secret password;
     
-    @DataBoundConstructor
     public KPPKeychain(String fileName) {
         this.fileName = fileName;
     }
@@ -67,6 +65,5 @@ public class KPPKeychain {
         hash = 67 * hash + (this.fileName != null ? this.fileName.hashCode() : 0);
         return hash;
     }
-
     
 }
