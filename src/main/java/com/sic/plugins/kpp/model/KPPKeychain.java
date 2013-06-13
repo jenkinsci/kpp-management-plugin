@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sic.jenkins.plugins.kpp.model;
+package com.sic.plugins.kpp.model;
 
 import hudson.util.Secret;
 

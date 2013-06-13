@@ -1,4 +1,4 @@
-package com.sic.jenkins.plugins.kpp;
+package com.sic.plugins.kpp;
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.util.FormValidation;

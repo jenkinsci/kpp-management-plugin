@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sic.jenkins.plugins.kpp;
+package com.sic.plugins.kpp;
 
 import hudson.XmlFile;
 import hudson.model.Hudson;
@@ -23,7 +23,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-import com.sic.jenkins.plugins.kpp.model.KPPKeychain;
+import com.sic.plugins.kpp.model.KPPKeychain;
 import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.Descriptor;

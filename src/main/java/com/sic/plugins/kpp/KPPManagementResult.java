@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sic.jenkins.plugins.kpp;
+package com.sic.plugins.kpp;
 
 import hudson.model.Hudson;
 import java.io.File;

@@ -2,11 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sic.jenkins.plugins.kpp;
+package com.sic.plugins.kpp;
 
 import hudson.Extension;
 import hudson.model.ManagementLink;
-import jenkins.model.Jenkins;
 import org.kohsuke.stapler.StaplerProxy;
 
 /**
@@ -36,9 +35,9 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy {
 
     @Override
     public Object getTarget() {
-        return Jenkins.getInstance().getDescriptor(KPPManagement.class);
+        //return Jenkins.getInstance().getDescriptor(KPPManagement.class);
         
-        //return KPPManagement.getInstance();
+        return KPPManagement.getInstance();
         //return new KPPManagementResult();
     }
 }
