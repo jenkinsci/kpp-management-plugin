@@ -4,13 +4,19 @@
  */
 package com.sic.plugins.kpp.model;
 
+import com.sic.plugins.kpp.KPPManagement;
+import hudson.Extension;
+import hudson.model.Describable;
+import hudson.model.Descriptor;
+import hudson.model.Hudson;
 import hudson.util.Secret;
+import java.io.Serializable;
 
 /**
  * Represents an keychain.
  * @author michaelbar
  */
-public class KPPKeychain {
+public class KPPKeychain implements Describable<KPPKeychain>, Serializable {
     
     private final String fileName;
     private String description;
@@ -64,6 +70,20 @@ public class KPPKeychain {
         int hash = 3;
         hash = 67 * hash + (this.fileName != null ? this.fileName.hashCode() : 0);
         return hash;
+    }
+
+    public Descriptor getDescriptor() {
+        return Hudson.getInstance().getDescriptorOrDie(getClass());
+    }
+    
+    @Extension
+    public static final class DescriptorImpl extends Descriptor<KPPManagement> {
+
+        @Override
+        public String getDisplayName() {
+            return "";
+        }
+        
     }
     
 }
