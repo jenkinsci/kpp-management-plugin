@@ -172,7 +172,7 @@ public class KPPManagement implements Describable<KPPManagement> {
         }
     }
     
-    @Extension
+    //@Extension
     public static final class DescriptorImpl extends Descriptor<KPPManagement> {
 
         public DescriptorImpl() {

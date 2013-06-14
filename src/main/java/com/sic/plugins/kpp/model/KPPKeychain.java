@@ -4,13 +4,13 @@
  */
 package com.sic.plugins.kpp.model;
 
-import com.sic.plugins.kpp.KPPManagement;
 import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import hudson.util.Secret;
 import java.io.Serializable;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Represents an keychain.
@@ -26,27 +26,34 @@ public class KPPKeychain implements Describable<KPPKeychain>, Serializable {
         this.fileName = fileName;
     }
     
-    public String getFileName() {
+    @DataBoundConstructor
+    public KPPKeychain(String fileName, String password, String description) {
+        this.fileName = fileName;
+        setPassword(password);
+        setDescription(description);
+    }
+    
+    public final String getFileName() {
         return fileName;
     }
     
-    public void setPassword(String password) {
+    public final void setPassword(String password) {
         this.password = Secret.fromString(password);
     }
     
-    public String getPassword() {
+    public final String getPassword() {
         return Secret.toString(password);
     }
     
-    public Secret getPasswordAsSecret() {
+    public final Secret getPasswordAsSecret() {
         return password;
     }
     
-    public String getDescription() {
+    public final String getDescription() {
         return description;
     }
     
-    public void setDescription(String description) {
+    public final void setDescription(String description) {
         this.description = description;
     }
     
@@ -77,7 +84,7 @@ public class KPPKeychain implements Describable<KPPKeychain>, Serializable {
     }
     
     @Extension
-    public static final class DescriptorImpl extends Descriptor<KPPManagement> {
+    public static final class DescriptorImpl extends Descriptor<KPPKeychain> {
 
         @Override
         public String getDisplayName() {

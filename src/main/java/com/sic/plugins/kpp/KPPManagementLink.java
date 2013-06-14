@@ -4,8 +4,8 @@
  */
 package com.sic.plugins.kpp;
 
+import com.sic.plugins.kpp.model.KPPBaseKeychainsProvider;
 import com.sic.plugins.kpp.model.KPPKeychain;
-import com.sic.plugins.kpp.model.KPPKeychainsProvider;
 import hudson.DescriptorExtensionList;
 import hudson.Extension;
 import hudson.model.Describable;
@@ -15,10 +15,15 @@ import hudson.model.ManagementLink;
 import static hudson.model.ManagementLink.all;
 import hudson.model.Saveable;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.servlet.ServletException;
+import net.sf.json.JSONObject;
+import org.apache.commons.fileupload.FileItem;
 import org.kohsuke.stapler.StaplerProxy;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
 /**
  *
@@ -26,19 +31,11 @@ import org.kohsuke.stapler.StaplerProxy;
  */
 @Extension
 public class KPPManagementLink extends ManagementLink implements StaplerProxy, Saveable, Describable<KPPManagementLink> {
-    
-    private final static Logger LOGGER = Logger.getLogger(KPPManagementLink.class.getName());
-    
-    /**
-     * Our keychains
-     */
-    private List<KPPKeychain> keychains = new ArrayList<KPPKeychain>();
-    
+
     /**
      * Constructor.
      */
     public KPPManagementLink() {
-        
     }
     
     /**
@@ -56,7 +53,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
      */
     @SuppressWarnings("unused") // used by stapler
     public List<KPPKeychain> getKeychains() {
-        return KPPKeychainsProvider.all().get(ProviderImpl.class).getKeychains();
+        return KPPBaseKeychainsProvider.getInstance().getKeychains();
     }
     
     /**
@@ -65,8 +62,39 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
      * @return all the credentials descriptors.
      */
     @SuppressWarnings("unused") // used by stapler
-    public DescriptorExtensionList<KPPKeychain, Descriptor<KPPKeychain>> getCredentialDescriptors() {
-        return KPPKeychainsProvider.allKeychainDescriptors();
+    public DescriptorExtensionList<KPPKeychain, Descriptor<KPPKeychain>> getKeychainsDescriptors() {
+        return KPPBaseKeychainsProvider.allKeychainDescriptors();
+    }
+    
+    public void doUploadKeychain(StaplerRequest req, StaplerResponse rsp) throws
+            ServletException,
+            IOException,
+            NoSuchAlgorithmException {
+        
+        Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+        
+        FileItem file = req.getFileItem("keychain.file");
+        if (file == null || file.getSize() == 0) {
+            throw new ServletException("no file selected");
+        }
+        
+        KPPBaseKeychainsProvider.getInstance().uploadKeychain(file);
+        KPPBaseKeychainsProvider.getInstance().update();
+        
+        rsp.sendRedirect2("../"+getUrlName()+"/"); //we stay on page
+    }
+    
+    public void doSave(StaplerRequest req, StaplerResponse rsp) throws
+            ServletException,
+            IOException,
+            NoSuchAlgorithmException {
+        Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+        
+        JSONObject data = req.getSubmittedForm();
+        List<KPPKeychain> keychains = req.bindJSONToList(KPPKeychain.class, data.get("keychain"));
+        KPPBaseKeychainsProvider.getInstance().updateKeychainsFromSave(keychains);
+        save();
+        rsp.sendRedirect2("../manage"); //we go back on management page
     }
     
     @Override
@@ -88,18 +116,15 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
     public Object getTarget() {
         Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
         return this;
-        
-        //return Jenkins.getInstance().getDescriptor(KPPManagement.class);
-        //return KPPManagement.getInstance();
-        //return new KPPManagementResult();
     }
 
+    @Override
     public void save() throws IOException {
         Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
-        
-        
+        KPPBaseKeychainsProvider.getInstance().save();
     }
 
+    @Override
     public Descriptor<KPPManagementLink> getDescriptor() {
         return Hudson.getInstance().getDescriptorOrDie(getClass());
     }
@@ -107,19 +132,10 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
     @Extension
     @SuppressWarnings("unused") // used by Jenkins
     public static final class DescriptorImpl extends Descriptor<KPPManagementLink> {
-
+        
         @Override
         public String getDisplayName() {
             return "";
-        }   
-    }
-    
-    @Extension
-    @SuppressWarnings("unused") // used by Jenkins
-    public static class ProviderImpl extends KPPKeychainsProvider {
-        public String test = null;
-        public ProviderImpl() {
-            test = "Hallo";
         }
     }
 }

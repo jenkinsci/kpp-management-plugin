@@ -27,12 +27,13 @@
                     <table>
                         <f:entry title="${%Filename}">
                             <label>${keychain.fileName}</label>
+                            <input type="hidden" name="_.fileName" value="${keychain.fileName}"/>
                         </f:entry>
                         <f:entry title="${%Password}" field="password">
                             <f:password name="keychain.password" value="${keychain.password}"></f:password>
                         </f:entry>
                         <f:entry title="${%Description}" field="description">
-                            <f:textbox></f:textbox>
+                            <f:textbox value="${keychain.description}"></f:textbox>
                         </f:entry>
                         <f:entry title="${%Certificates}"></f:entry>
                         <f:block>
