@@ -44,4 +44,15 @@
             <version>1.1</version>
         </dependency>
     </dependencies>
+    
+    <build> 
+     <plugins> 
+       <plugin> 
+         <groupId>org.jenkins-ci.tools</groupId> 
+         <artifactId>maven-hpi-plugin</artifactId> 
+         <version>1.95</version> 
+       </plugin> 
+     </plugins> 
+   </build> 
+    
 </project>
