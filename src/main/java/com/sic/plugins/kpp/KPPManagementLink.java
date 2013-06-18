@@ -6,10 +6,7 @@ package com.sic.plugins.kpp;
 
 import com.sic.plugins.kpp.model.KPPBaseKeychainsProvider;
 import com.sic.plugins.kpp.model.KPPKeychain;
-import hudson.DescriptorExtensionList;
 import hudson.Extension;
-import hudson.model.Describable;
-import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import hudson.model.ManagementLink;
 import static hudson.model.ManagementLink.all;
@@ -30,7 +27,7 @@ import org.kohsuke.stapler.StaplerResponse;
  * @author michaelbar
  */
 @Extension
-public class KPPManagementLink extends ManagementLink implements StaplerProxy, Saveable, Describable<KPPManagementLink> {
+public class KPPManagementLink extends ManagementLink implements StaplerProxy, Saveable {
 
     
     /**
@@ -56,16 +53,6 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
     @SuppressWarnings("unused") // used by stapler
     public List<KPPKeychain> getKeychains() {
         return KPPBaseKeychainsProvider.getInstance().getKeychains();
-    }
-    
-    /**
-     * Gets all the keychain descriptors.
-     *
-     * @return all the credentials descriptors.
-     */
-    @SuppressWarnings("unused") // used by stapler
-    public DescriptorExtensionList<KPPKeychain, Descriptor<KPPKeychain>> getKeychainsDescriptors() {
-        return KPPBaseKeychainsProvider.allKeychainDescriptors();
     }
     
     public void doUploadKeychain(StaplerRequest req, StaplerResponse rsp) throws
@@ -124,21 +111,5 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
     public void save() throws IOException {
         Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
         KPPBaseKeychainsProvider.getInstance().save();
-    }
-
-    @Override
-    public Descriptor<KPPManagementLink> getDescriptor() {
-        return Hudson.getInstance().getDescriptorOrDie(getClass());
-    }
-    
-    @Extension
-    @SuppressWarnings("unused") // used by Jenkins
-    public static final class DescriptorImpl extends Descriptor<KPPManagementLink> {
-        
-        @Override
-        public String getDisplayName() {
-            return "";
-        }
-        
     }
 }
