@@ -17,7 +17,6 @@ import java.util.List;
 import javax.servlet.ServletException;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.FileItem;
-import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -28,14 +27,6 @@ import org.kohsuke.stapler.StaplerResponse;
  */
 @Extension
 public class KPPManagementLink extends ManagementLink implements StaplerProxy, Saveable {
-
-    
-    /**
-     * Constructor.
-     */
-    @DataBoundConstructor
-    public KPPManagementLink() {
-    }
     
     /**
      * Gets the singletion instance.

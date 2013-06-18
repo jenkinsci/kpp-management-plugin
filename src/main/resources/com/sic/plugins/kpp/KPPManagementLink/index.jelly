@@ -5,7 +5,7 @@
         <st:include page="sidepanel.jelly" it="${app}"/>
         
         <l:main-panel>
-            <h1>${%KPP Management} JaJaJa</h1>
+            <h1>${%KPP Management}</h1>
             <table width="100%">
                 <f:section title="${%Upload Keychain or Provisioning Profile}"></f:section>
                 <f:block>

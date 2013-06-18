@@ -25,7 +25,6 @@ import org.apache.commons.lang.StringUtils;
  *
  * An extension point for providing {@link KPPKeychain}
  */
-
 public abstract class KPPKeychainsProvider implements ExtensionPoint {
     
     private final static Logger LOGGER = Logger.getLogger(KPPKeychainsProvider.class.getName());

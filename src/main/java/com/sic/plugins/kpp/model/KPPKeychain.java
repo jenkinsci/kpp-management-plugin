@@ -9,7 +9,23 @@ import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import hudson.util.Secret;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -17,6 +33,8 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author michaelbar
  */
 public final class KPPKeychain implements Describable<KPPKeychain>, Serializable {
+    
+    private final static Logger LOGGER = Logger.getLogger(KPPKeychain.class.getName());
     
     private final String fileName;
     private String description;
@@ -50,11 +68,43 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
     }
     
     public final String getDescription() {
+        getCertificates();
         return description;
     }
     
     public final void setDescription(String description) {
         this.description = description;
+    }
+    
+    public final List<KPPCertificate> getCertificates() {
+        List<KPPCertificate> certificates = new ArrayList<KPPCertificate>();
+        try {
+            final String filePath = KPPBaseKeychainsProvider.getInstance().getKeychainsUploadDirectoryPath() + File.separator + this.getFileName();
+            KeyStore ks = KPPKeychain.loadKeystoreFromFile(filePath, this.getPassword());
+            if (ks != null) {
+                Enumeration<String> aliases = ks.aliases();
+                String alias = null;
+                while (aliases.hasMoreElements()) {
+                    alias = aliases.nextElement();
+                    KPPCertificate cert = new KPPCertificate(alias, ks);
+                    certificates.add(cert);
+                }
+
+            }
+        } catch (KeyStoreException ex) {
+            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CertificateException ex) {
+            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchProviderException ex) {
+            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return certificates;
     }
     
     @Override
@@ -91,7 +141,31 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
         public String getDisplayName() {
             return "Keychain";
         }
-        
+    }
+    
+    /**
+     * This method loads the uplaoded keystore from a file.
+     *
+     * @return loaded Keystore
+     */
+    private static KeyStore loadKeystoreFromFile(String keyStoreFilePath, String keyStorePW) throws
+            KeyStoreException,
+            FileNotFoundException,
+            IOException,
+            NoSuchAlgorithmException,
+            CertificateException,
+            NoSuchProviderException {
+ 
+        KeyStore ks = KeyStore.getInstance("KeychainStore", "Apple");
+ 
+        // get user password and file input stream
+        char[] password = keyStorePW.toCharArray();
+        FileInputStream fis =
+                new FileInputStream(keyStoreFilePath);
+        ks.load(fis, password);
+        fis.close();
+ 
+        return ks;
     }
     
 }
