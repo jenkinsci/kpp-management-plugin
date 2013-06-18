@@ -17,10 +17,10 @@ import hudson.model.Saveable;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.FileItem;
+import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -32,9 +32,11 @@ import org.kohsuke.stapler.StaplerResponse;
 @Extension
 public class KPPManagementLink extends ManagementLink implements StaplerProxy, Saveable, Describable<KPPManagementLink> {
 
+    
     /**
      * Constructor.
      */
+    @DataBoundConstructor
     public KPPManagementLink() {
     }
     
@@ -137,5 +139,6 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
         public String getDisplayName() {
             return "";
         }
+        
     }
 }

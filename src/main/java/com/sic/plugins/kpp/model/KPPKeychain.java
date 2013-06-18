@@ -16,7 +16,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * Represents an keychain.
  * @author michaelbar
  */
-public class KPPKeychain implements Describable<KPPKeychain>, Serializable {
+public final class KPPKeychain implements Describable<KPPKeychain>, Serializable {
     
     private final String fileName;
     private String description;
@@ -80,7 +80,8 @@ public class KPPKeychain implements Describable<KPPKeychain>, Serializable {
     }
 
     public Descriptor getDescriptor() {
-        return Hudson.getInstance().getDescriptorOrDie(getClass());
+        Descriptor ds = Hudson.getInstance().getDescriptorOrDie(getClass());
+        return ds;
     }
     
     @Extension
@@ -88,7 +89,7 @@ public class KPPKeychain implements Describable<KPPKeychain>, Serializable {
 
         @Override
         public String getDisplayName() {
-            return "";
+            return "Keychain";
         }
         
     }
