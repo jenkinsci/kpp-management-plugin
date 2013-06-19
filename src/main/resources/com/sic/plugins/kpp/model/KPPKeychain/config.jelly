@@ -2,7 +2,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <table>
-        <f:entry title="Test"></f:entry>
         <f:entry title="${%Filename}">
             <label>${it.fileName}</label>
         </f:entry>
@@ -10,15 +9,29 @@
             <input type="hidden" name="fileName" value="${it.fileName}" />
         </f:invisibleEntry>
         <f:entry title="${%Password}" field="password">
-            <f:password name="keychain.password" value="${it.password}"></f:password>
+            <f:password value="${it.password}"></f:password>
         </f:entry>
         <f:entry title="${%Description}" field="description">
             <f:textbox value="${it.description}"></f:textbox>
         </f:entry>
-        <f:entry title="${%Certificates}"></f:entry>
+        <f:entry title="${%Identities}">
+            <f:repeatable var="certificates" items="${it.certificates}" minimum="1" add="${%Add Code Signing Identity}" header="">
+                <table width="100%">
+                <f:entry title="${%Code Signing Identity}" field="codeSigningIdentityName">
+                    <f:textbox value="${certificates.codeSigningIdentityName}"/>
+                </f:entry>
+                <f:block>
+                    <div align="right">
+                        <f:repeatableDeleteButton value="${%Delete Code Signing Identity}"></f:repeatableDeleteButton>
+                    </div>
+                </f:block>
+                </table>
+            </f:repeatable>
+        </f:entry>
+            
         <f:block>
             <div align="right">
-                <f:repeatableDeleteButton value="Delete"></f:repeatableDeleteButton>
+                <f:repeatableDeleteButton value="${%Delete Keychain}"></f:repeatableDeleteButton>
             </div>
         </f:block>
     </table>

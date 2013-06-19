@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.sic.plugins.kpp.model;
 
 import hudson.Extension;
@@ -18,18 +15,14 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
- * Represents an keychain.
+ * Represents a keychain.
  * @author michaelbar
  */
 public final class KPPKeychain implements Describable<KPPKeychain>, Serializable {
@@ -39,16 +32,18 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
     private final String fileName;
     private String description;
     private Secret password;
+    private List<KPPCertificate> certificates;
     
     public KPPKeychain(String fileName) {
         this.fileName = fileName;
     }
     
     @DataBoundConstructor
-    public KPPKeychain(String fileName, String password, String description) {
+    public KPPKeychain(String fileName, String password, String description, List<KPPCertificate> certificates) {
         this.fileName = fileName;
         setPassword(password);
         setDescription(description);
+        setCertificates(certificates);
     }
     
     public final String getFileName() {
@@ -77,34 +72,11 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
     }
     
     public final List<KPPCertificate> getCertificates() {
-        List<KPPCertificate> certificates = new ArrayList<KPPCertificate>();
-        try {
-            final String filePath = KPPBaseKeychainsProvider.getInstance().getKeychainsUploadDirectoryPath() + File.separator + this.getFileName();
-            KeyStore ks = KPPKeychain.loadKeystoreFromFile(filePath, this.getPassword());
-            if (ks != null) {
-                Enumeration<String> aliases = ks.aliases();
-                String alias = null;
-                while (aliases.hasMoreElements()) {
-                    alias = aliases.nextElement();
-                    KPPCertificate cert = new KPPCertificate(alias, ks);
-                    certificates.add(cert);
-                }
-
-            }
-        } catch (KeyStoreException ex) {
-            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (CertificateException ex) {
-            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchProviderException ex) {
-            Logger.getLogger(KPPKeychain.class.getName()).log(Level.SEVERE, null, ex);
-        }
         return certificates;
+    }
+    
+    public final void setCertificates(List<KPPCertificate>certificates){
+        this.certificates = certificates;
     }
     
     @Override
@@ -156,14 +128,31 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
             CertificateException,
             NoSuchProviderException {
  
-        KeyStore ks = KeyStore.getInstance("KeychainStore", "Apple");
- 
-        // get user password and file input stream
+        //KeyStore ks = KeyStore.getInstance("KeychainStore", "Apple");
+        //KeyStore ks = KeyStore.getInstance("KeychainStore");
+        KeyStore ks = KeyStore.getInstance("KeychainStore");
+
+        //keyStoreFilePath = "/Users/michaelbar/Documents/Projekte/SIC/Jenkins_ZPP_Plugin/source/kpp/work/kpp_upload/empty.keychain";
+        
+        keyStorePW = "123456";
         char[] password = keyStorePW.toCharArray();
-        FileInputStream fis =
-                new FileInputStream(keyStoreFilePath);
+        File keychainFile = new File(keyStoreFilePath);
+        LOGGER.log(Level.INFO, "content: {0}", keychainFile.toString());
+        if (!keychainFile.isFile()) {
+            if (keychainFile.isDirectory()) {
+                String[] files = keychainFile.list();
+                for (String filename : files) {
+                    LOGGER.log(Level.INFO, filename);
+                }
+            }
+        }
+
+        FileInputStream fis = new FileInputStream(keychainFile);
         ks.load(fis, password);
         fis.close();
+        
+        LOGGER.log(Level.INFO, "Provider1: {0}", ks.getProvider());
+        LOGGER.log(Level.INFO, "Provider2: {0}", ks.getProvider().toString());
  
         return ks;
     }

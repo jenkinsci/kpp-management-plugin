@@ -213,6 +213,7 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
                 if (currentKeychain.equals(keychainFromSave)) {
                     currentKeychain.setDescription(keychainFromSave.getDescription());
                     currentKeychain.setPassword(keychainFromSave.getPassword());
+                    currentKeychain.setCertificates(keychainFromSave.getCertificates());
                     break;
                 }
             }
