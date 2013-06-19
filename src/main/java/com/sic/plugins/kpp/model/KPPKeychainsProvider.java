@@ -194,7 +194,8 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
     }
     
     /**
-     * 
+     * Call this method to update keychain information after save action.
+     * This method updates keychain information and removes keychains from upload folder if they are deleted.
      * @param keychainsFromSave 
      */
     public void updateKeychainsFromSave(List<KPPKeychain>keychainsFromSave) {
@@ -205,12 +206,6 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
             for (KPPKeychain currentKeychain : currentKeychains) {
                 if (currentKeychain.equals(keychainFromSave)) {
                     newKeychains.add(keychainFromSave);
-                    /*
-                    currentKeychain.setDescription(keychainFromSave.getDescription());
-                    currentKeychain.setPassword(keychainFromSave.getPassword());
-                    currentKeychain.setCertificates(keychainFromSave.getCertificates());
-                    currentKeychains.add(0, currentKeychain);
-                    */
                     break;
                 }
             }
@@ -218,6 +213,9 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
         keychains = newKeychains;
     }
     
+    /**
+     * Filename filter to get only files with the ".keychain" extension.
+     */
     private class KeychainFileNameFilter implements FilenameFilter {
 
         public boolean accept(File file, String name) {
