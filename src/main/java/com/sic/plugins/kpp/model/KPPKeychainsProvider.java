@@ -199,18 +199,30 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
      * @param keychainsFromSave 
      */
     public void updateKeychainsFromSave(List<KPPKeychain>keychainsFromSave) {
-        List<KPPKeychain> currentKeychains = getKeychains();
-        List<KPPKeychain> newKeychains = new ArrayList<KPPKeychain>(keychainsFromSave.size());
+        List<KPPKeychain> ksCurrent = new ArrayList<KPPKeychain>(getKeychains());
+        List<KPPKeychain> ksNew = new ArrayList<KPPKeychain>(keychainsFromSave.size());
         
-        for (KPPKeychain keychainFromSave : keychainsFromSave) {
-            for (KPPKeychain currentKeychain : currentKeychains) {
-                if (currentKeychain.equals(keychainFromSave)) {
-                    newKeychains.add(keychainFromSave);
+        for (KPPKeychain kS : keychainsFromSave) {
+            for (KPPKeychain kC : ksCurrent) {
+                if (kC.equals(kS)) {
+                    ksNew.add(kS);
+                    ksCurrent.remove(kC);
                     break;
                 }
             }
         }
-        keychains = newKeychains;
+        
+        if (!ksCurrent.isEmpty()) {
+            // delete keychains from filesystem
+            final String ksFolderPath = getKeychainsUploadDirectoryPath();
+            File kFile;
+            for (KPPKeychain k : ksCurrent) {
+                kFile = new File(ksFolderPath + File.separator +k.getFileName());
+                kFile.delete();
+            }
+        }
+        
+        keychains = ksNew;
     }
     
     /**
