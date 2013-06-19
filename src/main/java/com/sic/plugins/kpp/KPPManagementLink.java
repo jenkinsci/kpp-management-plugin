@@ -6,6 +6,7 @@ package com.sic.plugins.kpp;
 
 import com.sic.plugins.kpp.model.KPPBaseKeychainsProvider;
 import com.sic.plugins.kpp.model.KPPKeychain;
+import com.sic.plugins.kpp.model.KPPKeychainsProvider;
 import hudson.Extension;
 import hudson.model.Hudson;
 import hudson.model.ManagementLink;
@@ -14,6 +15,8 @@ import hudson.model.Saveable;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.FileItem;
@@ -95,6 +98,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
     @Override
     public Object getTarget() {
         Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+        KPPBaseKeychainsProvider.getInstance().update();
         return this;
     }
 

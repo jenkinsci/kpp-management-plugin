@@ -68,7 +68,7 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
         List<KPPKeychain> keychainsFromFolder = loadKeychainsFromUploadFolder();
         
         //3. merge keychains
-        keychains = mergeKeychains(keychainsFromXml, keychainsFromFolder);
+        keychains = mergedKeychains(keychainsFromXml, keychainsFromFolder);
     }
     
     private List<KPPKeychain> loadKeychainsFromUploadFolder() {
@@ -86,32 +86,25 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
         return k;
     }
     
-    private List<KPPKeychain> mergeKeychains(List<KPPKeychain>keychainsFromXML, List<KPPKeychain>keychainsFromFolder) {
-        List<KPPKeychain> k = new ArrayList<KPPKeychain>();
+    private List<KPPKeychain> mergedKeychains(List<KPPKeychain>keychainsFromXML, List<KPPKeychain>keychainsFromFolder) {
+        List<KPPKeychain> ks = new ArrayList<KPPKeychain>();
         
-        // 1. add each keychain to the list, which occurs in both lists.
-        List<KPPKeychain> kNotListed = new ArrayList<KPPKeychain>();
-        for (KPPKeychain keychainFolder : keychainsFromFolder) {
-            boolean isKeychainNotInXML = true;
-            for (KPPKeychain keychainXML : keychainsFromXML) {
-                if (keychainXML.equals(keychainFolder)) {
-                    isKeychainNotInXML = false;
-                    k.add(keychainXML);
+        List<KPPKeychain> ksFolder = new ArrayList<KPPKeychain>(keychainsFromFolder);
+        for (KPPKeychain kXML : keychainsFromXML) {
+            for (KPPKeychain kFolder : ksFolder) {
+                if (kXML.equals(kFolder)) {
+                    ks.add(kXML);
+                    ksFolder.remove(kFolder);
                     break;
                 }
             }
-            
-            if (isKeychainNotInXML) {
-                kNotListed.add(keychainFolder);
-            }
         }
         
-        // 2. add each keychain from folder to the list, which is not 
-        if (kNotListed.isEmpty()==false) {
-            k.addAll(kNotListed);
+        if(!ksFolder.isEmpty()) {
+            ks.addAll(ksFolder);
         }
         
-        return k;
+        return ks;
     }
     
     private void checkAndCreateKeychainUploadFolder() {
@@ -175,7 +168,6 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
     
     public final void save() throws IOException {
         getKeychainsConfigFile().write(this);
-        update();
     }
     
     /**
@@ -207,18 +199,23 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
      */
     public void updateKeychainsFromSave(List<KPPKeychain>keychainsFromSave) {
         List<KPPKeychain> currentKeychains = getKeychains();
+        List<KPPKeychain> newKeychains = new ArrayList<KPPKeychain>(keychainsFromSave.size());
         
         for (KPPKeychain keychainFromSave : keychainsFromSave) {
             for (KPPKeychain currentKeychain : currentKeychains) {
                 if (currentKeychain.equals(keychainFromSave)) {
+                    newKeychains.add(keychainFromSave);
+                    /*
                     currentKeychain.setDescription(keychainFromSave.getDescription());
                     currentKeychain.setPassword(keychainFromSave.getPassword());
                     currentKeychain.setCertificates(keychainFromSave.getCertificates());
+                    currentKeychains.add(0, currentKeychain);
+                    */
                     break;
                 }
             }
         }
-        keychains = currentKeychains;
+        keychains = newKeychains;
     }
     
     private class KeychainFileNameFilter implements FilenameFilter {
