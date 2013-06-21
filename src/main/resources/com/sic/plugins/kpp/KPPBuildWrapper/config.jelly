@@ -10,8 +10,8 @@
                 <f:entry title="${%Code Signing Identity}" field="codeSigningIdentity">
                     <f:select />
                 </f:entry>
-                <f:entry title="${%Variables}">
-                    <label></label>
+                <f:entry title="${%Variables}" field="variables">
+                    <f:select />
                 </f:entry>
                 <f:block>
                     <div align="right">

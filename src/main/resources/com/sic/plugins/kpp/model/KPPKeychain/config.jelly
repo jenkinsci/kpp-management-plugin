@@ -14,6 +14,9 @@
         <f:entry title="${%Description}" field="description">
             <f:textbox value="${it.description}"></f:textbox>
         </f:entry>
+        <f:entry title="${%Var Prefix}" field="varPrefix">
+            <f:textbox value="${it.varPrefix}"></f:textbox>
+        </f:entry>
         <f:entry title="${%Identities}">
             <f:repeatable var="certificates" items="${it.certificates}" minimum="1" add="${%Add Code Signing Identity}" header="">
                 <table width="100%">

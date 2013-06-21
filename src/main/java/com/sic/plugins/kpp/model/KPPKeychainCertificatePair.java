@@ -34,6 +34,23 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
         return codeSigningIdentity;
     }
     
+    public String getVariables() {
+        KPPKeychain k = getKeychainFromString(keychain);
+        return getVariableNames(k);
+    }
+    
+    /**
+     * Get the concatenated variable names to access the keychain and code signing identity information.
+     * @param k keychain
+     * @return concatenated variable names
+     */
+    private static String getVariableNames(KPPKeychain k) {
+        if (k==null) {
+            return "";
+        }
+        return String.format("${%s} ${%s} ${%s}", k.getKeychainVariableName(), k.getKeychainPasswordVariableName(), k.getCodeSigningIdentityVariableName());
+    } 
+    
     /**
      * Get the keychain from a given string. The string has to start with the keychain filename.
      * @param keychainString
@@ -41,8 +58,11 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
      */
     private static KPPKeychain getKeychainFromString(String keychainString) {
         KPPKeychain k = null;
+        if (keychainString==null || keychainString.length()==0) {
+            return k;
+        }
         List<KPPKeychain> ks = KPPBaseKeychainsProvider.getInstance().getKeychains();
-        if (ks.isEmpty() || keychainString == null || keychainString.length() == 0 ) {
+        if (ks.isEmpty() || keychainString.length() == 0 ) {
             return k;
         }
 
@@ -62,6 +82,12 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
      * @return concatenated keychain string
      */
     private static String getKeychainString(KPPKeychain k) {
+        if (k==null) {
+            return "";
+        }
+        if (k.getDescription()==null || k.getDescription().length()==0) {
+            return k.getFileName();
+        }
         return String.format("%s (%s)", k.getFileName(), k.getDescription());
     }
     
@@ -79,18 +105,22 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
         
         public ListBoxModel doFillCodeSigningIdentityItems(@QueryParameter String keychain, @QueryParameter String codeSigningIdentity) {
             ListBoxModel m = new ListBoxModel();
-            List<KPPKeychain> ks = KPPBaseKeychainsProvider.getInstance().getKeychains();
-            if (ks.isEmpty()) {
-                return m;
-            }
-
             KPPKeychain k = KPPKeychainCertificatePair.getKeychainFromString(keychain);
             if (k != null) {
                 for (KPPCertificate c : k.getCertificates()) {
                     m.add(c.getCodeSigningIdentityName());
                 }
             }
-
+            return m;
+        }
+        
+        public ListBoxModel doFillVariablesItems(@QueryParameter String keychain, @QueryParameter String varPrefix) {
+            ListBoxModel m = new ListBoxModel();
+            KPPKeychain k = KPPKeychainCertificatePair.getKeychainFromString(keychain);
+            if (k != null) {
+                String variables = KPPKeychainCertificatePair.getVariableNames(k);
+                m.add(variables);
+            }
             return m;
         }
         
@@ -98,6 +128,5 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
         public String getDisplayName() {
             return "";
         }
-        
     }
 }
