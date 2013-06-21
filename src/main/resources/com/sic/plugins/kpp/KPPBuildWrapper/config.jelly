@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:f="/lib/form" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:i="jelly:fmt">
+    <f:block>
+        <f:repeatable var="keychainCertificatePair" field="keychainCertificatePairs" minimum="1" add="${%Add}">
+            <table width="100%">
+                <f:entry title="${%Keychain}" field="keychain">
+                    <f:select />
+                </f:entry>
+                <f:entry title="${%Code Signing Identity}" field="codeSigningIdentity">
+                    <f:select />
+                </f:entry>
+                <f:entry title="${%Variables}">
+                    <label></label>
+                </f:entry>
+                <f:block>
+                    <div align="right">
+                        <f:repeatableDeleteButton value="${%Delete}"></f:repeatableDeleteButton>
+                    </div>
+                </f:block>
+            </table>
+        </f:repeatable>
+    </f:block>
+</j:jelly>

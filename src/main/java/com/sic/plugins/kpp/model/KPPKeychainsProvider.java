@@ -194,7 +194,7 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
     }
     
     /**
-     * Call this method to update keychain information after save action.
+     * Call this method to update keychains after save action.
      * This method updates keychain information and removes keychains from upload folder if they are deleted.
      * @param keychainsFromSave 
      */
