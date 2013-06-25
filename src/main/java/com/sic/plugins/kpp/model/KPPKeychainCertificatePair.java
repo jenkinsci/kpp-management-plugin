@@ -56,7 +56,7 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
      * @param keychainString
      * @return keychain
      */
-    private static KPPKeychain getKeychainFromString(String keychainString) {
+    public static KPPKeychain getKeychainFromString(String keychainString) {
         KPPKeychain k = null;
         if (keychainString==null || keychainString.length()==0) {
             return k;
