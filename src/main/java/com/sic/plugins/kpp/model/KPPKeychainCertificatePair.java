@@ -49,6 +49,15 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
         return filePath;
     }
     
+    public String getKeychainFileName() {
+        KPPKeychain k = getKeychainFromString(keychain);
+        String fileName = null;
+        if (k!=null && k.getFileName()!=null) {
+            fileName = k.getFileName();
+        }
+        return fileName;
+    }
+    
     /**
      * Get the concatenated variable names to access the keychain and code signing identity information.
      * @param k keychain

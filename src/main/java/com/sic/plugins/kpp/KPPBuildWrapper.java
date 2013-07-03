@@ -22,6 +22,7 @@ public class KPPBuildWrapper extends BuildWrapper {
 
     private List<KPPKeychainCertificatePair> keychainCertificatePairs = new ArrayList<KPPKeychainCertificatePair>();
     private boolean deleteKeychainsAfterBuild;
+    private boolean overwriteExistingKeychains;
     private List<FilePath>copiedKeychains;
     
     /**
@@ -29,13 +30,18 @@ public class KPPBuildWrapper extends BuildWrapper {
      * @param keychainCertificatePairs 
      */
     @DataBoundConstructor
-    public KPPBuildWrapper(List<KPPKeychainCertificatePair> keychainCertificatePairs, boolean deleteKeychainsAfterBuild) {
+    public KPPBuildWrapper(List<KPPKeychainCertificatePair> keychainCertificatePairs, boolean deleteKeychainsAfterBuild, boolean overwriteExistingKeychains) {
         this.keychainCertificatePairs = keychainCertificatePairs;
         this.deleteKeychainsAfterBuild = deleteKeychainsAfterBuild;
+        this.overwriteExistingKeychains = overwriteExistingKeychains;
     }
     
     public boolean getDeleteKeychainsAfterBuild() {
         return deleteKeychainsAfterBuild;
+    }
+    
+    public boolean getOverwriteExistingKeychains() {
+        return overwriteExistingKeychains;
     }
     
     public List<KPPKeychainCertificatePair> getKeychainCertificatePairs() {
@@ -61,10 +67,11 @@ public class KPPBuildWrapper extends BuildWrapper {
                 }
                 
                 for (KPPKeychainCertificatePair pair : keychainCertificatePairs) {
-                    FilePath copyFrom = new FilePath(hudsonRoot, pair.getKeychainFilePath());
-                    //copyFrom.copyRecursiveTo(projectWorkspace);
-                    FilePath to = new FilePath(projectWorkspace, "login.keychain");
-                    copyFrom.copyTo(to);
+                    FilePath from = new FilePath(hudsonRoot, pair.getKeychainFilePath());
+                    FilePath to = new FilePath(projectWorkspace, pair.getKeychainFileName());
+                    if (overwriteExistingKeychains || !to.exists()) {
+                        from.copyTo(to);
+                    }
                     copiedKeychains.add(to);
                 }
 		
