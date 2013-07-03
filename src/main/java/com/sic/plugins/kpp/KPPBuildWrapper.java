@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.filechooser.FileSystemView;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class KPPBuildWrapper extends BuildWrapper {
@@ -55,33 +56,25 @@ public class KPPBuildWrapper extends BuildWrapper {
     }
     
     private void copyKeychainsToWorkspace(AbstractBuild build) throws IOException, InterruptedException {
-		FilePath projectWorkspace = build.getWorkspace();
-		
-		Hudson hudson = Hudson.getInstance();
-		FilePath hudsonRoot = hudson.getRootPath();
-		
-                if (copiedKeychains==null) {
-                    copiedKeychains = new ArrayList<FilePath>();
-                } else {
-                    copiedKeychains.clear();
-                }
-                
-                for (KPPKeychainCertificatePair pair : keychainCertificatePairs) {
-                    FilePath from = new FilePath(hudsonRoot, pair.getKeychainFilePath());
-                    FilePath to = new FilePath(projectWorkspace, pair.getKeychainFileName());
-                    if (overwriteExistingKeychains || !to.exists()) {
-                        from.copyTo(to);
-                    }
-                    copiedKeychains.add(to);
-                }
-		
-		//saveNames(copyFrom);
-    }
-    
-    private FilePath getKeychainFilePath(KPPKeychainCertificatePair pair) {
-        FilePath path = null;
-        
-        return path;
+        FilePath projectWorkspace = build.getWorkspace();
+
+        Hudson hudson = Hudson.getInstance();
+        FilePath hudsonRoot = hudson.getRootPath();
+
+        if (copiedKeychains == null) {
+            copiedKeychains = new ArrayList<FilePath>();
+        } else {
+            copiedKeychains.clear();
+        }
+
+        for (KPPKeychainCertificatePair pair : keychainCertificatePairs) {
+            FilePath from = new FilePath(hudsonRoot, pair.getKeychainFilePath());
+            FilePath to = new FilePath(projectWorkspace, pair.getKeychainFileName());
+            if (overwriteExistingKeychains || !to.exists()) {
+                from.copyTo(to);
+            }
+            copiedKeychains.add(to);
+        }
     }
     
     @Override
