@@ -3,10 +3,12 @@ package com.sic.plugins.kpp;
 import com.sic.plugins.kpp.model.KPPKeychain;
 import com.sic.plugins.kpp.model.KPPKeychainCertificatePair;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.model.Hudson;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
 import java.io.IOException;
@@ -19,14 +21,21 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class KPPBuildWrapper extends BuildWrapper {
 
     private List<KPPKeychainCertificatePair> keychainCertificatePairs = new ArrayList<KPPKeychainCertificatePair>();
+    private boolean deleteKeychainsAfterBuild;
+    private List<FilePath>copiedKeychains;
     
     /**
      * Constructor
      * @param keychainCertificatePairs 
      */
     @DataBoundConstructor
-    public KPPBuildWrapper(List<KPPKeychainCertificatePair> keychainCertificatePairs) {
+    public KPPBuildWrapper(List<KPPKeychainCertificatePair> keychainCertificatePairs, boolean deleteKeychainsAfterBuild) {
         this.keychainCertificatePairs = keychainCertificatePairs;
+        this.deleteKeychainsAfterBuild = deleteKeychainsAfterBuild;
+    }
+    
+    public boolean getDeleteKeychainsAfterBuild() {
+        return deleteKeychainsAfterBuild;
     }
     
     public List<KPPKeychainCertificatePair> getKeychainCertificatePairs() {
@@ -35,7 +44,37 @@ public class KPPBuildWrapper extends BuildWrapper {
     
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
+        copyKeychainsToWorkspace(build);
         return new EnvironmentImpl(keychainCertificatePairs);
+    }
+    
+    private void copyKeychainsToWorkspace(AbstractBuild build) throws IOException, InterruptedException {
+		FilePath projectWorkspace = build.getWorkspace();
+		
+		Hudson hudson = Hudson.getInstance();
+		FilePath hudsonRoot = hudson.getRootPath();
+		
+                if (copiedKeychains==null) {
+                    copiedKeychains = new ArrayList<FilePath>();
+                } else {
+                    copiedKeychains.clear();
+                }
+                
+                for (KPPKeychainCertificatePair pair : keychainCertificatePairs) {
+                    FilePath copyFrom = new FilePath(hudsonRoot, pair.getKeychainFilePath());
+                    //copyFrom.copyRecursiveTo(projectWorkspace);
+                    FilePath to = new FilePath(projectWorkspace, "login.keychain");
+                    copyFrom.copyTo(to);
+                    copiedKeychains.add(to);
+                }
+		
+		//saveNames(copyFrom);
+    }
+    
+    private FilePath getKeychainFilePath(KPPKeychainCertificatePair pair) {
+        FilePath path = null;
+        
+        return path;
     }
     
     @Override
@@ -88,6 +127,17 @@ public class KPPBuildWrapper extends BuildWrapper {
         public void buildEnvVars(Map<String, String> env) {
             env.putAll(getEnvMap());
 	}
+        
+        @Override
+        public boolean tearDown(AbstractBuild build, BuildListener listener)
+                throws IOException, InterruptedException {
+            if (deleteKeychainsAfterBuild) {
+                for (FilePath filePath : copiedKeychains) {
+                    filePath.delete();
+                }
+            }
+            return true;
+        }
         
     }
 }

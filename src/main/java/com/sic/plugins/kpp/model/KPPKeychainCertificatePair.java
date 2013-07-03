@@ -4,6 +4,7 @@ import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.ListBoxModel;
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -37,6 +38,15 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
     public String getVariables() {
         KPPKeychain k = getKeychainFromString(keychain);
         return getVariableNames(k);
+    }
+    
+    public String getKeychainFilePath() {
+        KPPKeychain k = getKeychainFromString(keychain);
+        String filePath = null;
+        if (k!=null && k.getFileName()!=null) {
+            filePath = String.format("%s%s%s", KPPBaseKeychainsProvider.getInstance().getKeychainsUploadDirectoryPath(), File.separator, k.getFileName());
+        }
+        return filePath;
     }
     
     /**

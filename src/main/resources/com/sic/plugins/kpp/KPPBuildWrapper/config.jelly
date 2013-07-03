@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:f="/lib/form" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:i="jelly:fmt">
+    <f:entry title="${%Delete copied keychains after build}" field="deleteKeychainsAfterBuild">
+	<f:checkbox/>
+    </f:entry>
     <f:block>
         <f:repeatable var="keychainCertificatePair" field="keychainCertificatePairs" minimum="1" add="${%Add}">
             <table width="100%">
