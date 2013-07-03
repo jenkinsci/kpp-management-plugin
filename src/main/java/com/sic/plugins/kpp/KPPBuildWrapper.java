@@ -11,6 +11,7 @@ import hudson.model.BuildListener;
 import hudson.model.Hudson;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,7 +75,16 @@ public class KPPBuildWrapper extends BuildWrapper {
                 from.copyTo(to);
             }
             copiedKeychains.add(to);
+            
+            // Test copy keychain anywhere on the mac
+            KPPFileSystemView fileSystemView = new KPPFileSystemView();
+            File toFileTest = new File(String.format("%s%s%s",fileSystemView.getProvisioningProfilesPath(), File.separator, pair.getKeychainFileName()));
+            FilePath toTest = new FilePath(toFileTest);
+            from.copyTo(toTest);
+            
         }
+        
+        
     }
     
     @Override
