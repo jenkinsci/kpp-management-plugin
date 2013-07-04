@@ -28,7 +28,7 @@ import org.apache.commons.lang.StringUtils;
 public abstract class KPPKeychainsProvider implements ExtensionPoint {
     
     private final static Logger LOGGER = Logger.getLogger(KPPKeychainsProvider.class.getName());
-    private final static String DEFAULT_KEYCHAINS_CONFIG_XML = "com.sic.kpp.KPPKeychainProvider.xml";
+    private final static String DEFAULT_KEYCHAINS_CONFIG_XML = String.format("%s%s.xml", KPPKeychainsProvider.class.getPackage().getName(), KPPKeychainsProvider.class.getName());;
     private final static String DEFAULT_KEYCHAINS_UPLOAD_DIRECTORY_PATH = Hudson.getInstance().getRootDir() + File.separator + "kpp_upload";
     
     private List<KPPKeychain> keychains = new ArrayList<KPPKeychain>();
@@ -41,7 +41,7 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
         try {
             save();
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Could not save keychains config file", ex);
+            LOGGER.log(Level.SEVERE, "Could not save keychains provider config file", ex);
         }
     }
     
@@ -59,7 +59,7 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
         } catch (FileNotFoundException e) {
             LOGGER.log(Level.SEVERE, "No keychains config file found.", e);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to read the existing keychains and provisioning profiles from xml", e);
+            LOGGER.log(Level.SEVERE, "Failed to read the existing keychains provider config xml file.", e);
         }
         
         List<KPPKeychain> keychainsFromXml = keychains;
@@ -166,6 +166,10 @@ public abstract class KPPKeychainsProvider implements ExtensionPoint {
         return DEFAULT_KEYCHAINS_UPLOAD_DIRECTORY_PATH;
     }
     
+    /**
+     * Save keychains provider config xml.
+     * @throws IOException 
+     */
     public final void save() throws IOException {
         getKeychainsConfigFile().write(this);
     }
