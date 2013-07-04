@@ -11,13 +11,11 @@ import hudson.model.BuildListener;
 import hudson.model.Hudson;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.filechooser.FileSystemView;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class KPPBuildWrapper extends BuildWrapper {
@@ -76,15 +74,15 @@ public class KPPBuildWrapper extends BuildWrapper {
             }
             copiedKeychains.add(to);
             
-            // Test copy keychain anywhere on the mac
-            KPPFileSystemView fileSystemView = new KPPFileSystemView();
-            File toFileTest = new File(String.format("%s%s%s",fileSystemView.getProvisioningProfilesPath(), File.separator, pair.getKeychainFileName()));
-            FilePath toTest = new FilePath(toFileTest);
-            from.copyTo(toTest);
-            
+            /* Testcode copy anywhere on the mac
+            Node node = build.getBuiltOn();
+            FilePath rootPath = node.getRootPath();
+            VirtualChannel channel = projectWorkspace.getChannel();
+            String remoteFilePath = String.format("%s%s", "/Users/sicdev/Library/MobileDevice/Provisioning Profiles/", pair.getKeychainFileName());
+            FilePath remoteHome = new FilePath(channel, remoteFilePath);
+            from.copyTo(remoteHome);
+            */
         }
-        
-        
     }
     
     @Override
