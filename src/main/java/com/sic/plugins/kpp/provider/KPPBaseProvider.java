@@ -1,12 +1,16 @@
 package com.sic.plugins.kpp.provider;
 
+import com.sic.plugins.kpp.model.KPPKeychain;
 import hudson.XmlFile;
 import hudson.model.Hudson;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.fileupload.FileItem;
@@ -30,6 +34,7 @@ public abstract class KPPBaseProvider {
     }
     
     private void initialize() {
+        checkAndCreateUploadFolder();
         load();
         merge();
         save();
@@ -118,6 +123,63 @@ public abstract class KPPBaseProvider {
     public void update() {
         load();
         merge();
+    }
+    
+    /**
+     * Get all files filtered by filetype from upload directory.
+     * @param fileExtension, e.g. ".keychain"
+     * @return array with all files
+     */
+    public File[] getFilesFromUploadDirectory(String fileExtension) {
+        return new File(getUploadDirectoryPath()).listFiles(new KPPBaseProvider.FileExtensionFilenameFilter(fileExtension));
+    }
+    
+    /**
+     * Merge two lists of objects.
+     * @param <T> type
+     * @param objectsFromXml objects loaded from xml
+     * @param objectsFromFolder objects loaded from upload folder
+     * @return merged objects
+     */
+    protected <T> List<T> mergedObjects(List<T>objectsFromXml, List<T>objectsFromFolder) {
+        List<T> objects = new ArrayList<T>();
+        
+        List<T> objectsFolder = new ArrayList<T>(objectsFromFolder);
+        for (T oXml : objectsFromXml) {
+            for (T oFolder : objectsFromFolder) {
+                if (oXml.equals(oFolder)) {
+                    objects.add(oXml);
+                    objectsFolder.remove(oFolder);
+                    break;
+                }
+            }
+        }
+        
+        if(!objectsFolder.isEmpty()) {
+            objects.addAll(objectsFolder);
+        }
+        
+        return objects;
+    }
+    
+    /**
+     * Filename filter to get only files with a special extension.
+     */
+    private class FileExtensionFilenameFilter implements FilenameFilter {
+        
+        private final String fileExtension;
+        
+        public FileExtensionFilenameFilter(String fileExtension) {
+            this.fileExtension = fileExtension;
+        }
+        
+        public boolean accept(File file, String name) {
+            boolean ret = false;
+            if (name.endsWith(this.fileExtension)) {
+                ret = true;
+            }
+            return ret;
+        }
     }
     
     /**

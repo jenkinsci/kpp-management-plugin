@@ -8,7 +8,6 @@ import hudson.ExtensionPoint;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 import jenkins.model.Jenkins;
@@ -16,7 +15,8 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  *
- * An extension point for providing {@link KPPKeychain}
+ * An extension point for providing {@link KPPKeychain}.
+ * @author mb
  */
 public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implements ExtensionPoint {
     
@@ -25,49 +25,32 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     /**
      * {@inherited}
      */
+    @Override
     protected void merge() {
-        List<KPPKeychain> keychainsFromXml = keychains;
-        
-        // 2. load keychains from upload folder.
         List<KPPKeychain> keychainsFromFolder = loadKeychainsFromUploadFolder();
-        
-        //3. merge keychains
-        keychains = mergedKeychains(keychainsFromXml, keychainsFromFolder);
+        keychains = mergedObjects(keychains, keychainsFromFolder);
+    }
+    
+    /**
+     * Updates keychains information.
+     */
+    @Override
+    public void update() {
+        getKeychains().clear();
+        super.update();
     }
     
     private List<KPPKeychain> loadKeychainsFromUploadFolder() {
-        checkAndCreateUploadFolder();
-        List<KPPKeychain> k = new ArrayList<KPPKeychain>();
+        List<KPPKeychain> ks = new ArrayList<KPPKeychain>();
         
-        File[] keychainFiles = new File(getUploadDirectoryPath()).listFiles(new KPPBaseKeychainsProvider.KeychainFileNameFilter());
+        File[] keychainFiles = getFilesFromUploadDirectory(".keychain");
         for(File keychainFile : keychainFiles) {
             KPPKeychain keychain = new KPPKeychain(keychainFile.getName());
             if(StringUtils.isBlank(keychain.getFileName())) {
             break;
             }
-            k.add(keychain);
+            ks.add(keychain);
         }
-        return k;
-    }
-    
-    private List<KPPKeychain> mergedKeychains(List<KPPKeychain>keychainsFromXML, List<KPPKeychain>keychainsFromFolder) {
-        List<KPPKeychain> ks = new ArrayList<KPPKeychain>();
-        
-        List<KPPKeychain> ksFolder = new ArrayList<KPPKeychain>(keychainsFromFolder);
-        for (KPPKeychain kXML : keychainsFromXML) {
-            for (KPPKeychain kFolder : ksFolder) {
-                if (kXML.equals(kFolder)) {
-                    ks.add(kXML);
-                    ksFolder.remove(kFolder);
-                    break;
-                }
-            }
-        }
-        
-        if(!ksFolder.isEmpty()) {
-            ks.addAll(ksFolder);
-        }
-        
         return ks;
     }
     
@@ -97,15 +80,16 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     }
     
     /**
+     * TODO: Refactor
      * Call this method to update keychains after save action.
      * This method updates keychain information and removes keychains from upload folder if they are deleted.
-     * @param keychainsFromSave 
+     * @param keychainsAfterSave 
      */
-    public void updateKeychainsFromSave(List<KPPKeychain>keychainsFromSave) {
+    public void updateKeychainsAfterSave(List<KPPKeychain>keychainsAfterSave) {
         List<KPPKeychain> ksCurrent = new ArrayList<KPPKeychain>(getKeychains());
-        List<KPPKeychain> ksNew = new ArrayList<KPPKeychain>(keychainsFromSave.size());
+        List<KPPKeychain> ksNew = new ArrayList<KPPKeychain>(keychainsAfterSave.size());
         
-        for (KPPKeychain kS : keychainsFromSave) {
+        for (KPPKeychain kS : keychainsAfterSave) {
             for (KPPKeychain kC : ksCurrent) {
                 if (kC.equals(kS)) {
                     ksNew.add(kS);
@@ -126,29 +110,6 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
         }
         
         keychains = ksNew;
-    }
-    
-    /**
-     * Filename filter to get only files with the ".keychain" extension.
-     */
-    private class KeychainFileNameFilter implements FilenameFilter {
-
-        public boolean accept(File file, String name) {
-            boolean ret = false;
-            if (file.isDirectory() && name.endsWith(".keychain")) { // keychains are directories
-                ret = true;
-            }
-            return ret;
-        }
-    }
-    
-    /**
-     * Updates keychains information.
-     */
-    @Override
-    public void update() {
-        getKeychains().clear();
-        super.update();
     }
     
 }

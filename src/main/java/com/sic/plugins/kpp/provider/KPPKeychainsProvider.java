@@ -4,6 +4,7 @@ import hudson.Extension;
 
 /**
 * The {@link KPPBaseKeychainsProvider} that stores and manages keychains.
+* @author mb
 */
 @Extension
 public class KPPKeychainsProvider extends KPPBaseKeychainsProvider {

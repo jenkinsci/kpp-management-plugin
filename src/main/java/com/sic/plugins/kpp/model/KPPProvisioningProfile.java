@@ -14,7 +14,6 @@ public class KPPProvisioningProfile implements Serializable {
     @DataBoundConstructor
     public KPPProvisioningProfile(String fileName) {
         this.fileName = fileName;
-        
     }
     
     /**

@@ -1,60 +1,51 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.sic.plugins.kpp.provider;
 
+import com.sic.plugins.kpp.model.KPPKeychain;
 import com.sic.plugins.kpp.model.KPPProvisioningProfile;
 import hudson.ExtensionPoint;
-import hudson.XmlFile;
-import hudson.model.Hudson;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * An extension point for providing {@link KPPProvisioningProfile}
- * @author michaelbar
+ * @author mb
  */
-public class KPPBaseProvisioningProfilesProvider implements ExtensionPoint {
-    
-    private final static Logger LOGGER = Logger.getLogger(KPPBaseKeychainsProvider.class.getName());
-    
-    private final static String DEFAULT_PROVISIONING_PROFILES_CONFIG_XML = String.format("%s%s.xml", KPPProvisioningProfile.class.getPackage().getName(), KPPProvisioningProfile.class.getName());
-    private final static String DEFAULT_PROVISIONING_PROFILES_UPLOAD_DIRECTORY_PATH = Hudson.getInstance().getRootDir() + File.separator + "kpp_upload";
+public class KPPBaseProvisioningProfilesProvider extends KPPBaseProvider implements ExtensionPoint {
     
     private List<KPPProvisioningProfile> provisioningProfiles = new ArrayList<KPPProvisioningProfile>();
     
     /**
-     * Constructor
+     * Updates provisioning profiles information.
      */
-    public KPPBaseProvisioningProfilesProvider() {
-        load();
-        try {
-            save();
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Could not save provisioning profiles provider config file.", e);
-        }
+    @Override
+    public void update() {
+        getProvisioningProfiles().clear();
+        super.update();
+    }
+
+    /**
+     * {@inherited}
+     */
+    @Override
+    protected void merge() {
+        List<KPPProvisioningProfile> ppsFromFolder = loadProvisioningProfilesFromUploadFolder();
+        provisioningProfiles = mergedObjects(provisioningProfiles, ppsFromFolder);
     }
     
-    private void load() {
-        // 1. load provisioning profile(s) information from config xml.
-        try {
-            XmlFile xml = getProvisioningProfilesConfigFile();
-            if (xml.exists()) {
-                xml.unmarshal(this);
-            }
-        } catch (FileNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "No provisioning profiles provider config file found.", e);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to read the existing provisioning profiles provider config xml file.", e);
-        }
+    private List<KPPProvisioningProfile> loadProvisioningProfilesFromUploadFolder() {
+        List<KPPProvisioningProfile> pps = new ArrayList<KPPProvisioningProfile>();
         
-        List<KPPProvisioningProfile> profilesFromXml = provisioningProfiles;
+        File[] ppsFiles = getFilesFromUploadDirectory(".mobileprovision");
+        for(File ppFile : ppsFiles) {
+            KPPProvisioningProfile pp = new KPPProvisioningProfile(ppFile.getName());
+            if(StringUtils.isBlank(pp.getFileName())) {
+                break;
+            }
+            pps.add(pp);
+        }
+        return pps;
     }
     
     /**
@@ -66,35 +57,35 @@ public class KPPBaseProvisioningProfilesProvider implements ExtensionPoint {
     }
     
     /**
-     * Get the provisioning profiles config xml file.
-     * @return file
+     * Call this method to update provisioning profiles after save action.
+     * This method updates provisioinig profiles information and removes provisioinig profiles from upload folder if they are deleted.
+     * @param provisioningProfilesAfterSave 
      */
-    public XmlFile getProvisioningProfilesConfigFile() {
-        return new XmlFile(new File(Hudson.getInstance().getRootDir(), getProvisioningProfilesConfigXMLName()));
-    }
-    
-    /**
-     * Get the provisioning profiles config xml filename.
-     * @return filename
-     */
-    public String getProvisioningProfilesConfigXMLName() {
-        return DEFAULT_PROVISIONING_PROFILES_CONFIG_XML;
-    }
-    
-    /**
-     * Save provisioning profiles provider config xml.
-     * @throws IOException 
-     */
-    public final void save() throws IOException {
-        getProvisioningProfilesConfigFile().write(this);
-    }
-    
-    /**
-     * Updates provisioning profiles information from xml configuration and provisioning profiles upload folder.
-     */
-    public void update() {
-        getProvisioningProfiles().clear();
-        load();
+    public void updateProvisioningProfilesAfterSave(List<KPPProvisioningProfile>provisioningProfilesAfterSave) {
+        List<KPPProvisioningProfile> ppsCurrent = new ArrayList<KPPProvisioningProfile>(getProvisioningProfiles());
+        List<KPPProvisioningProfile> ppsNew = new ArrayList<KPPProvisioningProfile>(provisioningProfilesAfterSave.size());
+        
+        for (KPPProvisioningProfile ppA : provisioningProfilesAfterSave) {
+            for (KPPProvisioningProfile ppC : ppsCurrent) {
+                if (ppC.equals(ppA)) {
+                    ppsNew.add(ppA);
+                    ppsCurrent.remove(ppC);
+                    break;
+                }
+            }
+        }
+        
+        if (!ppsCurrent.isEmpty()) {
+            // delete provisioning profile from filesystem
+            final String folderPath = getUploadDirectoryPath();
+            File ppFile;
+            for (KPPProvisioningProfile pp : ppsCurrent) {
+                ppFile = new File(folderPath + File.separator +pp.getFileName());
+                ppFile.delete();
+            }
+        }
+        
+        provisioningProfiles = ppsNew;
     }
     
 }
