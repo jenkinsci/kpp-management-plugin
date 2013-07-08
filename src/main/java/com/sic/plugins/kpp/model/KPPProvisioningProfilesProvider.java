@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jenkins.model.Jenkins;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * An extension point for providing {@link KPPProvisioningProfile}
@@ -55,11 +56,6 @@ public class KPPProvisioningProfilesProvider implements ExtensionPoint {
         }
         
         List<KPPProvisioningProfile> profilesFromXml = provisioningProfiles;
-    }
-    
-    private List<KPPProvisioningProfile> loadProvisioningProfilesFromUploadFolder() {
-        // TODO: hier gehts weiter.
-        return null;
     }
     
     /**

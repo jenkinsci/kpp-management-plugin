@@ -58,7 +58,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
             throw new ServletException("no file selected");
         }
         
-        KPPBaseKeychainsProvider.getInstance().uploadKeychain(file);
+        KPPBaseKeychainsProvider.getInstance().upload(file);
         KPPBaseKeychainsProvider.getInstance().update();
         
         rsp.sendRedirect2("../"+getUrlName()+"/"); //we stay on page
