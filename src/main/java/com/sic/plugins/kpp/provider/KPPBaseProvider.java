@@ -1,4 +1,4 @@
-package com.sic.plugins.kpp.model;
+package com.sic.plugins.kpp.provider;
 
 import hudson.XmlFile;
 import hudson.model.Hudson;
@@ -12,19 +12,19 @@ import java.util.logging.Logger;
 import org.apache.commons.fileupload.FileItem;
 
 /**
- * Abstract base class for {@link KPPKeychainsProvider} and {@link KPPProvisioningProfilesProvider}.
+ * Abstract base class for providers.
  * @author mb
  */
-public abstract class KPPProvider {
+public abstract class KPPBaseProvider {
     
-    protected final static Logger LOGGER = Logger.getLogger(KPPProvider.class.getName());
+    protected final static Logger LOGGER = Logger.getLogger(KPPBaseProvider.class.getName());
     private final static String DEFAULT_UPLOAD_DIRECTORY_PATH = Hudson.getInstance().getRootDir() + File.separator + "kpp_upload";
     private final String defaultConfigXmlFileName;
     
     /**
      * Constructor
      */
-    public KPPProvider() {
+    public KPPBaseProvider() {
         this.defaultConfigXmlFileName = String.format("%s.xml", this.getClass().getName());
         initialize();
     }

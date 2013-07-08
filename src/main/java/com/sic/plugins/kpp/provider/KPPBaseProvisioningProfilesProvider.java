@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sic.plugins.kpp.model;
+package com.sic.plugins.kpp.provider;
 
+import com.sic.plugins.kpp.model.KPPProvisioningProfile;
 import hudson.ExtensionPoint;
 import hudson.XmlFile;
 import hudson.model.Hudson;
@@ -14,16 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jenkins.model.Jenkins;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * An extension point for providing {@link KPPProvisioningProfile}
  * @author michaelbar
  */
-public class KPPProvisioningProfilesProvider implements ExtensionPoint {
+public class KPPBaseProvisioningProfilesProvider implements ExtensionPoint {
     
-    private final static Logger LOGGER = Logger.getLogger(KPPKeychainsProvider.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(KPPBaseKeychainsProvider.class.getName());
     
     private final static String DEFAULT_PROVISIONING_PROFILES_CONFIG_XML = String.format("%s%s.xml", KPPProvisioningProfile.class.getPackage().getName(), KPPProvisioningProfile.class.getName());
     private final static String DEFAULT_PROVISIONING_PROFILES_UPLOAD_DIRECTORY_PATH = Hudson.getInstance().getRootDir() + File.separator + "kpp_upload";
@@ -33,7 +32,7 @@ public class KPPProvisioningProfilesProvider implements ExtensionPoint {
     /**
      * Constructor
      */
-    public KPPProvisioningProfilesProvider() {
+    public KPPBaseProvisioningProfilesProvider() {
         load();
         try {
             save();

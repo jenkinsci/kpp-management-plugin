@@ -4,7 +4,7 @@
  */
 package com.sic.plugins.kpp;
 
-import com.sic.plugins.kpp.model.KPPBaseKeychainsProvider;
+import com.sic.plugins.kpp.provider.KPPKeychainsProvider;
 import com.sic.plugins.kpp.model.KPPKeychain;
 import hudson.Extension;
 import hudson.model.Hudson;
@@ -43,7 +43,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
      */
     @SuppressWarnings("unused") // used by stapler
     public List<KPPKeychain> getKeychains() {
-        return KPPBaseKeychainsProvider.getInstance().getKeychains();
+        return KPPKeychainsProvider.getInstance().getKeychains();
     }
     
     public void doUploadKeychain(StaplerRequest req, StaplerResponse rsp) throws
@@ -58,8 +58,8 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
             throw new ServletException("no file selected");
         }
         
-        KPPBaseKeychainsProvider.getInstance().upload(file);
-        KPPBaseKeychainsProvider.getInstance().update();
+        KPPKeychainsProvider.getInstance().upload(file);
+        KPPKeychainsProvider.getInstance().update();
         
         rsp.sendRedirect2("../"+getUrlName()+"/"); //we stay on page
     }
@@ -72,7 +72,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
         
         JSONObject data = req.getSubmittedForm();
         List<KPPKeychain> keychains = req.bindJSONToList(KPPKeychain.class, data.get("keychain"));
-        KPPBaseKeychainsProvider.getInstance().updateKeychainsFromSave(keychains);
+        KPPKeychainsProvider.getInstance().updateKeychainsFromSave(keychains);
         save();
         rsp.sendRedirect2("../manage"); //we go back on management page
     }
@@ -95,13 +95,13 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
     @Override
     public Object getTarget() {
         Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
-        KPPBaseKeychainsProvider.getInstance().update();
+        KPPKeychainsProvider.getInstance().update();
         return this;
     }
 
     @Override
     public void save() throws IOException {
         Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
-        KPPBaseKeychainsProvider.getInstance().save();
+        KPPKeychainsProvider.getInstance().save();
     }
 }

@@ -1,6 +1,7 @@
 
-package com.sic.plugins.kpp.model;
+package com.sic.plugins.kpp.provider;
 
+import com.sic.plugins.kpp.model.KPPKeychain;
 import hudson.DescriptorExtensionList;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
@@ -17,7 +18,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * An extension point for providing {@link KPPKeychain}
  */
-public abstract class KPPKeychainsProvider extends KPPProvider implements ExtensionPoint {
+public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implements ExtensionPoint {
     
     private List<KPPKeychain> keychains = new ArrayList<KPPKeychain>();
     
@@ -38,7 +39,7 @@ public abstract class KPPKeychainsProvider extends KPPProvider implements Extens
         checkAndCreateUploadFolder();
         List<KPPKeychain> k = new ArrayList<KPPKeychain>();
         
-        File[] keychainFiles = new File(getUploadDirectoryPath()).listFiles(new KPPKeychainsProvider.KeychainFileNameFilter());
+        File[] keychainFiles = new File(getUploadDirectoryPath()).listFiles(new KPPBaseKeychainsProvider.KeychainFileNameFilter());
         for(File keychainFile : keychainFiles) {
             KPPKeychain keychain = new KPPKeychain(keychainFile.getName());
             if(StringUtils.isBlank(keychain.getFileName())) {
@@ -91,8 +92,8 @@ public abstract class KPPKeychainsProvider extends KPPProvider implements Extens
     /**
      * All regsitered instances.
      */
-    public static ExtensionList<KPPKeychainsProvider> all() {
-        return Jenkins.getInstance().getExtensionList(KPPKeychainsProvider.class);
+    public static ExtensionList<KPPBaseKeychainsProvider> all() {
+        return Jenkins.getInstance().getExtensionList(KPPBaseKeychainsProvider.class);
     }
     
     /**

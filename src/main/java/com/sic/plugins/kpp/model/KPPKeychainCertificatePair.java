@@ -1,5 +1,6 @@
 package com.sic.plugins.kpp.model;
 
+import com.sic.plugins.kpp.provider.KPPKeychainsProvider;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
@@ -44,7 +45,7 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
         KPPKeychain k = getKeychainFromString(keychain);
         String filePath = null;
         if (k!=null && k.getFileName()!=null) {
-            filePath = String.format("%s%s%s", KPPBaseKeychainsProvider.getInstance().getUploadDirectoryPath(), File.separator, k.getFileName());
+            filePath = String.format("%s%s%s", KPPKeychainsProvider.getInstance().getUploadDirectoryPath(), File.separator, k.getFileName());
         }
         return filePath;
     }
@@ -80,7 +81,7 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
         if (keychainString==null || keychainString.length()==0) {
             return k;
         }
-        List<KPPKeychain> ks = KPPBaseKeychainsProvider.getInstance().getKeychains();
+        List<KPPKeychain> ks = KPPKeychainsProvider.getInstance().getKeychains();
         if (ks.isEmpty() || keychainString.length() == 0 ) {
             return k;
         }
@@ -115,7 +116,7 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
 
         public ListBoxModel doFillKeychainItems(@QueryParameter String keychain) {
             ListBoxModel m = new ListBoxModel();
-            List<KPPKeychain> ks = KPPBaseKeychainsProvider.getInstance().getKeychains();
+            List<KPPKeychain> ks = KPPKeychainsProvider.getInstance().getKeychains();
             for (KPPKeychain k : ks) {
                 m.add(KPPKeychainCertificatePair.getKeychainString(k));
             }
