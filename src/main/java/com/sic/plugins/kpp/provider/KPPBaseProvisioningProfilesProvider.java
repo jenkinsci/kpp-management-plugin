@@ -2,7 +2,10 @@ package com.sic.plugins.kpp.provider;
 
 import com.sic.plugins.kpp.model.KPPKeychain;
 import com.sic.plugins.kpp.model.KPPProvisioningProfile;
+import hudson.DescriptorExtensionList;
 import hudson.ExtensionPoint;
+import hudson.model.Descriptor;
+import hudson.model.Hudson;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +57,15 @@ public class KPPBaseProvisioningProfilesProvider extends KPPBaseProvider impleme
      */
     public List<KPPProvisioningProfile> getProvisioningProfiles() {
         return provisioningProfiles;
+    }
+    
+    /**
+     * Returns all the registered {@link KPPKeychain} descriptors.
+     *
+     * @return all the registered {@link KPPKeychain} descriptors.
+     */
+    public static DescriptorExtensionList<KPPProvisioningProfile, Descriptor<KPPProvisioningProfile>> allProvisioningProfileDescriptors() {
+        return Hudson.getInstance().getDescriptorList(KPPProvisioningProfile.class);
     }
     
     /**

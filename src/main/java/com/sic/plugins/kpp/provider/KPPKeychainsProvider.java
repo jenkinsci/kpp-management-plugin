@@ -1,6 +1,7 @@
 package com.sic.plugins.kpp.provider;
 
 import hudson.Extension;
+import hudson.ExtensionList;
 
 /**
 * The {@link KPPBaseKeychainsProvider} that stores and manages keychains.
@@ -10,7 +11,8 @@ import hudson.Extension;
 public class KPPKeychainsProvider extends KPPBaseKeychainsProvider {
     
     public static KPPKeychainsProvider getInstance() {
-        return KPPBaseKeychainsProvider.all().get(KPPKeychainsProvider.class);
+        ExtensionList<KPPBaseKeychainsProvider> list = KPPBaseKeychainsProvider.all();
+        return list.get(KPPKeychainsProvider.class);
     }
     
 }

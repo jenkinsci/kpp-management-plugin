@@ -1,6 +1,5 @@
 package com.sic.plugins.kpp.provider;
 
-import com.sic.plugins.kpp.model.KPPKeychain;
 import hudson.XmlFile;
 import hudson.model.Hudson;
 import java.io.File;
@@ -144,7 +143,16 @@ public abstract class KPPBaseProvider {
     protected <T> List<T> mergedObjects(List<T>objectsFromXml, List<T>objectsFromFolder) {
         List<T> objects = new ArrayList<T>();
         
-        List<T> objectsFolder = new ArrayList<T>(objectsFromFolder);
+        if (objectsFromFolder==null || objectsFromXml==null) {
+            if (objectsFromFolder==null) {
+                objects.addAll(objectsFromXml);
+            } else if (objectsFromXml==null) {
+                objects.addAll(objectsFromFolder);
+            }
+            return objects;
+        }
+        
+        List<T>objectsFolder = new ArrayList<T>(objectsFromFolder);
         for (T oXml : objectsFromXml) {
             for (T oFolder : objectsFromFolder) {
                 if (oXml.equals(oFolder)) {

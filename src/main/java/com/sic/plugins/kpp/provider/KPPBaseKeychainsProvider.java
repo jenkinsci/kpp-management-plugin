@@ -10,7 +10,6 @@ import hudson.model.Hudson;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import jenkins.model.Jenkins;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -64,19 +63,20 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     }
 
     /**
-     * Returns all the registered {@link KPPKeychain} descriptors.
+     * Get all the registered {@link KPPKeychain} descriptors.
      *
      * @return all the registered {@link KPPKeychain} descriptors.
      */
     public static DescriptorExtensionList<KPPKeychain, Descriptor<KPPKeychain>> allKeychainDescriptors() {
         return Hudson.getInstance().getDescriptorList(KPPKeychain.class);
     }
-
+    
     /**
-     * All regsitered instances.
+     * All regsitered {@KPPBaseKeychainsProvider}s.
      */
     public static ExtensionList<KPPBaseKeychainsProvider> all() {
-        return Jenkins.getInstance().getExtensionList(KPPBaseKeychainsProvider.class);
+        Hudson.getInstance();
+        return Hudson.getInstance().getExtensionList(KPPBaseKeychainsProvider.class);
     }
     
     /**
