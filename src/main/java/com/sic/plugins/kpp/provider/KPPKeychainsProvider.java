@@ -10,6 +10,10 @@ import hudson.ExtensionList;
 @Extension
 public class KPPKeychainsProvider extends KPPBaseKeychainsProvider {
     
+    /**
+     * Get the instance from extensionlist.
+     * @return instance
+     */
     public static KPPKeychainsProvider getInstance() {
         ExtensionList<KPPBaseKeychainsProvider> list = KPPBaseKeychainsProvider.all();
         return list.get(KPPKeychainsProvider.class);

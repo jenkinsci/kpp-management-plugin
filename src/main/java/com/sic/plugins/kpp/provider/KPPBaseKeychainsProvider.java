@@ -72,10 +72,9 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     }
     
     /**
-     * All regsitered {@KPPBaseKeychainsProvider}s.
+     * All regsitered {@link KPPBaseKeychainsProvider}s.
      */
     public static ExtensionList<KPPBaseKeychainsProvider> all() {
-        Hudson.getInstance();
         return Hudson.getInstance().getExtensionList(KPPBaseKeychainsProvider.class);
     }
     
