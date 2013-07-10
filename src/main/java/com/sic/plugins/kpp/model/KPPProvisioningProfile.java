@@ -1,10 +1,16 @@
 package com.sic.plugins.kpp.model;
 
+import com.dd.plist.NSDictionary;
+import com.dd.plist.PropertyListParser;
+import com.sic.plugins.kpp.provider.KPPProvisioningProfilesProvider;
 import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
+import java.io.File;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -12,12 +18,14 @@ import org.kohsuke.stapler.DataBoundConstructor;
  */
 public class KPPProvisioningProfile implements Describable<KPPProvisioningProfile>, Serializable {
     
-    private String uuid;
     private final String fileName;
+    private transient final String uuid;
     
     @DataBoundConstructor
     public KPPProvisioningProfile(String fileName) {
         this.fileName = fileName;
+        //this.uuid = getUUIDFromFileName(fileName);
+        this.uuid = "uuid";
     }
     
     /**
@@ -33,6 +41,7 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
      * @return uuid
      */
     public String getUuid() {
+        //return getUUIDFromFileName(fileName);
         return uuid;
     }
     
@@ -61,6 +70,17 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
     public Descriptor<KPPProvisioningProfile> getDescriptor() {
         Descriptor ds = Hudson.getInstance().getDescriptorOrDie(getClass());
         return ds;
+    }
+    
+    private static String getUUIDFromFileName(String fileName) {
+        
+        try {
+            File file = KPPProvisioningProfilesProvider.getInstance().getProvisioningFile(fileName);
+            NSDictionary rootDict = (NSDictionary)PropertyListParser.parse(file);
+        } catch (Exception ex) {
+            Logger.getLogger(KPPProvisioningProfile.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     @Extension

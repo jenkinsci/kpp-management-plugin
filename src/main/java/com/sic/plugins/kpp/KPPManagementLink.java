@@ -89,8 +89,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
         JSONObject data = req.getSubmittedForm();
         List<KPPKeychain> keychains = req.bindJSONToList(KPPKeychain.class, data.get("keychain"));
         KPPKeychainsProvider.getInstance().updateKeychainsFromSave(keychains);
-        Object object = data.get("profile");
-        List<KPPProvisioningProfile> pps = req.bindJSONToList(KPPProvisioningProfile.class, object);
+        List<KPPProvisioningProfile> pps = req.bindJSONToList(KPPProvisioningProfile.class, data.get("profile"));
         KPPProvisioningProfilesProvider.getInstance().updateProvisioningProfilesFromSave(pps);
         save();
         rsp.sendRedirect2("../manage"); //we go back on management page

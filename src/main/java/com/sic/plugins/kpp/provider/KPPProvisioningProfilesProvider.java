@@ -2,6 +2,7 @@ package com.sic.plugins.kpp.provider;
 
 import hudson.Extension;
 import hudson.ExtensionList;
+import java.io.File;
 
 /**
  * The {@link KPPBaseKeychainsProvider} that stores and manages profisioning profiles.
@@ -20,5 +21,14 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
         return provider;
     }
     
-    
+    /**
+     * Get the file for a given provisioning profile file name.
+     * @param fileName
+     * @return file
+     */
+    public File getProvisioningFile(String fileName) {
+        String path = String.format("%s%s%s", getUploadDirectoryPath(), File.separator, fileName);
+        File file = new File(path);
+        return file;
+    }
 }
