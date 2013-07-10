@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils;
  * An extension point for providing {@link KPPProvisioningProfile}
  * @author mb
  */
-public class KPPBaseProvisioningProfilesProvider extends KPPBaseProvider implements ExtensionPoint {
+public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvider implements ExtensionPoint {
     
     private List<KPPProvisioningProfile> provisioningProfiles = new ArrayList<KPPProvisioningProfile>();
     
