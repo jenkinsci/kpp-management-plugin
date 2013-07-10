@@ -77,15 +77,15 @@ public class KPPBaseProvisioningProfilesProvider extends KPPBaseProvider impleme
     }
     
     /**
-     * Call this method to update provisioning profiles after save action.
-     * This method updates provisioinig profiles information and removes provisioinig profiles from upload folder if they are deleted.
+     * Call this method to update provisioning profiles from save action. The provisioning profiles from save action are merged into current provisioning profiles list. 
+     * Then this list is sychnronized with the upload folder.
      * @param provisioningProfilesAfterSave 
      */
-    public void updateProvisioningProfilesAfterSave(List<KPPProvisioningProfile>provisioningProfilesAfterSave) {
+    public void updateProvisioningProfilesFromSave(List<KPPProvisioningProfile>provisioningProfilesFromSave) {
         List<KPPProvisioningProfile> ppsCurrent = new ArrayList<KPPProvisioningProfile>(getProvisioningProfiles());
-        List<KPPProvisioningProfile> ppsNew = new ArrayList<KPPProvisioningProfile>(provisioningProfilesAfterSave.size());
+        List<KPPProvisioningProfile> ppsNew = new ArrayList<KPPProvisioningProfile>(provisioningProfilesFromSave.size());
         
-        for (KPPProvisioningProfile ppA : provisioningProfilesAfterSave) {
+        for (KPPProvisioningProfile ppA : provisioningProfilesFromSave) {
             for (KPPProvisioningProfile ppC : ppsCurrent) {
                 if (ppC.equals(ppA)) {
                     ppsNew.add(ppA);

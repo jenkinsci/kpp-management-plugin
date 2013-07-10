@@ -1,5 +1,6 @@
 package com.sic.plugins.kpp.provider;
 
+import com.sic.plugins.kpp.model.KPPKeychain;
 import hudson.XmlFile;
 import hudson.model.Hudson;
 import java.io.File;

@@ -79,16 +79,15 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     }
     
     /**
-     * TODO: Refactor
-     * Call this method to update keychains after save action.
-     * This method updates keychain information and removes keychains from upload folder if they are deleted.
+     * Call this method to update keychains from save action. The keychains from save action are merged into current keychains list. 
+     * Then this list is sychnronized with the upload folder.
      * @param keychainsAfterSave 
      */
-    public void updateKeychainsAfterSave(List<KPPKeychain>keychainsAfterSave) {
+    public void updateKeychainsFromSave(List<KPPKeychain>keychainsFromSave) {
         List<KPPKeychain> ksCurrent = new ArrayList<KPPKeychain>(getKeychains());
-        List<KPPKeychain> ksNew = new ArrayList<KPPKeychain>(keychainsAfterSave.size());
+        List<KPPKeychain> ksNew = new ArrayList<KPPKeychain>(keychainsFromSave.size());
         
-        for (KPPKeychain kS : keychainsAfterSave) {
+        for (KPPKeychain kS : keychainsFromSave) {
             for (KPPKeychain kC : ksCurrent) {
                 if (kC.equals(kS)) {
                     ksNew.add(kS);
