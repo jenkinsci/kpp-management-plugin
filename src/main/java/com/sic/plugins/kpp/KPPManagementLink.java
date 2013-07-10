@@ -1,11 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.sic.plugins.kpp;
 
 import com.sic.plugins.kpp.provider.KPPKeychainsProvider;
 import com.sic.plugins.kpp.model.KPPKeychain;
+import com.sic.plugins.kpp.model.KPPProvisioningProfile;
+import com.sic.plugins.kpp.provider.KPPProvisioningProfilesProvider;
 import hudson.Extension;
 import hudson.model.Hudson;
 import hudson.model.ManagementLink;
@@ -23,7 +21,7 @@ import org.kohsuke.stapler.StaplerResponse;
 
 /**
  *
- * @author michaelbar
+ * @author mb
  */
 @Extension
 public class KPPManagementLink extends ManagementLink implements StaplerProxy, Saveable {
@@ -46,20 +44,38 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
         return KPPKeychainsProvider.getInstance().getKeychains();
     }
     
-    public void doUploadKeychain(StaplerRequest req, StaplerResponse rsp) throws
+    /**
+     * Get all provisioning profiles.
+     * @return  all provisioning profiles
+     */
+    public List<KPPProvisioningProfile> getProvisioningProfiles() {
+        List<KPPProvisioningProfile> list = KPPProvisioningProfilesProvider.getInstance().getProvisioningProfiles();
+        return list;
+    }
+    
+    public void doUploadFile(StaplerRequest req, StaplerResponse rsp) throws
             ServletException,
             IOException,
             NoSuchAlgorithmException {
         
         Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
         
-        FileItem file = req.getFileItem("keychain.file");
+        FileItem file = req.getFileItem("file");
         if (file == null || file.getSize() == 0) {
             throw new ServletException("no file selected");
         }
         
-        KPPKeychainsProvider.getInstance().upload(file);
-        KPPKeychainsProvider.getInstance().update();
+        KPPKeychainsProvider kProvider = KPPKeychainsProvider.getInstance();
+        KPPProvisioningProfilesProvider ppProvider = KPPProvisioningProfilesProvider.getInstance();
+        if (kProvider.isKeychainFile(file)) {
+            kProvider.upload(file);
+            kProvider.update();
+        } else if (ppProvider.isMobileProvisionProfileFile(file)) {
+            ppProvider.upload(file);
+            ppProvider.update();
+        } else {
+            throw new ServletException("Wrong filetype. Uploaded file is no keychain or provisioning profile file.");
+        }
         
         rsp.sendRedirect2("../"+getUrlName()+"/"); //we stay on page
     }
@@ -73,6 +89,9 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
         JSONObject data = req.getSubmittedForm();
         List<KPPKeychain> keychains = req.bindJSONToList(KPPKeychain.class, data.get("keychain"));
         KPPKeychainsProvider.getInstance().updateKeychainsFromSave(keychains);
+        Object object = data.get("profile");
+        List<KPPProvisioningProfile> pps = req.bindJSONToList(KPPProvisioningProfile.class, object);
+        KPPProvisioningProfilesProvider.getInstance().updateProvisioningProfilesFromSave(pps);
         save();
         rsp.sendRedirect2("../manage"); //we go back on management page
     }

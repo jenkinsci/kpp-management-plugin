@@ -10,6 +10,7 @@ import hudson.model.Hudson;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -18,7 +19,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvider implements ExtensionPoint {
     
-    private List<KPPProvisioningProfile> provisioningProfiles = new ArrayList<KPPProvisioningProfile>();
+    private static String FILE_EXTENSION = ".mobileprovision";
+    private List<KPPProvisioningProfile> provisioningProfiles;
     
     /**
      * Updates provisioning profiles information.
@@ -29,19 +31,16 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
         super.update();
     }
 
-    /**
-     * {@inherited}
-     */
     @Override
     protected void merge() {
         List<KPPProvisioningProfile> ppsFromFolder = loadProvisioningProfilesFromUploadFolder();
-        provisioningProfiles = mergedObjects(provisioningProfiles, ppsFromFolder);
+        setProvisioningProfiles(mergedObjects(provisioningProfiles, ppsFromFolder));
     }
     
     private List<KPPProvisioningProfile> loadProvisioningProfilesFromUploadFolder() {
         List<KPPProvisioningProfile> pps = new ArrayList<KPPProvisioningProfile>();
         
-        File[] ppsFiles = getFilesFromUploadDirectory(".mobileprovision");
+        File[] ppsFiles = getFilesFromUploadDirectory(FILE_EXTENSION);
         for(File ppFile : ppsFiles) {
             KPPProvisioningProfile pp = new KPPProvisioningProfile(ppFile.getName());
             if(StringUtils.isBlank(pp.getFileName())) {
@@ -57,7 +56,11 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
      * @return list
      */
     public List<KPPProvisioningProfile> getProvisioningProfiles() {
-        return provisioningProfiles;
+        return this.provisioningProfiles;
+    }
+    
+    private void setProvisioningProfiles(List<KPPProvisioningProfile> provisioningProfiles) {
+        this.provisioningProfiles = provisioningProfiles;
     }
     
     /**
@@ -105,7 +108,17 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
             }
         }
         
-        provisioningProfiles = ppsNew;
+        setProvisioningProfiles(ppsNew);
+    }
+    
+    
+    /**
+     * Checks if a given file item is a mobile provision profile file.
+     * @param item
+     * @return true, if it is a mobile provision profile file.
+     */
+    public boolean isMobileProvisionProfileFile(FileItem item) {
+        return item.getName().endsWith(FILE_EXTENSION);
     }
     
 }

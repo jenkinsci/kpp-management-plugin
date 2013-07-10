@@ -10,6 +10,7 @@ import hudson.model.Hudson;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -19,7 +20,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implements ExtensionPoint {
     
-    private List<KPPKeychain> keychains = new ArrayList<KPPKeychain>();
+    private static String FILE_EXTENSION = ".keychain";
+    private List<KPPKeychain> keychains;
     
     /**
      * {@inherited}
@@ -42,7 +44,7 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     private List<KPPKeychain> loadKeychainsFromUploadFolder() {
         List<KPPKeychain> ks = new ArrayList<KPPKeychain>();
         
-        File[] keychainFiles = getFilesFromUploadDirectory(".keychain");
+        File[] keychainFiles = getFilesFromUploadDirectory(FILE_EXTENSION);
         for(File keychainFile : keychainFiles) {
             KPPKeychain keychain = new KPPKeychain(keychainFile.getName());
             if(StringUtils.isBlank(keychain.getFileName())) {
@@ -108,6 +110,15 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
         }
         
         keychains = ksNew;
+    }
+    
+    /**
+     * Checks if a given file item is a keychain file.
+     * @param item
+     * @return true, if it is a keychain file.
+     */
+    public boolean isKeychainFile(FileItem item) {
+        return item.getName().endsWith(FILE_EXTENSION);
     }
     
 }

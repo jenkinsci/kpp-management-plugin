@@ -1,7 +1,9 @@
 package com.sic.plugins.kpp.model;
 
+import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
+import hudson.model.Hudson;
 import java.io.Serializable;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -30,12 +32,44 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
      * Get the uuid of the provisioning profile.
      * @return uuid
      */
-    public String getUUID() {
+    public String getUuid() {
         return uuid;
     }
-
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final KPPProvisioningProfile other = (KPPProvisioningProfile) obj;
+        if ((this.fileName == null) ? (other.fileName != null) : !this.fileName.equals(other.fileName)) {
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + (this.fileName != null ? this.fileName.hashCode() : 0);
+        return hash;
+    }
+    
     public Descriptor<KPPProvisioningProfile> getDescriptor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Descriptor ds = Hudson.getInstance().getDescriptorOrDie(getClass());
+        return ds;
+    }
+    
+    @Extension
+    public static final class DescriptorImpl extends Descriptor<KPPProvisioningProfile> {
+
+        @Override
+        public String getDisplayName() {
+            return "Provisioning Profile";
+        }
     }
     
     

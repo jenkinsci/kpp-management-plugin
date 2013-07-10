@@ -16,7 +16,8 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
      */
     public static KPPProvisioningProfilesProvider getInstance() {
         ExtensionList<KPPBaseProvisioningProfilesProvider> list = KPPBaseProvisioningProfilesProvider.all();
-        return list.get(KPPProvisioningProfilesProvider.class);
+        KPPProvisioningProfilesProvider provider = list.get(KPPProvisioningProfilesProvider.class);
+        return provider;
     }
     
     

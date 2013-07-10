@@ -9,9 +9,9 @@
             <table width="100%">
                 <f:section title="${%Upload Keychain or Provisioning Profile}"></f:section>
                 <f:block>
-                    <f:form method="post" action="uploadKeychain">
+                    <f:form method="post" action="uploadFile">
                         <f:block>
-                            <input type="file" name="keychain.file"/>
+                            <input type="file" name="file"/>
                         </f:block>
                         <f:block>
                             <f:submit value="${%Upload}"/>
@@ -30,8 +30,12 @@
                 </f:repeatable>
                 <table width="100%">
                     <f:section title="${%Provisioning Profiles}"></f:section>
-                    <f:entry title="Not implemented! -> TODO"></f:entry>
                 </table>
+                <f:repeatable var="profile" items="${it.provisioningProfiles}" minimum="0" noAddButton="true" header="${%Provisioning Profile}">
+                    <j:if test="${!empty(profile)}">
+                        <st:include it="${profile}" page="config.jelly"/>
+                    </j:if>
+                </f:repeatable>
                 <f:submit value="${%Save}"></f:submit>
             </f:form>
             
