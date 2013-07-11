@@ -23,7 +23,7 @@
                 <table width="100%">
                     <f:section title="${%Keychains}"></f:section>
                 </table>
-                <f:repeatable var="keychain" items="${it.keychains}" minimum="0" noAddButton="true" header="${%Keychain}">
+                <f:repeatable var="keychain" items="${it.keychains}" minimum="0" noAddButton="true" header="">
                     <j:if test="${!empty(keychain)}">
                         <st:include it="${keychain}" page="config.jelly"/>
                     </j:if>
@@ -31,7 +31,7 @@
                 <table width="100%">
                     <f:section title="${%Provisioning Profiles}"></f:section>
                 </table>
-                <f:repeatable var="profile" items="${it.provisioningProfiles}" minimum="0" noAddButton="true" header="${%Provisioning Profile}">
+                <f:repeatable var="profile" items="${it.provisioningProfiles}" minimum="0" noAddButton="true" header="">
                     <j:if test="${!empty(profile)}">
                         <st:include it="${profile}" page="config.jelly"/>
                     </j:if>
