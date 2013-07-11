@@ -8,7 +8,6 @@ import hudson.model.Hudson;
 import hudson.util.Secret;
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Logger;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -17,15 +16,9 @@ import org.kohsuke.stapler.DataBoundConstructor;
  */
 public final class KPPKeychain implements Describable<KPPKeychain>, Serializable {
     
-    private final static Logger LOGGER = Logger.getLogger(KPPKeychain.class.getName());
-    private final static String VARIABLE_NAME_KEYCHAIN = "KEYCHAIN";
-    private final static String VARIABLE_NAME_CODE_SIGNING_IDENTITY ="CODE_SIGNING_IDENTITY";
-    private final static String VARIABLE_NAME_KEYCHAIN_PASSWORD = "KEYCHAIN_PASSWORD";
-    
     private final String fileName;
     private String description;
     private Secret password;
-    private String varPrefix;
     private List<KPPCertificate> certificates;
     
     public KPPKeychain(String fileName) {
@@ -33,11 +26,10 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
     }
     
     @DataBoundConstructor
-    public KPPKeychain(String fileName, String password, String description, String varPrefix, List<KPPCertificate> certificates) {
+    public KPPKeychain(String fileName, String password, String description, List<KPPCertificate> certificates) {
         this.fileName = fileName;
         setPassword(password);
         setDescription(description);
-        setVarPrefix(varPrefix);
         setCertificates(certificates);
     }
     
@@ -66,41 +58,12 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
         this.description = description;
     }
     
-    public final void setVarPrefix(String varPrefix) {
-        this.varPrefix = varPrefix;
-    }
-    
-    public final String getVarPrefix() {
-        return varPrefix;
-    }
-    
     public final List<KPPCertificate> getCertificates() {
         return certificates;
     }
     
     public final void setCertificates(List<KPPCertificate>certificates){
         this.certificates = certificates;
-    }
-    
-    public String getKeychainVariableName() {
-        return getPrefixedVariableName(VARIABLE_NAME_KEYCHAIN);
-    }
-    
-    public String getKeychainPasswordVariableName() {
-        return getPrefixedVariableName(VARIABLE_NAME_KEYCHAIN_PASSWORD);
-    }
-    
-    public String getCodeSigningIdentityVariableName() {
-        return getPrefixedVariableName(VARIABLE_NAME_CODE_SIGNING_IDENTITY);
-    }
-    
-    private String getPrefixedVariableName(String variableName) {
-        String name = variableName;
-        if (varPrefix==null || varPrefix.length()==0) {
-            return String.format("%s", name);
-        }
-        name = String.format("%s_%s", varPrefix, name);
-        return name;
     }
     
     @Override

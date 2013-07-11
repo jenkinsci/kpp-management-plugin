@@ -16,14 +16,17 @@
                 <f:entry title="${%Code Signing Identity}" field="codeSigningIdentity">
                     <f:select />
                 </f:entry>
-                <f:entry title="${%Variables}" field="variables">
-                    <f:select />
+                <f:entry title="${%Variables Prefix}" field="varPrefix">
+                    <f:textbox />
                 </f:entry>
-                <f:block>
+                <f:entry title="${%Variables}" field="variableNames">
+                    <f:readOnlyTextbox/>
+                </f:entry>
+                <f:entry title="">
                     <div align="right">
                         <f:repeatableDeleteButton value="${%Delete}"></f:repeatableDeleteButton>
                     </div>
-                </f:block>
+                </f:entry>
             </table>
         </f:repeatable>
     </f:block>

@@ -121,11 +121,11 @@ public class KPPBuildWrapper extends BuildWrapper {
                     String password = keychain.getPassword();
                     String codeSigningIdentity = pair.getCodeSigningIdentity();
                     if (fileName!=null && fileName.length()!=0)
-                        map.put(keychain.getKeychainVariableName(), keychain.getFileName());
+                        map.put(pair.getKeychainVariableName(), keychain.getFileName());
                     if (password!=null && password.length()!=0)
-                        map.put(keychain.getKeychainPasswordVariableName(), keychain.getPassword());
+                        map.put(pair.getKeychainPasswordVariableName(), keychain.getPassword());
                     if (codeSigningIdentity!=null && codeSigningIdentity.length()!=0)
-                        map.put(keychain.getCodeSigningIdentityVariableName(), pair.getCodeSigningIdentity());
+                        map.put(pair.getCodeSigningIdentityVariableName(), codeSigningIdentity);
                 }
             }
             return map;

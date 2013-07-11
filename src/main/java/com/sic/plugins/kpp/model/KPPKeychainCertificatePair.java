@@ -16,13 +16,18 @@ import org.kohsuke.stapler.QueryParameter;
  */
 public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeychainCertificatePair> implements Serializable{
     
+    private final static String KEYCHAIN_BASE_VARIABLE_NAME = "KEYCHAIN";
+    private final static String KEYCHAIN_PASSWORD_BASE_VARIABLE_NAME = "KEYCHAIN_PASSWORD";
+    private final static String CODESIGNING_IDENTITY_BASE_VARIABLE_NAME = "CODESIGNING_IDENTITY";
+    
     private String keychain;
     private String codeSigningIdentity;
+    private String varPrefix;
     
     @DataBoundConstructor
-    public KPPKeychainCertificatePair(String keychain, String codeSigningIdentity) {
+    public KPPKeychainCertificatePair(String keychain, String codeSigningIdentity, String varPrefix) {
         this.keychain = keychain;
-        
+        this.varPrefix = varPrefix.trim();
         this.codeSigningIdentity = codeSigningIdentity;
     }
     
@@ -36,9 +41,35 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
         return codeSigningIdentity;
     }
     
-    public String getVariables() {
-        KPPKeychain k = getKeychainFromString(keychain);
-        return getVariableNames(k);
+    public String getVarPrefix() {
+        return varPrefix;
+    }
+    
+    public String getVariableNames() {
+        String variables = String.format("${%s} ${%s} ${%s}", getKeychainVariableName(), getKeychainPasswordVariableName(), getCodeSigningIdentityVariableName());
+        return variables;
+    }
+    
+    private String getVariableName(String prefix, String base) {
+        String name;
+        if (prefix!=null && !prefix.isEmpty()) {
+            name = String.format("%s_%s", prefix, base);
+        } else {
+            name = base;
+        }
+        return name;
+    }
+    
+    public String getKeychainVariableName() {
+        return getVariableName(varPrefix, KEYCHAIN_BASE_VARIABLE_NAME);
+    }
+    
+    public String getKeychainPasswordVariableName() {
+        return getVariableName(varPrefix, KEYCHAIN_PASSWORD_BASE_VARIABLE_NAME);
+    }
+    
+    public String getCodeSigningIdentityVariableName() {
+        return getVariableName(varPrefix, CODESIGNING_IDENTITY_BASE_VARIABLE_NAME);
     }
     
     public String getKeychainFilePath() {
@@ -58,18 +89,6 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
         }
         return fileName;
     }
-    
-    /**
-     * Get the concatenated variable names to access the keychain and code signing identity information.
-     * @param k keychain
-     * @return concatenated variable names
-     */
-    private static String getVariableNames(KPPKeychain k) {
-        if (k==null) {
-            return "";
-        }
-        return String.format("${%s} ${%s} ${%s}", k.getKeychainVariableName(), k.getKeychainPasswordVariableName(), k.getCodeSigningIdentityVariableName());
-    } 
     
     /**
      * Get the keychain from a given string. The string has to start with the keychain filename.
@@ -130,16 +149,6 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
                 for (KPPCertificate c : k.getCertificates()) {
                     m.add(c.getCodeSigningIdentityName());
                 }
-            }
-            return m;
-        }
-        
-        public ListBoxModel doFillVariablesItems(@QueryParameter String keychain, @QueryParameter String varPrefix) {
-            ListBoxModel m = new ListBoxModel();
-            KPPKeychain k = KPPKeychainCertificatePair.getKeychainFromString(keychain);
-            if (k != null) {
-                String variables = KPPKeychainCertificatePair.getVariableNames(k);
-                m.add(variables);
             }
             return m;
         }

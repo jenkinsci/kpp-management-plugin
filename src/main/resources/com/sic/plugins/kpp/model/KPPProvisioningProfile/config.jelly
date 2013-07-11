@@ -2,19 +2,16 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <table>
-        <f:invisibleEntry>
-            <input type="hidden" name="fileName" value="${it.fileName}" />
-        </f:invisibleEntry>
-        <f:entry title="${%Filename}">
-            <label>${it.fileName}</label>
+        <f:entry title="${%Filename}" field="fileName">
+            <f:readOnlyTextbox value="${it.fileName}"/>
         </f:entry>
         <f:entry title="${%UUID}">
-            <label>${it.uuid}</label>
+            <f:readOnlyTextbox value="${it.uuid}"/>
         </f:entry>
-        <f:block>
+        <f:entry title="">
             <div align="right">
                 <f:repeatableDeleteButton value="${%Delete Provisioning Profile}"></f:repeatableDeleteButton>
             </div>
-        </f:block>
+        </f:entry>
     </table>
 </j:jelly>
