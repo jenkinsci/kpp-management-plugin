@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-public class KPPBuildWrapper extends BuildWrapper {
+public class KPPKeychainsBuildWrapper extends BuildWrapper {
 
     private List<KPPKeychainCertificatePair> keychainCertificatePairs = new ArrayList<KPPKeychainCertificatePair>();
     private boolean deleteKeychainsAfterBuild;
@@ -30,7 +30,7 @@ public class KPPBuildWrapper extends BuildWrapper {
      * @param keychainCertificatePairs 
      */
     @DataBoundConstructor
-    public KPPBuildWrapper(List<KPPKeychainCertificatePair> keychainCertificatePairs, boolean deleteKeychainsAfterBuild, boolean overwriteExistingKeychains) {
+    public KPPKeychainsBuildWrapper(List<KPPKeychainCertificatePair> keychainCertificatePairs, boolean deleteKeychainsAfterBuild, boolean overwriteExistingKeychains) {
         this.keychainCertificatePairs = keychainCertificatePairs;
         this.deleteKeychainsAfterBuild = deleteKeychainsAfterBuild;
         this.overwriteExistingKeychains = overwriteExistingKeychains;
