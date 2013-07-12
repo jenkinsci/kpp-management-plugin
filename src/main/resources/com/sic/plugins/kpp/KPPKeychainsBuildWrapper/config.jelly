@@ -8,7 +8,7 @@
 	<f:checkbox/>
     </f:entry>
     <f:block>
-        <f:repeatable var="keychainCertificatePair" field="keychainCertificatePairs" minimum="1" add="${%Add}">
+        <f:repeatable var="keychainCertificatePair" field="keychainCertificatePairs" minimum="1" add="${%Add Keychain}">
             <table width="100%">
                 <f:entry title="${%Keychain}" field="keychain">
                     <f:select />

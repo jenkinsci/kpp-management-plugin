@@ -5,20 +5,27 @@ import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
+import hudson.util.ListBoxModel;
 import java.io.Serializable;
+import java.util.List;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 /**
  * Represents a provisioning profile.
  */
 public class KPPProvisioningProfile implements Describable<KPPProvisioningProfile>, Serializable {
     
+    private final static String PROVISIONING_PROFILE_BASE_VARIABLE_NAME = "PROVISIONING_PROFILE";
+    
     private final String fileName;
+    private final String varPrefix; // variable prefix for build step integration
     private transient String uuid;
     
     @DataBoundConstructor
-    public KPPProvisioningProfile(String fileName) {
+    public KPPProvisioningProfile(String fileName, String varPrefix) {
         this.fileName = fileName;
+        this.varPrefix = varPrefix;
     }
     
     /**
@@ -30,6 +37,37 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
     }
     
     /**
+     * Get the variable prefix for build step integration.
+     * @return variable prefix
+     */
+    public String getVarPrefix() {
+        return varPrefix;
+    }
+    
+    /**
+     * Get the variable name for the provisioning profile.
+     * @return variable name.
+     */
+    public String getProvisioningProfileVariableName() {
+        String name;
+        String prefix = getVarPrefix();
+        if (prefix!=null && !prefix.isEmpty()) {
+            name = String.format("%s_%s", prefix, PROVISIONING_PROFILE_BASE_VARIABLE_NAME);
+        } else {
+            name = PROVISIONING_PROFILE_BASE_VARIABLE_NAME;
+        }
+        return name;
+    }
+    
+    /**
+     * Get the variable name included in ${}.
+     * @return variable name
+     */
+    public String getVariableName() {
+        return String.format("${%s}", getProvisioningProfileVariableName());
+    }
+    
+    /**
      * Get the uuid of the provisioning profile.
      * @return uuid
      */
@@ -38,6 +76,14 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
             uuid = KPPProvisioningProfilesProvider.parseUUIDFromProvisioningProfileFile(fileName);
         }
         return uuid;
+    }
+    
+    /**
+     * Get the filename and uuid in one string.
+     * @return filename and uuid
+     */
+    public String getFileNameUuidDescription() {
+        return String.format("%s (%s)", getFileName(), getUuid());
     }
     
     @Override
@@ -68,11 +114,20 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
     }
     
     @Extension
-    public static final class DescriptorImpl extends Descriptor<KPPProvisioningProfile> {
+    public static class DescriptorImpl extends Descriptor<KPPProvisioningProfile> {
 
         @Override
         public String getDisplayName() {
             return "Provisioning Profile";
+        }
+        
+        public ListBoxModel doFillFileNameItems(@QueryParameter String fileName) {
+            ListBoxModel m = new ListBoxModel();
+            List<KPPProvisioningProfile> pps = KPPProvisioningProfilesProvider.getInstance().getProvisioningProfiles();
+            for (KPPProvisioningProfile pp : pps) {
+                m.add(pp.getFileNameUuidDescription());
+            }
+            return m;
         }
     }
     

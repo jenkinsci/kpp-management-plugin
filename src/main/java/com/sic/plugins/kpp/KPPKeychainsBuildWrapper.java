@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.Map;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+/**
+ * Build wrapper for keychains
+ * @author mb
+ */
 public class KPPKeychainsBuildWrapper extends BuildWrapper {
 
     private List<KPPKeychainCertificatePair> keychainCertificatePairs = new ArrayList<KPPKeychainCertificatePair>();
@@ -27,7 +31,9 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
     
     /**
      * Constructor
-     * @param keychainCertificatePairs 
+     * @param keychainCertificatePairs
+     * @param deleteKeychainsAfterBuild
+     * @param overwriteExistingKeychains 
      */
     @DataBoundConstructor
     public KPPKeychainsBuildWrapper(List<KPPKeychainCertificatePair> keychainCertificatePairs, boolean deleteKeychainsAfterBuild, boolean overwriteExistingKeychains) {
@@ -100,7 +106,7 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
 
         @Override
         public String getDisplayName() {
-            return Messages.KPPBuildWrapper_DisplayName();
+            return Messages.KPPKeychainsBuildWrapper_DisplayName();
         }
     }
     

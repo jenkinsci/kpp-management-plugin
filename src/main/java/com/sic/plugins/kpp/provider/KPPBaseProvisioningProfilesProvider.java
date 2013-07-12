@@ -42,7 +42,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
         
         File[] ppsFiles = getFilesFromUploadDirectory(FILE_EXTENSION);
         for(File ppFile : ppsFiles) {
-            KPPProvisioningProfile pp = new KPPProvisioningProfile(ppFile.getName());
+            KPPProvisioningProfile pp = new KPPProvisioningProfile(ppFile.getName(), null);
             if(StringUtils.isBlank(pp.getFileName())) {
                 break;
             }
