@@ -53,6 +53,14 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
         return list;
     }
     
+    /**
+     * Get the path to provisioning profiles on master or standalone jenkins instance.
+     * @return path
+     */
+    public String getProvisioningProfilesPath() {
+        return KPPProvisioningProfilesProvider.getInstance().getProvisioningProfilesPath();
+    }
+    
     public void doUploadFile(StaplerRequest req, StaplerResponse rsp) throws
             ServletException,
             IOException,
@@ -91,6 +99,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
         KPPKeychainsProvider.getInstance().updateKeychainsFromSave(keychains);
         List<KPPProvisioningProfile> pps = req.bindJSONToList(KPPProvisioningProfile.class, data.get("profile"));
         KPPProvisioningProfilesProvider.getInstance().updateProvisioningProfilesFromSave(pps);
+        KPPProvisioningProfilesProvider.getInstance().setProvisioningProfilesPath(data.getString("provisioningProfilesPath"));
         save();
         rsp.sendRedirect2("../manage"); //we go back on management page
     }
@@ -121,5 +130,6 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
     public void save() throws IOException {
         Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
         KPPKeychainsProvider.getInstance().save();
+        KPPProvisioningProfilesProvider.getInstance().save();
     }
 }

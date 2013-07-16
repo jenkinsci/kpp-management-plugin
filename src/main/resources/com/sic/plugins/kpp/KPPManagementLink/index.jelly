@@ -30,6 +30,9 @@
                 </f:repeatable>
                 <table width="100%">
                     <f:section title="${%Provisioning Profiles}"></f:section>
+                    <f:entry title="${%Provisioning Profiles Path}" field="provisioningProfilesPath" help="">
+                        <f:textbox value="${it.provisioningProfilesPath}"/>
+                    </f:entry>
                 </table>
                 <f:repeatable var="profile" items="${it.provisioningProfiles}" minimum="0" noAddButton="true" header="">
                     <j:if test="${!empty(profile)}">

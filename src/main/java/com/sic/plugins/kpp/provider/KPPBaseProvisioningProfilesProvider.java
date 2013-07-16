@@ -21,6 +21,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     
     private static String FILE_EXTENSION = ".mobileprovision";
     private List<KPPProvisioningProfile> provisioningProfiles;
+    private String provisioningProfilesPath;
     
     /**
      * Updates provisioning profiles information.
@@ -61,6 +62,22 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     
     private void setProvisioningProfiles(List<KPPProvisioningProfile> provisioningProfiles) {
         this.provisioningProfiles = provisioningProfiles;
+    }
+    
+    /**
+     * Get the path to provisioning profiles on the master or standalone jenkins instance.
+     * @return path
+     */
+    public String getProvisioningProfilesPath() {
+        return provisioningProfilesPath;
+    }
+    
+    /**
+     * Set the path to store provisioning profiles on the master or standalone jenkins instance.
+     * @param provisioningProfilesPath 
+     */
+    public void setProvisioningProfilesPath(String provisioningProfilesPath) {
+        this.provisioningProfilesPath = provisioningProfilesPath;
     }
     
     /**
