@@ -77,8 +77,8 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
             FilePath to = new FilePath(projectWorkspace, pair.getKeychainFileName());
             if (overwriteExistingKeychains || !to.exists()) {
                 from.copyTo(to);
+                copiedKeychains.add(to);
             }
-            copiedKeychains.add(to);
             
             /* Testcode copy anywhere on the mac
             Node node = build.getBuiltOn();
