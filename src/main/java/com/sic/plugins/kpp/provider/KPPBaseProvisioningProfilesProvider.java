@@ -138,4 +138,18 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
         return item.getName().endsWith(FILE_EXTENSION);
     }
     
+    /**
+     * If the fileName contains the uuid at the end, so remove the uuid part.
+     * @param fileName
+     * @return fileName without uuid
+     */
+    public static String removeUUIDFromFileName(String fileName) {
+        String ret = fileName;
+        if (!fileName.endsWith(FILE_EXTENSION)) {
+            int index = fileName.indexOf(FILE_EXTENSION) + FILE_EXTENSION.length();
+            ret = fileName.substring(0, index);
+        }
+        return ret;
+    }
+    
 }

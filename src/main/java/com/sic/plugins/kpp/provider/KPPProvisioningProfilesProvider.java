@@ -47,8 +47,8 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
         String uuid = "UUID not found";
         BufferedReader br = null;
         try {
-            
-            File file = KPPProvisioningProfilesProvider.getInstance().getProvisioningFile(fileName);
+            String fileNameWithoutUUID = KPPBaseProvisioningProfilesProvider.removeUUIDFromFileName(fileName);
+            File file = KPPProvisioningProfilesProvider.getInstance().getProvisioningFile(fileNameWithoutUUID);
             FileReader reader = new FileReader(file);
             br = new BufferedReader(reader);
             String line;
