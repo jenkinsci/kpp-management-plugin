@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-
+    <f:entry title="${%Overwrite existing provisioning profiles}" field="overwriteExistingProfiles">
+	<f:checkbox/>
+    </f:entry>
+    <f:entry title="${%Delete copied provisioning profiles after build}" field="deleteProfilesAfterBuild">
+	<f:checkbox/>
+    </f:entry>
     <f:block>
         <f:repeatable var="provisioningProfile" field="provisioningProfiles" minimum="1" add="${%Add Provisioning Profile}">
             <table width="100%">

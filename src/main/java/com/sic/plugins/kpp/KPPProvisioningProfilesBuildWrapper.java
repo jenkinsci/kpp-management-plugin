@@ -22,18 +22,29 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
     
     private List<KPPProvisioningProfile> provisioningProfiles;
-    
+    private boolean deleteProfilesAfterBuild;
+    private boolean overwriteExistingProfiles;
     /**
      * Constructor
      */
     @DataBoundConstructor
-    public KPPProvisioningProfilesBuildWrapper(List<KPPProvisioningProfile> provisioningProfiles) {
+    public KPPProvisioningProfilesBuildWrapper(List<KPPProvisioningProfile> provisioningProfiles, boolean deleteProfilesAfterBuild, boolean overwriteExistingProfiles) {
         super();
         this.provisioningProfiles = provisioningProfiles;
+        this.deleteProfilesAfterBuild = deleteProfilesAfterBuild;
+        this.overwriteExistingProfiles = overwriteExistingProfiles;
     }
     
     public List<KPPProvisioningProfile> getProvisioningProfiles() {
         return provisioningProfiles;
+    }
+    
+    public boolean getDeleteProfilesAfterBuild() {
+        return deleteProfilesAfterBuild;
+    }
+    
+    public boolean getOverwriteExistingProfiles() {
+        return overwriteExistingProfiles;
     }
     
     @Override
