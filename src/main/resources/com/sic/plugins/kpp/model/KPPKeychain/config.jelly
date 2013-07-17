@@ -14,7 +14,7 @@
         <f:entry title="${%Identities}">
             <f:repeatable var="certificates" items="${it.certificates}" minimum="1" add="${%Add Code Signing Identity}" header="">
                 <table width="100%">
-                <f:entry title="${%Code Signing Identity}" field="codeSigningIdentityName" help="help-codeSigningIdentityName">
+                <f:entry title="${%Code Signing Identity}" field="codeSigningIdentityName" help="/plugin/kpp/help-codeSigningIdentityName.jelly">
                     <f:textbox value="${certificates.codeSigningIdentityName}"/>
                 </f:entry>
                 <f:block>
