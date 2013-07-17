@@ -2,19 +2,19 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <table width="100%">
-        <f:entry title="${%Filename}" field="fileName">
-            <f:readOnlyTextbox value="${it.fileName}" />
+        <f:entry title="${%Filename}" field="fileName" help="/plugin/kpp/help-filename.jelly">
+            <f:readOnlyTextbox value="${it.fileName}"/>
         </f:entry>
-        <f:entry title="${%Password}" field="password">
+        <f:entry title="${%Password}" field="password" help="/plugin/kpp/help-password.jelly">
             <f:password value="${it.password}"></f:password>
         </f:entry>
-        <f:entry title="${%Description}" field="description">
+        <f:entry title="${%Description}" field="description" help="/plugin/kpp/help-description.jelly">
             <f:textbox value="${it.description}"></f:textbox>
         </f:entry>
         <f:entry title="${%Identities}">
             <f:repeatable var="certificates" items="${it.certificates}" minimum="1" add="${%Add Code Signing Identity}" header="">
                 <table width="100%">
-                <f:entry title="${%Code Signing Identity}" field="codeSigningIdentityName">
+                <f:entry title="${%Code Signing Identity}" field="codeSigningIdentityName" help="help-codeSigningIdentityName">
                     <f:textbox value="${certificates.codeSigningIdentityName}"/>
                 </f:entry>
                 <f:block>
