@@ -65,7 +65,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     }
     
     /**
-     * Get the path to provisioning profiles on the master or standalone jenkins instance.
+     * Get the path to the directory to store provisioning profiles on the master or standalone jenkins instance.
      * @return path
      */
     public String getProvisioningProfilesPath() {
@@ -73,7 +73,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     }
     
     /**
-     * Set the path to store provisioning profiles on the master or standalone jenkins instance.
+     * Set the path to the directory to store provisioning profiles on the master or standalone jenkins instance.
      * @param provisioningProfilesPath 
      */
     public void setProvisioningProfilesPath(String provisioningProfilesPath) {
@@ -150,6 +150,15 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
             ret = fileName.substring(0, index);
         }
         return ret;
+    }
+    
+    /**
+     * Get the filename of the provisioning profile in the shape of uuid.mobileprovision.
+     * @param uuid
+     * @return filename
+     */
+    public static String getUUIDFileName(String uuid) {
+        return String.format("%s%s", uuid, FILE_EXTENSION);
     }
     
 }

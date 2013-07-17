@@ -6,6 +6,7 @@ import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import hudson.util.ListBoxModel;
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -34,6 +35,15 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
      */
     public String getFileName() {
         return fileName;
+    }
+    
+    /**
+     * Get the filepath to the provisioning profile stored on the master or standalone jenkins instance.
+     * @return filepath
+     */
+    public String getProvisioningProfileFilePath() {
+        String file = KPPProvisioningProfilesProvider.removeUUIDFromFileName(fileName);
+        return String.format("%s%s%s", KPPProvisioningProfilesProvider.getInstance().getUploadDirectoryPath(), File.separator, file);
     }
     
     /**

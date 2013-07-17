@@ -3,13 +3,19 @@ package com.sic.plugins.kpp;
 import com.sic.plugins.kpp.model.KPPProvisioningProfile;
 import com.sic.plugins.kpp.provider.KPPProvisioningProfilesProvider;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.model.Hudson;
+import hudson.model.Node;
+import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +30,7 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
     private List<KPPProvisioningProfile> provisioningProfiles;
     private boolean deleteProfilesAfterBuild;
     private boolean overwriteExistingProfiles;
+    private transient List<FilePath> copiedProfiles;
     /**
      * Constructor
      */
@@ -53,8 +60,46 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         return new KPPProvisioningProfilesBuildWrapper.EnvironmentImpl(provisioningProfiles);
     }
     
-    private void copyProvisioningProfiles(AbstractBuild build) {
-        // TODO: implement
+    private void copyProvisioningProfiles(AbstractBuild build) throws IOException, InterruptedException {
+        
+        Hudson hudson = Hudson.getInstance();
+        FilePath hudsonRoot = hudson.getRootPath();
+        VirtualChannel channel = null;
+        String toProvisioningProfilesDirectoryPath = null;
+        
+        String buildOn = build.getBuiltOnStr();
+        if (buildOn==null || buildOn.isEmpty()) {
+            // build on master
+            FilePath projectWorkspace = build.getWorkspace();
+            channel = projectWorkspace.getChannel();
+            toProvisioningProfilesDirectoryPath = KPPProvisioningProfilesProvider.getInstance().getProvisioningProfilesPath();
+        } else {
+            // build on slave
+            // TODO implement
+            Node node = build.getBuiltOn();
+            System.out.println("build on slave");
+        }
+        
+        if (toProvisioningProfilesDirectoryPath==null || toProvisioningProfilesDirectoryPath.isEmpty()) {
+            // nothing to copy to provisioning profiles path
+            return;
+        }
+        
+        if (copiedProfiles == null) {
+            copiedProfiles = new ArrayList<FilePath>();
+        } else {
+            copiedProfiles.clear();
+        }
+        
+        for (KPPProvisioningProfile pp : provisioningProfiles) {
+            FilePath from = new FilePath(hudsonRoot, pp.getProvisioningProfileFilePath());
+            String toPPPath = String.format("%s%s%s", toProvisioningProfilesDirectoryPath, File.separator, KPPProvisioningProfilesProvider.getUUIDFileName(pp.getUuid()));
+            FilePath to = new FilePath(channel, toPPPath);
+            if (overwriteExistingProfiles || !to.exists()) {
+                from.copyTo(to);
+                copiedProfiles.add(to);
+            }
+        }
     }
     
     @Override
@@ -99,6 +144,17 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         public void buildEnvVars(Map<String, String> env) {
             env.putAll(getEnvMap());
 	}
+        
+        @Override
+        public boolean tearDown(AbstractBuild build, BuildListener listener)
+                throws IOException, InterruptedException {
+            if (deleteProfilesAfterBuild) {
+                for (FilePath filePath : copiedProfiles) {
+                    filePath.delete();
+                }
+            }
+            return true;
+        }
         
     }
     

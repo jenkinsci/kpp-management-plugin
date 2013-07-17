@@ -27,7 +27,7 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
     private List<KPPKeychainCertificatePair> keychainCertificatePairs = new ArrayList<KPPKeychainCertificatePair>();
     private boolean deleteKeychainsAfterBuild;
     private boolean overwriteExistingKeychains;
-    private List<FilePath>copiedKeychains;
+    private transient List<FilePath>copiedKeychains;
     
     /**
      * Constructor
