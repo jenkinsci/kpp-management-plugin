@@ -5,13 +5,13 @@
     <f:block>
         <f:repeatable var="provisioningProfile" field="provisioningProfiles" minimum="1" add="${%Add Provisioning Profile}">
             <table width="100%">
-                <f:entry title="${%Provisioning Profile}" field="fileName">
+                <f:entry title="${%Provisioning Profile}" field="fileName" help="/plugin/kpp/model/KPPProvisioningProfile/help-fileName.jelly">
                     <f:select />
                 </f:entry>
-                <f:entry title="${%Variable Prefix}" field="varPrefix">
+                <f:entry title="${%Variable Prefix}" field="varPrefix" help="/plugin/kpp/model/KPPProvisioningProfile/help-varPrefix.jelly">
                     <f:textbox />
                 </f:entry>
-                <f:entry title="${%Variable}" field="variableName">
+                <f:entry title="${%Variable}" field="variableName" help="/plugin/kpp/model/KPPProvisioningProfile/help-variableName.jelly">
                     <f:readOnlyTextbox/>
                 </f:entry>
                 <f:entry title="">
