@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt">
-    variableName
+    Open on your mac the "Keychain Accses", then select by category "My Certificates" and select your certificate at next make a right click on your certificate and click „get info“ and copy the line „common line“ and paste it in the line
 </j:jelly>
