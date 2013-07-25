@@ -30,7 +30,7 @@
                 </f:repeatable>
                 <table width="100%">
                     <f:section title="${%Provisioning Profiles}"></f:section>
-                    <f:entry title="${%Provisioning Profiles Path}" field="provisioningProfilesPath" help="">
+                    <f:entry title="${%Provisioning Profiles Path}" field="provisioningProfilesPath" help="/plugin/kpp/help-provisioningProfilesPath.jelly">
                         <f:textbox value="${it.provisioningProfilesPath}"/>
                     </f:entry>
                 </table>

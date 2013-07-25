@@ -2,7 +2,7 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <table width="100%">
-        <f:entry title="${%Filename}" field="fileName" help="help.html">
+        <f:entry title="${%Filename}" field="fileName" help="/plugin/kpp/model/KPPProvisioningProfile/help-fileName.jelly">
             <f:readOnlyTextbox value="${it.fileName}"/>
         </f:entry>
         <f:entry title="${%UUID}">
