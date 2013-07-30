@@ -75,14 +75,19 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
             toProvisioningProfilesDirectoryPath = KPPProvisioningProfilesProvider.getInstance().getProvisioningProfilesPath();
         } else {
             // build on slave
-            // TODO implement
             Node node = build.getBuiltOn();
-            System.out.println("build on slave");
+            channel = node.getChannel();
+            toProvisioningProfilesDirectoryPath = KPPNodeProperty.getCurrentNodeProperties().getProvisioningProfilesPath();
         }
         
         if (toProvisioningProfilesDirectoryPath==null || toProvisioningProfilesDirectoryPath.isEmpty()) {
             // nothing to copy to provisioning profiles path
             return;
+        }
+        
+        // remove file seperator char at the end of the path
+        if (toProvisioningProfilesDirectoryPath.endsWith(File.separator)) {
+            toProvisioningProfilesDirectoryPath = toProvisioningProfilesDirectoryPath.substring(0, toProvisioningProfilesDirectoryPath.length()-1);
         }
         
         if (copiedProfiles == null) {
