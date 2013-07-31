@@ -16,9 +16,9 @@ import org.kohsuke.stapler.QueryParameter;
  */
 public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeychainCertificatePair> implements Serializable{
     
-    private final static String KEYCHAIN_BASE_VARIABLE_NAME = "KEYCHAIN";
+    private final static String KEYCHAIN_BASE_VARIABLE_NAME = "KEYCHAIN_PATH";
     private final static String KEYCHAIN_PASSWORD_BASE_VARIABLE_NAME = "KEYCHAIN_PASSWORD";
-    private final static String CODESIGNING_IDENTITY_BASE_VARIABLE_NAME = "CODESIGNING_IDENTITY";
+    private final static String CODESIGNING_IDENTITY_BASE_VARIABLE_NAME = "CODE_SIGNING_IDENTITY";
     
     private String keychain;
     private String codeSigningIdentity;

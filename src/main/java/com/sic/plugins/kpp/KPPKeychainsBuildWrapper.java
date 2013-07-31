@@ -11,6 +11,7 @@ import hudson.model.BuildListener;
 import hudson.model.Hudson;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,15 +80,6 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
                 from.copyTo(to);
                 copiedKeychains.add(to);
             }
-            
-            /* Testcode copy anywhere on the mac
-            Node node = build.getBuiltOn();
-            FilePath rootPath = node.getRootPath();
-            VirtualChannel channel = projectWorkspace.getChannel();
-            String remoteFilePath = String.format("%s%s", "/Users/sicdev/Library/MobileDevice/Provisioning Profiles/", pair.getKeychainFileName());
-            FilePath remoteHome = new FilePath(channel, remoteFilePath);
-            from.copyTo(remoteHome);
-            */
         }
     }
     
@@ -118,7 +110,7 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
             this.keychainCertificatePairs = keychainCertificatePairs;
         }
         
-        private Map<String, String> getEnvMap() {
+        private Map<String, String> getEnvMap(Map<String, String> env) {
             Map<String, String> map = new HashMap<String,String>();
             for (KPPKeychainCertificatePair pair : keychainCertificatePairs) {
                 KPPKeychain keychain = KPPKeychainCertificatePair.getKeychainFromString(pair.getKeychain());
@@ -126,8 +118,10 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
                     String fileName = keychain.getFileName();
                     String password = keychain.getPassword();
                     String codeSigningIdentity = pair.getCodeSigningIdentity();
-                    if (fileName!=null && fileName.length()!=0)
-                        map.put(pair.getKeychainVariableName(), keychain.getFileName());
+                    if (fileName!=null && fileName.length()!=0) {
+                        String keychainPath = String.format("%s%s%s", env.get("WORKSPACE"), File.separator, fileName);
+                        map.put(pair.getKeychainVariableName(), keychainPath);
+                    }
                     if (password!=null && password.length()!=0)
                         map.put(pair.getKeychainPasswordVariableName(), keychain.getPassword());
                     if (codeSigningIdentity!=null && codeSigningIdentity.length()!=0)
@@ -139,7 +133,7 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
         
         @Override
         public void buildEnvVars(Map<String, String> env) {
-            env.putAll(getEnvMap());
+            env.putAll(getEnvMap(env));
 	}
         
         @Override
