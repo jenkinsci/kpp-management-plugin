@@ -1,5 +1,30 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2013 Michael Bär SIC! Software GmbH.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package com.sic.plugins.kpp.model;
 
+import com.sic.plugins.kpp.Messages;
 import com.sic.plugins.kpp.provider.KPPProvisioningProfilesProvider;
 import hudson.Extension;
 import hudson.model.Describable;
@@ -14,6 +39,7 @@ import org.kohsuke.stapler.QueryParameter;
 
 /**
  * Represents a provisioning profile.
+ * @author Michael Bär
  */
 public class KPPProvisioningProfile implements Describable<KPPProvisioningProfile>, Serializable {
     
@@ -23,6 +49,11 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
     private final String varPrefix; // variable prefix for build step integration
     private transient String uuid;
     
+    /**
+     * Constructor
+     * @param fileName filename of the provisioning profile
+     * @param varPrefix variable prefix name
+     */
     @DataBoundConstructor
     public KPPProvisioningProfile(String fileName, String varPrefix) {
         this.fileName = fileName;
@@ -118,19 +149,31 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
         return hash;
     }
     
+    /**
+     * Get the {@link DescriptorImpl}
+     * @return descriptor
+     */
     public Descriptor<KPPProvisioningProfile> getDescriptor() {
         Descriptor ds = Hudson.getInstance().getDescriptorOrDie(getClass());
         return ds;
     }
     
+    /**
+     * Descriptor for an {@link KPPProvisioningProfile}.
+     */
     @Extension
     public static class DescriptorImpl extends Descriptor<KPPProvisioningProfile> {
 
         @Override
         public String getDisplayName() {
-            return "Provisioning Profile";
+            return Messages.KPPProvisioningProfile_DisplayName();
         }
         
+        /**
+         * Action method to fill out the filename items.
+         * @param fileName the query parameter of the filename
+         * @return 
+         */
         public ListBoxModel doFillFileNameItems(@QueryParameter String fileName) {
             ListBoxModel m = new ListBoxModel();
             List<KPPProvisioningProfile> pps = KPPProvisioningProfilesProvider.getInstance().getProvisioningProfiles();
