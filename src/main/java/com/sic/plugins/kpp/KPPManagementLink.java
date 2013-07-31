@@ -26,12 +26,24 @@ import org.kohsuke.stapler.StaplerResponse;
 @Extension
 public class KPPManagementLink extends ManagementLink implements StaplerProxy, Saveable {
     
+    private String errorMessage = null;
+    
     /**
      * Gets the singletion instance.
      * @return the singletion instance.
      */
     public static KPPManagementLink getInstance() {
         return all().get(KPPManagementLink.class);
+    }
+    
+    /**
+     * Get error message
+     * @return error message
+     */
+    public String getErrorMessage () {
+        String message = errorMessage;
+        errorMessage = null;
+        return message;
     }
 
     /**
@@ -61,33 +73,50 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
         return KPPProvisioningProfilesProvider.getInstance().getProvisioningProfilesPath();
     }
     
+    /**
+     * Action method if upload button is clicked.
+     * 
+     * @param req Request
+     * @param rsp Response
+     * @throws ServletException
+     * @throws IOException
+     * @throws NoSuchAlgorithmException 
+     */
     public void doUploadFile(StaplerRequest req, StaplerResponse rsp) throws
             ServletException,
             IOException,
             NoSuchAlgorithmException {
-        
         Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
         
         FileItem file = req.getFileItem("file");
         if (file == null || file.getSize() == 0) {
-            throw new ServletException("no file selected");
-        }
-        
-        KPPKeychainsProvider kProvider = KPPKeychainsProvider.getInstance();
-        KPPProvisioningProfilesProvider ppProvider = KPPProvisioningProfilesProvider.getInstance();
-        if (kProvider.isKeychainFile(file)) {
-            kProvider.upload(file);
-            kProvider.update();
-        } else if (ppProvider.isMobileProvisionProfileFile(file)) {
-            ppProvider.upload(file);
-            ppProvider.update();
+            this.errorMessage = Messages.KPPManagementLink_Upload_Error_NoFile();
         } else {
-            throw new ServletException("Wrong filetype. Uploaded file is no keychain or provisioning profile file.");
+            KPPKeychainsProvider kProvider = KPPKeychainsProvider.getInstance();
+            KPPProvisioningProfilesProvider ppProvider = KPPProvisioningProfilesProvider.getInstance();
+            if (kProvider.isKeychainFile(file)) {
+                kProvider.upload(file);
+                kProvider.update();
+            } else if (ppProvider.isMobileProvisionProfileFile(file)) {
+                ppProvider.upload(file);
+                ppProvider.update();
+            } else {
+                this.errorMessage = String.format(Messages.KPPManagementLink_Upload_Error_WrongFileType(), file.getName());
+            }
         }
         
         rsp.sendRedirect2("../"+getUrlName()+"/"); //we stay on page
     }
     
+    /**
+     * Action method if save button is clicked.
+     * 
+     * @param req Request
+     * @param rsp Response
+     * @throws ServletException
+     * @throws IOException
+     * @throws NoSuchAlgorithmException 
+     */
     public void doSave(StaplerRequest req, StaplerResponse rsp) throws
             ServletException,
             IOException,
@@ -123,6 +152,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
     public Object getTarget() {
         Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
         KPPKeychainsProvider.getInstance().update();
+        KPPProvisioningProfilesProvider.getInstance().update();
         return this;
     }
 

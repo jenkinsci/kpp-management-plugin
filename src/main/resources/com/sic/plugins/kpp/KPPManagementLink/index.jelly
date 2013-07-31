@@ -6,6 +6,10 @@
         
         <l:main-panel>
             <h1>${%KPP Management}</h1>
+            <j:set var="error" value="${it.errorMessage}" />
+            <j:if test="${!empty(error)}">
+                <div style="font-size: 1.2em; background-color: red; padding: 5px; color: white;">${%Error:} ${error}</div>
+            </j:if>
             <table width="100%">
                 <f:section title="${%Upload Keychain or Provisioning Profile}"></f:section>
                 <f:block>
