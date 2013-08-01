@@ -47,7 +47,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Build wrapper for provisioning profiles
- * @author mb
+ * @author Michael Bär
  */
 public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
     
@@ -55,8 +55,12 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
     private boolean deleteProfilesAfterBuild;
     private boolean overwriteExistingProfiles;
     private transient List<FilePath> copiedProfiles;
+    
     /**
      * Constructor
+     * @param provisioningProfiles list of provisioning profiles
+     * @param deleteProfilesAfterBuild if the provisioning profile can be deleted after the build
+     * @param overwriteExistingProfiles if the provisioning profile can be overwritten
      */
     @DataBoundConstructor
     public KPPProvisioningProfilesBuildWrapper(List<KPPProvisioningProfile> provisioningProfiles, boolean deleteProfilesAfterBuild, boolean overwriteExistingProfiles) {
@@ -66,14 +70,26 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         this.overwriteExistingProfiles = overwriteExistingProfiles;
     }
     
+    /**
+     * Get the provisioning profiles.
+     * @return list of provisioning profiles
+     */
     public List<KPPProvisioningProfile> getProvisioningProfiles() {
         return provisioningProfiles;
     }
     
+    /**
+     * Get if the provisioning profile can be deleted after the build.
+     * @return true can be deleted, otherwise false
+     */
     public boolean getDeleteProfilesAfterBuild() {
         return deleteProfilesAfterBuild;
     }
     
+    /**
+     * Get if current existing provisioning profile with the same filename can be overwritten.
+     * @return true can be overwritten, otherwise false
+     */
     public boolean getOverwriteExistingProfiles() {
         return overwriteExistingProfiles;
     }
@@ -84,6 +100,12 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         return new KPPProvisioningProfilesBuildWrapper.EnvironmentImpl(provisioningProfiles);
     }
     
+    /**
+     * Copy the provisioning profiles configured for this job to the mobile provisioning profile path of the node or master, where the job is executed.
+     * @param build current build
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     private void copyProvisioningProfiles(AbstractBuild build) throws IOException, InterruptedException {
         
         Hudson hudson = Hudson.getInstance();
@@ -136,6 +158,9 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         return (DescriptorImpl) super.getDescriptor();
     }
     
+    /**
+     * Descriptor of the {@link KPPProvisioningProfilesBuildWrapper}
+     */
     @Extension
     public static final class DescriptorImpl extends BuildWrapperDescriptor {
         
@@ -150,14 +175,25 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         }
     }
     
+    /**
+     * Environment implementation that adds additional variables to the build.
+     */
     private class EnvironmentImpl extends Environment {
         private final List<KPPProvisioningProfile> provisioningProfiles;
         
+        /**
+         * Constructor
+         * @param provisioningProfiles list of provisioning profiles configured for this job
+         */
         public EnvironmentImpl(List<KPPProvisioningProfile> provisioningProfiles) {
             super();
             this.provisioningProfiles = provisioningProfiles;
         }
         
+        /**
+         * Adds additional variables to the build environment.
+         * @return environment with additional variables
+         */
         private Map<String, String> getEnvMap() {
             Map<String, String> map = new HashMap<String,String>();
             for(KPPProvisioningProfile profile : provisioningProfiles) {

@@ -28,7 +28,7 @@ import hudson.Plugin;
 import java.util.logging.Logger;
 
 /**
- *
+ * Plugin class
  * @author michaelbar
  */
 public class KPPPlugin extends Plugin {
@@ -37,7 +37,7 @@ public class KPPPlugin extends Plugin {
     
     @Override
     public void start() throws Exception {
-        LOG.info("starting KPP plugin");
+        LOG.info("starting kpp plugin");
     }
    
 }

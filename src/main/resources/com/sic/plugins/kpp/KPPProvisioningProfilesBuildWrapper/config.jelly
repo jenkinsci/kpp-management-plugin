@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-    <f:entry title="${%Overwrite existing provisioning profiles}" field="overwriteExistingProfiles">
+    <f:entry title="${%overwrite}" field="overwriteExistingProfiles">
 	<f:checkbox/>
     </f:entry>
-    <f:entry title="${%Delete copied provisioning profiles after build}" field="deleteProfilesAfterBuild">
+    <f:entry title="${%delete}" field="deleteProfilesAfterBuild">
 	<f:checkbox/>
     </f:entry>
     <f:block>
-        <f:repeatable var="provisioningProfile" field="provisioningProfiles" minimum="1" add="${%Add Provisioning Profile}">
+        <f:repeatable var="provisioningProfile" field="provisioningProfiles" minimum="1" add="${%add_btn}">
             <table width="100%">
-                <f:entry title="${%Provisioning Profile}" field="fileName" help="/plugin/kpp/model/KPPProvisioningProfile/help-fileName.jelly">
+                <f:entry title="${%profile}" field="fileName" help="/plugin/kpp/model/KPPProvisioningProfile/help-fileName.jelly">
                     <f:select />
                 </f:entry>
-                <f:entry title="${%Variable Prefix}" field="varPrefix" help="/plugin/kpp/model/KPPProvisioningProfile/help-varPrefix.jelly">
+                <f:entry title="${%prefix}" field="varPrefix" help="/plugin/kpp/model/KPPProvisioningProfile/help-varPrefix.jelly">
                     <f:textbox />
                 </f:entry>
-                <f:entry title="${%Variable}" field="variableName" help="/plugin/kpp/model/KPPProvisioningProfile/help-variableName.jelly">
+                <f:entry title="${%variable}" field="variableName" help="/plugin/kpp/model/KPPProvisioningProfile/help-variableName.jelly">
                     <f:readOnlyTextbox/>
                 </f:entry>
                 <f:entry title="">
                     <div align="right">
-                        <f:repeatableDeleteButton value="${%Delete}"></f:repeatableDeleteButton>
+                        <f:repeatableDeleteButton value="${%delete_btn}"></f:repeatableDeleteButton>
                     </div>
                 </f:entry>
             </table>

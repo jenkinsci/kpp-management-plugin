@@ -172,7 +172,7 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
         /**
          * Action method to fill out the filename items.
          * @param fileName the query parameter of the filename
-         * @return 
+         * @return list of filename items
          */
         public ListBoxModel doFillFileNameItems(@QueryParameter String fileName) {
             ListBoxModel m = new ListBoxModel();
