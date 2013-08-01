@@ -3,10 +3,12 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.509.2</version><!-- which version of Jenkins is this plugin built against? -->
+        <version>1.509.2</version>
     </parent>
 
     <groupId>sic.software</groupId>
+    <name>Keychain and Provisioning Profiles Management</name>
+    <description>This plugins intrages an keychain and provisioning profiles managment for iOS and OSX projects build on a mac.</description>
     <artifactId>kpp</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
@@ -18,6 +20,14 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    
+    <developers>
+        <developer>
+            <id>michaelb</id>
+            <name>Michael Bär</name>
+            <email>michael.baer@sic-software.com</email>
+        </developer>
+  </developers>
 
     <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
     <repositories>
