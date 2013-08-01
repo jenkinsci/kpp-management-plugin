@@ -2,7 +2,7 @@
 <!--
 The MIT License
 
-Copyright 2013 Michael Bär SIC! Software GmbH
+Copyright 2013 michaelbar.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,6 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt">
-    Variables added to the build environment. They can be used in other build steps.
-    <dl>
-        <dt>${PROVISIONING_PROFILE}</dt>
-        <dd>Contains the uuid of the provisioning profile.</dd>
-    </dl>
+    Select this checkbox if a keychain with the same filename, as the one to be copied, exists and should be overwritten.<br/>
+    The keychains are copied to the workspace.
 </j:jelly>

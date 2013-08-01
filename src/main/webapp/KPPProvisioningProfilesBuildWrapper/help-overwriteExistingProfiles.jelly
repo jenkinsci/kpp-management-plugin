@@ -25,9 +25,6 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt">
-    Variables added to the build environment. They can be used in other build steps.
-    <dl>
-        <dt>${PROVISIONING_PROFILE}</dt>
-        <dd>Contains the uuid of the provisioning profile.</dd>
-    </dl>
+    Select this checkbox if a provisioning profile with the same filename, as the one to be copied, exists and should be overwritten.<br/>
+    The provisioning profiles are copied to the mobile provisioning profiles directory given on the plugin or node configuration page. 
 </j:jelly>
