@@ -10,16 +10,16 @@
     <f:block>
         <f:repeatable var="keychainCertificatePair" field="keychainCertificatePairs" minimum="1" add="${%Add Keychain}">
             <table width="100%">
-                <f:entry title="${%Keychain}" field="keychain">
+                <f:entry title="${%Keychain}" field="keychain" help="/plugin/kpp/model/KPPKeychainCertificatePair/help-keychain.jelly">
                     <f:select />
                 </f:entry>
-                <f:entry title="${%Code Signing Identity}" field="codeSigningIdentity">
+                <f:entry title="${%Code Signing Identity}" field="codeSigningIdentity" 							help="/plugin/kpp/model/KPPKeychainCertificatePair/help-codeSigningIdentity.jelly">
                     <f:select />
                 </f:entry>
-                <f:entry title="${%Variables Prefix}" field="varPrefix">
+                <f:entry title="${%Variables Prefix}" field="varPrefix" help="/plugin/kpp/model/KPPKeychainCertificatePair/help-varPrefix.jelly">
                     <f:textbox />
                 </f:entry>
-                <f:entry title="${%Variables}" field="variableNames">
+                <f:entry title="${%Variables}" field="variableNames" help="/plugin/kpp/model/KPPKeychainCertificatePair/help-variableNames.jelly">
                     <f:readOnlyTextbox/>
                 </f:entry>
                 <f:entry title="">
