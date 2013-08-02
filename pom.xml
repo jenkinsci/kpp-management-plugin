@@ -12,7 +12,7 @@
     <artifactId>kpp</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
-    <url>http://wiki.jenkins-ci.org/display/JENKINS/Keychain+and+Provisioning+Profiles+Plugin</url>
+    <url>http://wiki.jenkins-ci.org/display/JENKINS/Keychains+and+Provisioning+Profiles+Plugin</url>
     
     <licenses>
         <license>
