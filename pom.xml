@@ -4,15 +4,21 @@
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
         <version>1.509.2</version>
+        <relativePath />
     </parent>
 
     <groupId>sic.software</groupId>
     <name>Keychains and Provisioning Profiles Management</name>
     <description>This Jenkins plugin integrates a keychains and provisioning profiles managment for iOS and OSX projects build on a mac.</description>
-    <artifactId>kpp</artifactId>
+    <artifactId>kpp-management-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Keychains+and+Provisioning+Profiles+Plugin</url>
+    <scm>
+        <connection>scm:git:ssh://github.com/jenkinsci/kpp-management-plugin.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/kpp-management-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/kpp-management-plugin</url>
+    </scm>
     
     <licenses>
         <license>
@@ -29,6 +35,13 @@
             <email>michael.baer@sic-software.com</email>
         </developer>
   </developers>
+  
+  <distributionManagement>
+    <repository>
+      <id>maven.jenkins-ci.org</id>
+      <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+    </repository>
+  </distributionManagement>
 
     <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
     <repositories>
@@ -44,25 +57,6 @@
             <url>http://repo.jenkins-ci.org/public/</url>
         </pluginRepository>
     </pluginRepositories>
-    <dependencies>
-        <dependency>
-            <groupId>org.jenkins-ci.main</groupId>
-            <artifactId>jenkins-core</artifactId>
-            <version>1.509.1</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.jvnet.hudson</groupId>
-            <artifactId>htmlunit-core-js</artifactId>
-            <version>2.9-jenkins-1</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1</version>
-        </dependency>
-    </dependencies>
     
     <build> 
      <plugins> 
@@ -71,6 +65,12 @@
          <artifactId>maven-hpi-plugin</artifactId> 
          <version>1.95</version> 
        </plugin> 
+       <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <goals>deploy</goals>
+        </configuration>
+      </plugin>
      </plugins> 
    </build> 
     
