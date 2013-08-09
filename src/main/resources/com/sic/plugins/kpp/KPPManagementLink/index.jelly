@@ -31,7 +31,7 @@ THE SOFTWARE.
         
         <l:main-panel>
 			
-            <h1><img src="${rootURL}/plugin/kpp/icon_kpp.png" width="96" height="96" alt="${%headline}" />${%headline}</h1>
+            <h1><a href="http://www.sic-software.com"><img src="${rootURL}/plugin/kpp/icon_kpp.png" width="96" height="96" alt="${%headline}" /></a>${%headline}</h1>
             <dl><dt>${%description}</dt></dl>
             <j:set var="error" value="${it.errorMessage}" />
             <j:if test="${!empty(error)}">
