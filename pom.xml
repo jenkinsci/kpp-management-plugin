@@ -35,13 +35,6 @@
             <email>michael.baer@sic-software.com</email>
         </developer>
   </developers>
-  
-  <distributionManagement>
-    <repository>
-      <id>maven.jenkins-ci.org</id>
-      <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
-    </repository>
-  </distributionManagement>
 
     <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
     <repositories>
@@ -65,12 +58,6 @@
          <artifactId>maven-hpi-plugin</artifactId> 
          <version>1.95</version> 
        </plugin> 
-       <plugin>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <goals>deploy</goals>
-        </configuration>
-      </plugin>
      </plugins> 
    </build> 
     
