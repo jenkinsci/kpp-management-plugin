@@ -160,10 +160,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
     
     @Override
     public String getIconFileName() {
-        //return "src/main/webapp/sic_zertifikat.png";
-        //return "/sic_zertifikat.png";
-        //return "document.gif";
-        return "/plugin/kpp/icon_kpp.png";
+        return "/plugin/kpp-management-plugin/icon_kpp.png";
     }
 
     @Override
