@@ -25,22 +25,22 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-    <f:entry title="${%overwrite}" field="overwriteExistingProfiles" help="/plugin/kpp/KPPProvisioningProfilesBuildWrapper/help-overwriteExistingProfiles.jelly">
+    <f:entry title="${%overwrite}" field="overwriteExistingProfiles" help="/plugin/kpp-management-plugin/KPPProvisioningProfilesBuildWrapper/help-overwriteExistingProfiles.jelly">
 	<f:checkbox/>
     </f:entry>
-    <f:entry title="${%delete}" field="deleteProfilesAfterBuild" help="/plugin/kpp/KPPProvisioningProfilesBuildWrapper/help-deleteProfilesAfterBuild.jelly">
+    <f:entry title="${%delete}" field="deleteProfilesAfterBuild" help="/plugin/kpp-management-plugin/KPPProvisioningProfilesBuildWrapper/help-deleteProfilesAfterBuild.jelly">
 	<f:checkbox/>
     </f:entry>
     <f:block>
         <f:repeatable var="provisioningProfile" field="provisioningProfiles" minimum="1" add="${%add_btn}">
             <table width="100%">
-                <f:entry title="${%profile}" field="fileName" help="/plugin/kpp/model/KPPProvisioningProfile/help-build-fileName.jelly">
+                <f:entry title="${%profile}" field="fileName" help="/plugin/kpp-management-plugin/model/KPPProvisioningProfile/help-build-fileName.jelly">
                     <f:select />
                 </f:entry>
-                <f:entry title="${%prefix}" field="varPrefix" help="/plugin/kpp/model/KPPProvisioningProfile/help-varPrefix.jelly">
+                <f:entry title="${%prefix}" field="varPrefix" help="/plugin/kpp-management-plugin/model/KPPProvisioningProfile/help-varPrefix.jelly">
                     <f:textbox />
                 </f:entry>
-                <f:entry title="${%variable}" field="variableName" help="/plugin/kpp/model/KPPProvisioningProfile/help-variableName.jelly">
+                <f:entry title="${%variable}" field="variableName" help="/plugin/kpp-management-plugin/model/KPPProvisioningProfile/help-variableName.jelly">
                     <f:readOnlyTextbox/>
                 </f:entry>
                 <f:entry title="">

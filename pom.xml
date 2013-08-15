@@ -11,7 +11,7 @@
     <name>Keychains and Provisioning Profiles Management</name>
     <description>This Jenkins plugin integrates a keychains and provisioning profiles managment for iOS and OSX projects build on a mac.</description>
     <artifactId>kpp-management-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Keychains+and+Provisioning+Profiles+Plugin</url>
     <scm>
