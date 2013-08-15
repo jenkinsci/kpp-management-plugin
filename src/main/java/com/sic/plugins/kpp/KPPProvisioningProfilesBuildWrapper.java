@@ -110,25 +110,36 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         
         Hudson hudson = Hudson.getInstance();
         FilePath hudsonRoot = hudson.getRootPath();
-        VirtualChannel channel = null;
+        VirtualChannel channel;
         String toProvisioningProfilesDirectoryPath = null;
         
         String buildOn = build.getBuiltOnStr();
+        boolean isMaster = false;
         if (buildOn==null || buildOn.isEmpty()) {
             // build on master
             FilePath projectWorkspace = build.getWorkspace();
             channel = projectWorkspace.getChannel();
             toProvisioningProfilesDirectoryPath = KPPProvisioningProfilesProvider.getInstance().getProvisioningProfilesPath();
+            isMaster = true;
         } else {
             // build on slave
             Node node = build.getBuiltOn();
             channel = node.getChannel();
-            toProvisioningProfilesDirectoryPath = KPPNodeProperty.getCurrentNodeProperties().getProvisioningProfilesPath();
+            KPPNodeProperty nodeProperty = KPPNodeProperty.getCurrentNodeProperties();
+            if (nodeProperty != null) {
+                toProvisioningProfilesDirectoryPath = KPPNodeProperty.getCurrentNodeProperties().getProvisioningProfilesPath();
+            }
         }
         
         if (toProvisioningProfilesDirectoryPath==null || toProvisioningProfilesDirectoryPath.isEmpty()) {
             // nothing to copy to provisioning profiles path
-            return;
+            String message;
+            if (isMaster) {
+                message = Messages.KPPProvisioningProfilesBuildWrapper_NoProvisioningProfilesPathForMaster();
+            } else {
+                message = Messages.KPPProvisioningProfilesBuildWrapper_NoProvisioningProfilesPathForSlave();
+            }
+            throw new IOException(message);
         }
         
         // remove file seperator char at the end of the path
