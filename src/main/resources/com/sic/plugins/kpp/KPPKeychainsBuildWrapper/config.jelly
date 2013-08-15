@@ -25,25 +25,25 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:f="/lib/form" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:i="jelly:fmt">
-    <f:entry title="${%overwrite}" field="overwriteExistingKeychains" help="/plugin/kpp/KPPKeychainsBuildWrapper/help-overwriteExistingKeychains.jelly">
+    <f:entry title="${%overwrite}" field="overwriteExistingKeychains" help="/plugin/kpp-management-plugin/KPPKeychainsBuildWrapper/help-overwriteExistingKeychains.jelly">
 	<f:checkbox/>
     </f:entry>
-    <f:entry title="${%delete}" field="deleteKeychainsAfterBuild" help="/plugin/kpp/KPPKeychainsBuildWrapper/help-deleteKeychainsAfterBuild.jelly">
+    <f:entry title="${%delete}" field="deleteKeychainsAfterBuild" help="/plugin/kpp-management-plugin/KPPKeychainsBuildWrapper/help-deleteKeychainsAfterBuild.jelly">
 	<f:checkbox/>
     </f:entry>
     <f:block>
         <f:repeatable var="keychainCertificatePair" field="keychainCertificatePairs" minimum="1" add="${%add_btn}">
             <table width="100%">
-                <f:entry title="${%keychain}" field="keychain" help="/plugin/kpp/model/KPPKeychainCertificatePair/help-keychain.jelly">
+                <f:entry title="${%keychain}" field="keychain" help="/plugin/kpp-management-plugin/model/KPPKeychainCertificatePair/help-keychain.jelly">
                     <f:select />
                 </f:entry>
-                <f:entry title="${%identity}" field="codeSigningIdentity" 							help="/plugin/kpp/model/KPPKeychainCertificatePair/help-codeSigningIdentity.jelly">
+                <f:entry title="${%identity}" field="codeSigningIdentity" help="/plugin/kpp-management-plugin/model/KPPKeychainCertificatePair/help-codeSigningIdentity.jelly">
                     <f:select />
                 </f:entry>
-                <f:entry title="${%prefix}" field="varPrefix" help="/plugin/kpp/model/KPPKeychainCertificatePair/help-varPrefix.jelly">
+                <f:entry title="${%prefix}" field="varPrefix" help="/plugin/kpp-management-plugin/model/KPPKeychainCertificatePair/help-varPrefix.jelly">
                     <f:textbox />
                 </f:entry>
-                <f:entry title="${%variables}" field="variableNames" help="/plugin/kpp/model/KPPKeychainCertificatePair/help-variableNames.jelly">
+                <f:entry title="${%variables}" field="variableNames" help="/plugin/kpp-management-plugin/model/KPPKeychainCertificatePair/help-variableNames.jelly">
                     <f:readOnlyTextbox/>
                 </f:entry>
                 <f:entry title="">

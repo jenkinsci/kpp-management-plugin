@@ -61,7 +61,7 @@ THE SOFTWARE.
                 </f:repeatable>
                 <table width="100%">
                     <f:section title="${%profiles_title}"></f:section>
-                    <f:entry title="${%profiles_path}" field="provisioningProfilesPath" help="/plugin/kpp/KPPManagementLink/help-provisioningProfilesPath.jelly">
+                    <f:entry title="${%profiles_path}" field="provisioningProfilesPath" help="/plugin/kpp-management-plugin/KPPManagementLink/help-provisioningProfilesPath.jelly">
                         <f:textbox value="${it.provisioningProfilesPath}"/>
                     </f:entry>
                 </table>

@@ -26,19 +26,19 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <table width="100%">
-        <f:entry title="${%filename}" field="fileName" help="/plugin/kpp/model/KPPKeychain/help-filename.jelly">
+        <f:entry title="${%filename}" field="fileName" help="/plugin/kpp-management-plugin/model/KPPKeychain/help-filename.jelly">
             <f:readOnlyTextbox value="${it.fileName}"/>
         </f:entry>
-        <f:entry title="${%password}" field="password" help="/plugin/kpp/model/KPPKeychain/help-password.jelly">
+        <f:entry title="${%password}" field="password" help="/plugin/kpp-management-plugin/model/KPPKeychain/help-password.jelly">
             <f:password value="${it.password}"></f:password>
         </f:entry>
-        <f:entry title="${%description}" field="description" help="/plugin/kpp/model/KPPKeychain/help-description.jelly">
+        <f:entry title="${%description}" field="description" help="/plugin/kpp-management-plugin/model/KPPKeychain/help-description.jelly">
             <f:textbox value="${it.description}"></f:textbox>
         </f:entry>
         <f:entry title="${%identities}">
             <f:repeatable var="certificates" items="${it.certificates}" minimum="1" add="${%add_btn}" header="">
                 <table width="100%">
-                <f:entry title="${%identity}" field="codeSigningIdentityName" help="/plugin/kpp/model/KPPKeychain/help-codeSigningIdentityName.jelly">
+                <f:entry title="${%identity}" field="codeSigningIdentityName" help="/plugin/kpp-management-plugin/model/KPPKeychain/help-codeSigningIdentityName.jelly">
                     <f:textbox value="${certificates.codeSigningIdentityName}"/>
                 </f:entry>
                 <f:block>
