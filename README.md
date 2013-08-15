@@ -1,3 +1,4 @@
+[![Build Status](https://buildhive.cloudbees.com/job/jenkinsci/job/kpp-management-plugin/badge/icon)](https://buildhive.cloudbees.com/job/jenkinsci/job/kpp-management-plugin/)
 kpp-management-plugin
 =====================
 
