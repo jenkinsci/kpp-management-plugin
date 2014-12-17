@@ -50,7 +50,7 @@ import org.kohsuke.stapler.StaplerResponse;
  */
 @Extension
 public class KPPManagementLink extends ManagementLink implements StaplerProxy, Saveable {
-    
+
     private String errorMessage = null;
     
     /**
@@ -97,7 +97,19 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
     public String getProvisioningProfilesPath() {
         return KPPProvisioningProfilesProvider.getInstance().getProvisioningProfilesPath();
     }
-    
+
+    /**
+     *
+     * @return Use Master Provisioning Profile Provider as the default path.
+     */
+    public boolean isUseMasterPPPAsDefault() {
+        return KPPProvisioningProfilesProvider.getInstance().isUseMasterPPPAsDefault();
+    }
+
+    public void setUseMasterPPPAsDefault(boolean useMasterPPPAsDefault) {
+        KPPProvisioningProfilesProvider.getInstance().setUseMasterPPPAsDefault(useMasterPPPAsDefault);
+    }
+
     /**
      * Action method if upload button is clicked.
      * 
@@ -154,6 +166,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
         List<KPPProvisioningProfile> pps = req.bindJSONToList(KPPProvisioningProfile.class, data.get("profile"));
         KPPProvisioningProfilesProvider.getInstance().updateProvisioningProfilesFromSave(pps);
         KPPProvisioningProfilesProvider.getInstance().setProvisioningProfilesPath(data.getString("provisioningProfilesPath"));
+        KPPProvisioningProfilesProvider.getInstance().setUseMasterPPPAsDefault(data.getBoolean("useMasterPPPAsDefault"));
         save();
         rsp.sendRedirect2("../manage"); //we go back on management page
     }

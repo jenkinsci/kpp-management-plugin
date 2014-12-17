@@ -128,6 +128,9 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
             KPPNodeProperty nodeProperty = KPPNodeProperty.getCurrentNodeProperties();
             if (nodeProperty != null) {
                 toProvisioningProfilesDirectoryPath = KPPNodeProperty.getCurrentNodeProperties().getProvisioningProfilesPath();
+            } else if (KPPProvisioningProfilesProvider.getInstance().isUseMasterPPPAsDefault()) {
+                // Use master default path instead
+                toProvisioningProfilesDirectoryPath = KPPProvisioningProfilesProvider.getInstance().getProvisioningProfilesPath();
             }
         }
         
@@ -157,6 +160,8 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
             FilePath from = new FilePath(hudsonRoot, pp.getProvisioningProfileFilePath());
             String toPPPath = String.format("%s%s%s", toProvisioningProfilesDirectoryPath, File.separator, KPPProvisioningProfilesProvider.getUUIDFileName(pp.getUuid()));
             FilePath to = new FilePath(channel, toPPPath);
+            if (!to.getParent().exists())
+                to.getParent().mkdirs();
             if (overwriteExistingProfiles || !to.exists()) {
                 from.copyTo(to);
                 copiedProfiles.add(to);

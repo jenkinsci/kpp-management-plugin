@@ -61,7 +61,7 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
         File file = new File(path);
         return file;
     }
-    
+
     /**
      * Parse the UUID from the content of the provisioning profile file.
      * @param fileName name of the provisioning profile file
