@@ -176,7 +176,7 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
                     String password = keychain.getPassword();
                     String codeSigningIdentity = pair.getCodeSigningIdentity();
                     if (fileName!=null && fileName.length()!=0) {
-                        String keychainPath = String.format("%s%s%s", env.get("WORKSPACE"), File.separator, fileName);
+                        String keychainPath = String.format("%s/%s", env.get("WORKSPACE"), fileName);
                         map.put(pair.getKeychainVariableName(), keychainPath);
                     }
                     if (password!=null && password.length()!=0)

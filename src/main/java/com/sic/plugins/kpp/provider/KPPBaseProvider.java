@@ -45,7 +45,7 @@ import org.apache.commons.fileupload.FileItem;
 public abstract class KPPBaseProvider {
     
     protected final static Logger LOGGER = Logger.getLogger(KPPBaseProvider.class.getName());
-    private final static String DEFAULT_UPLOAD_DIRECTORY_PATH = Hudson.getInstance().getRootDir() + File.separator + "kpp_upload";
+    private final static String DEFAULT_UPLOAD_DIRECTORY_PATH = Hudson.getInstance().getRootDir() + "/kpp_upload";
     private final String defaultConfigXmlFileName;
     
     /**
