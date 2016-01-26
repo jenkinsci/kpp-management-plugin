@@ -124,7 +124,7 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
             final String ksFolderPath = getUploadDirectoryPath();
             File kFile;
             for (KPPKeychain k : ksCurrent) {
-                kFile = new File(ksFolderPath + File.separator +k.getFileName());
+                kFile = new File(ksFolderPath + "/" + k.getFileName());
                 kFile.delete();
             }
         }

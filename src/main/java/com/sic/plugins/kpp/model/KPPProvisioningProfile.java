@@ -74,7 +74,7 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
      */
     public String getProvisioningProfileFilePath() {
         String file = KPPProvisioningProfilesProvider.removeUUIDFromFileName(fileName);
-        return String.format("%s%s%s", KPPProvisioningProfilesProvider.getInstance().getUploadDirectoryPath(), File.separator, file);
+        return String.format("%s/%s", KPPProvisioningProfilesProvider.getInstance().getUploadDirectoryPath(), file);
     }
     
     /**

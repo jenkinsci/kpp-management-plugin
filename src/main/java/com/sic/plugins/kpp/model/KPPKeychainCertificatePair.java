@@ -141,7 +141,7 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
         KPPKeychain k = getKeychainFromString(keychain);
         String filePath = null;
         if (k!=null && k.getFileName()!=null) {
-            filePath = String.format("%s%s%s", KPPKeychainsProvider.getInstance().getUploadDirectoryPath(), File.separator, k.getFileName());
+            filePath = String.format("%s/%s", KPPKeychainsProvider.getInstance().getUploadDirectoryPath(), k.getFileName());
         }
         return filePath;
     }
