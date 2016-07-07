@@ -160,7 +160,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
     
     @Override
     public String getIconFileName() {
-        return "/plugin/kpp-management-plugin/icon_kpp.png";
+        return "/plugin/kpp-management-plugin-pipeline/icon_kpp.png";
     }
 
     @Override
@@ -170,7 +170,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
 
     @Override
     public String getUrlName() {
-        return "kppmanagment";
+        return "kppmanagmentpipeline";
     }
 
     @Override
