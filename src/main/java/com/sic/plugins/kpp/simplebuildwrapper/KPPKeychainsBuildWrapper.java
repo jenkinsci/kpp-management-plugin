@@ -59,12 +59,12 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
     private boolean overwriteExistingKeychains;
     private transient List<FilePath>copiedKeychains;
     private final static Logger LOG = Logger.getLogger(KPPKeychainsBuildWrapper.class.getName());
+    private TaskListener taskListener;
 
     @DataBoundConstructor
     public KPPKeychainsBuildWrapper(String keychain, String codeSigningIdentity, String varPrefix, boolean deleteKeychainsAfterBuild, boolean overwriteExistingKeychains) {
 
 
-        this.keychainCertificatePairs.add(new KPPKeychainCertificatePair("iOS-Enterprise-2016-2019.keychain", "iPhone Distribution: sovanta AG", varPrefix));
         this.keychainCertificatePairs.add(new KPPKeychainCertificatePair("iOS-Enterprise-2016-2019.keychain", "iPhone Distribution: sovanta AG", varPrefix));
         this.deleteKeychainsAfterBuild = deleteKeychainsAfterBuild;
         this.overwriteExistingKeychains = overwriteExistingKeychains;
@@ -96,10 +96,30 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
 
     @Override
     public void setUp(Context context, Run<?, ?> run, FilePath filePath, Launcher launcher, TaskListener taskListener, EnvVars envVars) throws IOException, InterruptedException {
+        this.taskListener = taskListener;
+        taskListener.getLogger().println(keychainCertificatePairs.get(0).getKeychain());
         copyKeychainsToWorkspace(filePath);
+        
         Environment env = new EnvironmentImpl(keychainCertificatePairs);
-
+        env.buildEnvVars(context.getEnv());
+        context.setDisposer(new KPPKeychainsDisposer());
     }
+
+    /**
+     * Disposer class for cleaning up copied keychains
+     */
+    public class KPPKeychainsDisposer extends Disposer
+    {
+        @Override
+        public void tearDown(Run<?, ?> run, FilePath filePath, Launcher launcher, TaskListener taskListener) throws IOException, InterruptedException {
+            if (deleteKeychainsAfterBuild) {
+                for (FilePath keychainPath : copiedKeychains) {
+                    keychainPath.delete();
+                }
+            }
+        }
+    }
+
 
     /**
      * Copy the keychains configured for this build job to the workspace of the job.
@@ -178,6 +198,8 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
                     String codeSigningIdentity = pair.getCodeSigningIdentity();
                     if (fileName!=null && fileName.length()!=0) {
                         String keychainPath = String.format("%s%s%s", env.get("WORKSPACE"), File.separator, fileName);
+
+                        taskListener.getLogger().println("huch?");
                         map.put(pair.getKeychainVariableName(), keychainPath);
                     
                     }
@@ -193,18 +215,6 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
         @Override
         public void buildEnvVars(Map<String, String> env) {
             env.putAll(getEnvMap(env));
-	}
-        
-        @Override
-        public boolean tearDown(AbstractBuild build, BuildListener listener)
-                throws IOException, InterruptedException {
-            if (deleteKeychainsAfterBuild) {
-                for (FilePath filePath : copiedKeychains) {
-                    filePath.delete();
-                }
-            }
-            return true;
-        }
-        
+	    }
     }
 }
