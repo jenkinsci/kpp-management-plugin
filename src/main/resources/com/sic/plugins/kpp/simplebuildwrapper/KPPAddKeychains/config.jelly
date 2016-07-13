@@ -45,7 +45,6 @@ THE SOFTWARE.
         <f:checkbox/>
         <label class="attach-previous">${%Delete Keychains after build?}</label>
       </f:entry>
-
       <f:entry field="overwriteExistingKeychains">
           <f:checkbox/>
             <label class="attach-previous">${%Overwrite existing keychains?}</label>

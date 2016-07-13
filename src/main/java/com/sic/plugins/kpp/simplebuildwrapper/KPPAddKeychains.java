@@ -43,13 +43,12 @@ import java.util.logging.Logger;
 
 import jenkins.tasks.SimpleBuildWrapper;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 
 /**
  * Build wrapper for keychains
  * @author mb
  */
-public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
+public class KPPAddKeychains extends SimpleBuildWrapper {
 
     private List<KPPKeychainCertificatePair> keychainCertificatePairs = new ArrayList<KPPKeychainCertificatePair>();
     private boolean deleteKeychainsAfterBuild;
@@ -57,12 +56,12 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
     private String keychain;
     private String codeSigningIdentity;
     private transient List<FilePath>copiedKeychains;
-    private final static Logger LOG = Logger.getLogger(KPPKeychainsBuildWrapper.class.getName());
+    private final static Logger LOG = Logger.getLogger(KPPAddKeychains.class.getName());
     private TaskListener taskListener;
 
 
     @DataBoundConstructor
-    public KPPKeychainsBuildWrapper(String keychain, String codeSigningIdentity, boolean deleteKeychainsAfterBuild, boolean overwriteExistingKeychains) {
+    public KPPAddKeychains(String keychain, String codeSigningIdentity, boolean deleteKeychainsAfterBuild, boolean overwriteExistingKeychains) {
         this.codeSigningIdentity = codeSigningIdentity;
         this.keychain = keychain;
         this.keychainCertificatePairs.add(new KPPKeychainCertificatePair("iOS-Enterprise-2016-2019.keychain", "iPhone Distribution: sovanta AG", ""));
@@ -172,7 +171,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
     public static final class DescriptorImpl extends BuildWrapperDescriptor {
         public DescriptorImpl()
         {
-            super(KPPKeychainsBuildWrapper.class);
+            super(KPPAddKeychains.class);
         }
 
 
