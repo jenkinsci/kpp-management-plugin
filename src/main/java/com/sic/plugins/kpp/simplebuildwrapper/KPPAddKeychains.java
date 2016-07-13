@@ -54,6 +54,7 @@ public class KPPAddKeychains extends SimpleBuildWrapper {
     private boolean deleteKeychainsAfterBuild;
     private boolean overwriteExistingKeychains;
     private String keychain;
+    private String varPrefix;
     private String codeSigningIdentity;
     private transient List<FilePath>copiedKeychains;
     private final static Logger LOG = Logger.getLogger(KPPAddKeychains.class.getName());
@@ -61,13 +62,23 @@ public class KPPAddKeychains extends SimpleBuildWrapper {
 
 
     @DataBoundConstructor
-    public KPPAddKeychains(String keychain, String codeSigningIdentity, boolean deleteKeychainsAfterBuild, boolean overwriteExistingKeychains) {
+    public KPPAddKeychains(String keychain, String codeSigningIdentity, String varPrefix, boolean deleteKeychainsAfterBuild, boolean overwriteExistingKeychains) {
         this.codeSigningIdentity = codeSigningIdentity;
+        this.varPrefix = varPrefix;
         this.keychain = keychain;
         this.keychainCertificatePairs.add(new KPPKeychainCertificatePair("iOS-Enterprise-2016-2019.keychain", "iPhone Distribution: sovanta AG", ""));
         this.deleteKeychainsAfterBuild = deleteKeychainsAfterBuild;
         this.overwriteExistingKeychains = overwriteExistingKeychains;
 
+    }
+
+    /**
+     * Getter needed by Jenkins Snippet Generator. Don't remove.
+     * @return varPrefix string
+     */
+    public String getVarPrefix()
+    {
+        return varPrefix;
     }
 
     /**

@@ -41,6 +41,10 @@ THE SOFTWARE.
             <label class="attach-previous">${%identity}</label>
             <f:textbox/>
         </f:entry>
+        <f:entry field="varPrefix">
+            <label class="attach-previous">${%prefix}</label>
+            <f:textbox/>
+        </f:entry>
       <f:entry field="deleteKeychainsAfterBuild">
         <f:checkbox/>
         <label class="attach-previous">${%Delete Keychains after build?}</label>
