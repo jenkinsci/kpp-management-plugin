@@ -24,7 +24,6 @@
 
 package com.sic.plugins.kpp.simplebuildwrapper;
 
-import com.sic.plugins.kpp.KPPPlugin;
 import com.sic.plugins.kpp.Messages;
 import com.sic.plugins.kpp.model.KPPKeychain;
 import com.sic.plugins.kpp.model.KPPKeychainCertificatePair;
@@ -32,9 +31,7 @@ import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.console.ConsoleLogFilter;
 import hudson.model.*;
-import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
 import java.io.File;
 import java.io.IOException;
@@ -45,8 +42,8 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import jenkins.tasks.SimpleBuildWrapper;
-import org.apache.tools.ant.types.LogLevel;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 /**
  * Build wrapper for keychains
@@ -57,19 +54,41 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
     private List<KPPKeychainCertificatePair> keychainCertificatePairs = new ArrayList<KPPKeychainCertificatePair>();
     private boolean deleteKeychainsAfterBuild;
     private boolean overwriteExistingKeychains;
+    private String keychain;
+    private String codeSigningIdentity;
     private transient List<FilePath>copiedKeychains;
     private final static Logger LOG = Logger.getLogger(KPPKeychainsBuildWrapper.class.getName());
     private TaskListener taskListener;
 
+
     @DataBoundConstructor
-    public KPPKeychainsBuildWrapper(String keychain, String codeSigningIdentity, String varPrefix, boolean deleteKeychainsAfterBuild, boolean overwriteExistingKeychains) {
-
-
-        this.keychainCertificatePairs.add(new KPPKeychainCertificatePair("iOS-Enterprise-2016-2019.keychain", "iPhone Distribution: sovanta AG", varPrefix));
+    public KPPKeychainsBuildWrapper(String keychain, String codeSigningIdentity, boolean deleteKeychainsAfterBuild, boolean overwriteExistingKeychains) {
+        this.codeSigningIdentity = codeSigningIdentity;
+        this.keychain = keychain;
+        this.keychainCertificatePairs.add(new KPPKeychainCertificatePair("iOS-Enterprise-2016-2019.keychain", "iPhone Distribution: sovanta AG", ""));
         this.deleteKeychainsAfterBuild = deleteKeychainsAfterBuild;
         this.overwriteExistingKeychains = overwriteExistingKeychains;
+
     }
-    
+
+    /**
+     * Getter needed by Jenkins Snippet Generator. Don't remove.
+     * @return keychain string
+     */
+    public String getKeychain()
+    {
+        return keychain;
+    }
+
+    /**
+     * Getter needed by Jenkins Snippet Generator. Don't remove.
+     * @return code signing identity string
+     */
+    public String getCodeSigningIdentity()
+    {
+        return codeSigningIdentity;
+    }
+
     /**
      * Get if the keychain can be deleted after the build.
      * @return true can be deleted, otherwise false
@@ -77,7 +96,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
     public boolean getDeleteKeychainsAfterBuild() {
         return deleteKeychainsAfterBuild;
     }
-    
+
     /**
      * Get if a current existing keychain with the same filename can be overwritten.
      * @return true can be overwritten, otherwise false
@@ -99,7 +118,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
         this.taskListener = taskListener;
         taskListener.getLogger().println(keychainCertificatePairs.get(0).getKeychain());
         copyKeychainsToWorkspace(filePath);
-        
+
         Environment env = new EnvironmentImpl(keychainCertificatePairs);
         env.buildEnvVars(context.getEnv());
         context.setDisposer(new KPPKeychainsDisposer());
@@ -148,15 +167,15 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
             }
         }
     }
-    
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) super.getDescriptor();
-    }
-    
 
     @Extension
     public static final class DescriptorImpl extends BuildWrapperDescriptor {
+        public DescriptorImpl()
+        {
+            super(KPPKeychainsBuildWrapper.class);
+        }
+
+
         @Override
         public boolean isApplicable(AbstractProject<?, ?> ap) {
             return true;
@@ -166,10 +185,12 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
         public String getDisplayName() {
             return Messages.KPPKeychainsBuildWrapper_DisplayName();
         }
+
     }
     
     /**
      * Environment implementation that adds additional variables to the build.
+     * TODO: Does not need extend Environment anymore.
      */
     private class EnvironmentImpl extends Environment {
         
@@ -198,10 +219,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
                     String codeSigningIdentity = pair.getCodeSigningIdentity();
                     if (fileName!=null && fileName.length()!=0) {
                         String keychainPath = String.format("%s%s%s", env.get("WORKSPACE"), File.separator, fileName);
-
-                        taskListener.getLogger().println("huch?");
                         map.put(pair.getKeychainVariableName(), keychainPath);
-                    
                     }
                     if (password!=null && password.length()!=0)
                         map.put(pair.getKeychainPasswordVariableName(), keychain.getPassword());
