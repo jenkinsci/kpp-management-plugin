@@ -60,8 +60,8 @@ public class KPPNodeProperty extends NodeProperty<Node>{
      * Get the {@link KPPNodeProperty}.
      * @return node property
      */
-    public static KPPNodeProperty getCurrentNodeProperties() {
-        KPPNodeProperty property = Computer.currentComputer().getNode().getNodeProperties().get(KPPNodeProperty.class);
+    public static KPPNodeProperty getCurrentNodeProperties(Node node) {
+        KPPNodeProperty property = node.getNodeProperties().get(KPPNodeProperty.class);
         if(property == null) {
             property = Hudson.getInstance().getGlobalNodeProperties().get(KPPNodeProperty.class);
         }
