@@ -95,7 +95,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
     public void setUp(Context context, Run<?, ?> run, FilePath filePath, Launcher launcher, TaskListener taskListener, EnvVars envVars) throws IOException, InterruptedException {
         copyKeychainsToWorkspace(filePath);
 
-        Environment env = new EnvironmentImpl(keychainCertificatePairs);
+        Environment env = new EnvironmentImpl(keychainCertificatePairs, filePath);
         env.buildEnvVars(context.getEnv());
         context.setDisposer(new KPPKeychainsDisposer());
     }
@@ -168,6 +168,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
      * TODO: Does not need extend Environment anymore.
      */
     private class EnvironmentImpl extends Environment {
+        private FilePath workspace;
 
         private final List<KPPKeychainCertificatePair> keychainCertificatePairs;
 
@@ -175,8 +176,9 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
          * Constructor
          * @param keychainCertificatePairs list of keychain certificate pairs configured for this build job
          */
-        public EnvironmentImpl(List<KPPKeychainCertificatePair> keychainCertificatePairs) {
+        public EnvironmentImpl(List<KPPKeychainCertificatePair> keychainCertificatePairs, FilePath workspace) {
             this.keychainCertificatePairs = keychainCertificatePairs;
+            this.workspace = workspace;
         }
 
         /**
@@ -193,7 +195,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
                     String password = keychain.getPassword();
                     String codeSigningIdentity = pair.getCodeSigningIdentity();
                     if (fileName!=null && fileName.length()!=0) {
-                        String keychainPath = String.format("%s%s%s", env.get("WORKSPACE"), File.separator, fileName);
+                        String keychainPath = String.format("%s%s%s", workspace, File.separator, fileName);
                         map.put(pair.getKeychainVariableName(), keychainPath);
                     }
                     if (password!=null && password.length()!=0)
