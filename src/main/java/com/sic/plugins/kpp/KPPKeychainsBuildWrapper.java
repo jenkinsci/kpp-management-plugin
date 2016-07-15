@@ -35,6 +35,7 @@ import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +48,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * Build wrapper for keychains
  * @author mb
  */
-public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper {
+public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper implements Serializable {
 
     private List<KPPKeychainCertificatePair> keychainCertificatePairs = new ArrayList<KPPKeychainCertificatePair>();
     private boolean deleteKeychainsAfterBuild;

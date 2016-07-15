@@ -36,6 +36,7 @@ import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +49,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * Build wrapper for provisioning profiles
  * @author Michael Bär
  */
-public class KPPProvisioningProfilesBuildWrapper extends SimpleBuildWrapper {
+public class KPPProvisioningProfilesBuildWrapper extends SimpleBuildWrapper implements Serializable {
     
     private List<KPPProvisioningProfile> provisioningProfiles;
     private boolean deleteProfilesAfterBuild;
