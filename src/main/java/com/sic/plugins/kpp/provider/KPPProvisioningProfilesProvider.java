@@ -105,4 +105,92 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
         }
         return uuid;
     }
+    
+    /**
+     * Parse the Name from the content of the provisioning profile file.
+     * @param fileName name of the provisioning profile file
+     * @return Name
+     */
+    public static String parseNameFromProvisioningProfileFile(String fileName) {
+        String name = "Name not found";
+        BufferedReader br = null;
+        try {
+            String fileNameWithoutUUID = KPPBaseProvisioningProfilesProvider.removeUUIDFromFileName(fileName);
+            File file = KPPProvisioningProfilesProvider.getInstance().getProvisioningFile(fileNameWithoutUUID);
+            FileReader reader = new FileReader(file);
+            br = new BufferedReader(reader);
+            String line;
+            boolean foundName = false;
+            while (br!=null && (line = br.readLine()) != null) {
+                if (line.contains("<key>Name</key>")) {
+                    foundName = true; // next line is value
+                } else if (foundName) {
+                    final String openTag = "<string>";
+                    final String closeTag = "</string>";
+                    // parse value for Name key
+                    int indexOfOpenTag = line.indexOf(openTag);
+                    int indexOfCloseTag = line.indexOf(closeTag);
+                    if (indexOfOpenTag != -1 && indexOfCloseTag != -1 && indexOfOpenTag < indexOfCloseTag) {
+                        name = line.substring(indexOfOpenTag+openTag.length(), indexOfCloseTag);
+                    }
+                    break;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                br.close();
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
+        }
+        return name;
+    }
+    
+    /**
+     * Parse the TeamIdentifier from the content of the provisioning profile file.
+     * @param fileName name of the provisioning profile file
+     * @return TeamIdentifier
+     */
+    public static String parseTeamIdentifierFromProvisioningProfileFile(String fileName) {
+        String teamIdentifier = "TeamIdentifier not found";
+        BufferedReader br = null;
+        try {
+            String fileNameWithoutUUID = KPPBaseProvisioningProfilesProvider.removeUUIDFromFileName(fileName);
+            File file = KPPProvisioningProfilesProvider.getInstance().getProvisioningFile(fileNameWithoutUUID);
+            FileReader reader = new FileReader(file);
+            br = new BufferedReader(reader);
+            String line;
+            boolean foundTeamIdentifier = false;
+            while (br!=null && (line = br.readLine()) != null) {
+                if (line.contains("<key>com.apple.developer.team-identifier</key>")) {
+                    foundTeamIdentifier = true; // next line is value
+                } else if (foundTeamIdentifier) {
+                    final String openTag = "<string>";
+                    final String closeTag = "</string>";
+                    // parse value for Name key
+                    int indexOfOpenTag = line.indexOf(openTag);
+                    int indexOfCloseTag = line.indexOf(closeTag);
+                    if (indexOfOpenTag != -1 && indexOfCloseTag != -1 && indexOfOpenTag < indexOfCloseTag) {
+                        teamIdentifier = line.substring(indexOfOpenTag+openTag.length(), indexOfCloseTag);
+                    }
+                    break;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                br.close();
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
+        }
+        return teamIdentifier;
+    }
 }

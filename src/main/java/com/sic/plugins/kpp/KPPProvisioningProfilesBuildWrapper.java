@@ -155,7 +155,7 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         
         for (KPPProvisioningProfile pp : provisioningProfiles) {
             FilePath from = new FilePath(hudsonRoot, pp.getProvisioningProfileFilePath());
-            String toPPPath = String.format("%s%s%s", toProvisioningProfilesDirectoryPath, File.separator, KPPProvisioningProfilesProvider.getUUIDFileName(pp.getUuid()));
+            String toPPPath = String.format("%s%s%s", toProvisioningProfilesDirectoryPath, File.separator, KPPProvisioningProfilesProvider.getUUIDFileName(pp.getProfileUuid()));
             FilePath to = new FilePath(channel, toPPPath);
             if (overwriteExistingProfiles || !to.exists()) {
                 from.copyTo(to);
@@ -208,9 +208,17 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         private Map<String, String> getEnvMap() {
             Map<String, String> map = new HashMap<String,String>();
             for(KPPProvisioningProfile profile : provisioningProfiles) {
-                String uuid = profile.getUuid();
-                if (uuid != null && uuid.length()!=0) {
-                    map.put(profile.getProvisioningProfileVariableName(), uuid);
+                String profileUuid = profile.getProfileUuid();
+                if (profileUuid != null && profileUuid.length() != 0) {
+                    map.put(profile.getProvisioningProfileVariableName(), profileUuid);
+                }
+                String profileName = profile.getProfileName();
+                if (profileName != null && profileName.length() != 0) {
+                    map.put(profile.getProvisioningProfileSpecifierVariableName(), profileName);
+                }
+                String profileTeamIdentifier = profile.getProfileTeamIdentifier();
+                if (profileTeamIdentifier != null && profileTeamIdentifier.length() != 0) {
+                    map.put(profile.getDevelopmentTeamVariableName(), profileTeamIdentifier);
                 }
             }
             return map;

@@ -29,8 +29,14 @@ THE SOFTWARE.
         <f:entry title="${%filename}" field="fileName" help="/plugin/kpp-management-plugin/model/KPPProvisioningProfile/help-fileName.jelly">
             <f:readOnlyTextbox value="${it.fileName}"/>
         </f:entry>
+        <f:entry title="${%teamIdentifier}" help="/plugin/kpp-management-plugin/model/KPPProvisioningProfile/help-teamIdentifier.jelly">
+            <f:readOnlyTextbox value="${it.profileTeamIdentifier}"/>
+        </f:entry>
         <f:entry title="${%uuid}" help="/plugin/kpp-management-plugin/model/KPPProvisioningProfile/help-uuid.jelly">
-            <f:readOnlyTextbox value="${it.uuid}"/>
+            <f:readOnlyTextbox value="${it.profileUuid}"/>
+        </f:entry>
+        <f:entry title="${%name}" help="/plugin/kpp-management-plugin/model/KPPProvisioningProfile/help-name.jelly">
+            <f:readOnlyTextbox value="${it.profileName}"/>
         </f:entry>
         <f:entry title="">
             <div align="right">
