@@ -40,7 +40,7 @@ THE SOFTWARE.
                 <f:entry title="${%prefix}" field="varPrefix" help="/plugin/kpp-management-plugin/model/KPPProvisioningProfile/help-varPrefix.jelly">
                     <f:textbox />
                 </f:entry>
-                <f:entry title="${%variable}" field="variableName" help="/plugin/kpp-management-plugin/model/KPPProvisioningProfile/help-variableName.jelly">
+                <f:entry title="${%variables}" field="variableNames" help="/plugin/kpp-management-plugin/model/KPPProvisioningProfile/help-variableNames.jelly">
                     <f:readOnlyTextbox/>
                 </f:entry>
                 <f:entry title="">

@@ -43,11 +43,16 @@ import org.kohsuke.stapler.QueryParameter;
  */
 public class KPPProvisioningProfile implements Describable<KPPProvisioningProfile>, Serializable {
     
+    private final static String DEVELOPMENT_TEAM_BASE_VARIABLE_NAME = "DEVELOPMENT_TEAM";
     private final static String PROVISIONING_PROFILE_BASE_VARIABLE_NAME = "PROVISIONING_PROFILE";
+    private final static String PROVISIONING_PROFILE_SPECIFIER_BASE_VARIABLE_NAME = "PROVISIONING_PROFILE_SPECIFIER";
     
     private final String fileName;
     private final String varPrefix; // variable prefix for build step integration
-    private transient String uuid;
+    
+    private transient String profileUuid;
+    private transient String profileName;
+    private transient String profileTeamIdentifier;
     
     /**
      * Constructor
@@ -86,6 +91,21 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
     }
     
     /**
+     * Get the variable name for the development team.
+     * @return variable name.
+     */
+    public String getDevelopmentTeamVariableName() {
+        String name;
+        String prefix = getVarPrefix();
+        if (prefix!=null && !prefix.isEmpty()) {
+            name = String.format("%s_%s", prefix, DEVELOPMENT_TEAM_BASE_VARIABLE_NAME);
+        } else {
+            name = DEVELOPMENT_TEAM_BASE_VARIABLE_NAME;
+        }
+        return name;
+    }
+    
+    /**
      * Get the variable name for the provisioning profile.
      * @return variable name.
      */
@@ -101,6 +121,30 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
     }
     
     /**
+     * Get the variable name for the provisioning profile specifier.
+     * @return variable name.
+     */
+    public String getProvisioningProfileSpecifierVariableName() {
+        String name;
+        String prefix = getVarPrefix();
+        if (prefix!=null && !prefix.isEmpty()) {
+            name = String.format("%s_%s", prefix, PROVISIONING_PROFILE_SPECIFIER_BASE_VARIABLE_NAME);
+        } else {
+            name = PROVISIONING_PROFILE_SPECIFIER_BASE_VARIABLE_NAME;
+        }
+        return name;
+    }
+    
+    /**
+     * Get variable names which can be used in other build steps.
+     * @return development team, identifier (uuid) and name variable names
+     */
+    public String getVariableNames() {
+        String variables = String.format("${%s} ${%s} ${%s}", getDevelopmentTeamVariableName(), getProvisioningProfileVariableName(), getProvisioningProfileSpecifierVariableName());
+        return variables;
+    }
+    
+    /**
      * Get the variable name included in ${}.
      * @return variable name
      */
@@ -112,11 +156,33 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
      * Get the uuid of the provisioning profile.
      * @return uuid
      */
-    public String getUuid() {
-        if (uuid==null || uuid.isEmpty()) {
-            uuid = KPPProvisioningProfilesProvider.parseUUIDFromProvisioningProfileFile(fileName);
+    public String getProfileUuid() {
+        if (profileUuid==null || profileUuid.isEmpty()) {
+            profileUuid = KPPProvisioningProfilesProvider.parseUUIDFromProvisioningProfileFile(fileName);
         }
-        return uuid;
+        return profileUuid;
+    }
+    
+    /**
+     * Get the name of the provisioning profile.
+     * @return name
+     */
+    public String getProfileName() {
+        if (profileName==null || profileName.isEmpty()) {
+            profileName = KPPProvisioningProfilesProvider.parseNameFromProvisioningProfileFile(fileName);
+        }
+        return profileName;
+    }
+    
+    /**
+     * Get the team identifier of the provisioning profile.
+     * @return team identifier
+     */
+    public String getProfileTeamIdentifier() {
+        if (profileTeamIdentifier==null || profileTeamIdentifier.isEmpty()) {
+            profileTeamIdentifier = KPPProvisioningProfilesProvider.parseTeamIdentifierFromProvisioningProfileFile(fileName);
+        }
+        return profileTeamIdentifier;
     }
     
     /**
@@ -124,7 +190,7 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
      * @return filename and uuid
      */
     public String getFileNameUuidDescription() {
-        return String.format("%s (%s)", getFileName(), getUuid());
+        return String.format("%s (%s)", getFileName(), getProfileUuid());
     }
     
     @Override

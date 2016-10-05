@@ -68,7 +68,41 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
      * @return UUID
      */
     public static String parseUUIDFromProvisioningProfileFile(String fileName) {
-        String uuid = "UUID not found";
+        String value = parseStringValueFromProvisioningProfileFile(fileName, "UUID");
+        if (value == null || value.isEmpty()) {
+            return "UUID not found";
+        }
+        return value;
+    }
+    
+    /**
+     * Parse the Name from the content of the provisioning profile file.
+     * @param fileName name of the provisioning profile file
+     * @return Name
+     */
+    public static String parseNameFromProvisioningProfileFile(String fileName) {
+        String value = parseStringValueFromProvisioningProfileFile(fileName, "Name");
+        if (value == null || value.isEmpty()) {
+            return "Name not found";
+        }
+        return value;
+    }
+    
+    /**
+     * Parse the TeamIdentifier from the content of the provisioning profile file.
+     * @param fileName name of the provisioning profile file
+     * @return TeamIdentifier
+     */
+    public static String parseTeamIdentifierFromProvisioningProfileFile(String fileName) {
+        String value = parseStringValueFromProvisioningProfileFile(fileName, "com.apple.developer.team-identifier");
+        if (value == null || value.isEmpty()) {
+            return "TeamIdentifier not found";
+        }
+        return value;
+    }
+    
+    private static String parseStringValueFromProvisioningProfileFile(String fileName, String keyName) {
+        String keyValue = null;
         BufferedReader br = null;
         try {
             String fileNameWithoutUUID = KPPBaseProvisioningProfilesProvider.removeUUIDFromFileName(fileName);
@@ -76,18 +110,18 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
             FileReader reader = new FileReader(file);
             br = new BufferedReader(reader);
             String line;
-            boolean foundUUID = false;
+            boolean foundKeyName = false;
             while (br!=null && (line = br.readLine()) != null) {
-                if (line.contains("<key>UUID</key>")) {
-                    foundUUID = true; // next line is value
-                } else if (foundUUID) {
+                if (line.contains("<key>" + keyName + "</key>")) {
+                    foundKeyName = true; // next line is value
+                } else if (foundKeyName) {
                     final String openTag = "<string>";
                     final String closeTag = "</string>";
-                    // parse value for UUID key
+                    // parse value for Name key
                     int indexOfOpenTag = line.indexOf(openTag);
                     int indexOfCloseTag = line.indexOf(closeTag);
                     if (indexOfOpenTag != -1 && indexOfCloseTag != -1 && indexOfOpenTag < indexOfCloseTag) {
-                        uuid = line.substring(indexOfOpenTag+openTag.length(), indexOfCloseTag);
+                        keyValue = line.substring(indexOfOpenTag+openTag.length(), indexOfCloseTag);
                     }
                     break;
                 }
@@ -103,6 +137,6 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
                 LOGGER.log(Level.SEVERE, null, ex);
             }
         }
-        return uuid;
+        return keyValue;
     }
 }
