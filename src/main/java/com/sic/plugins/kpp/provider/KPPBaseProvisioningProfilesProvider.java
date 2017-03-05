@@ -30,12 +30,13 @@ import hudson.DescriptorExtensionList;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
 import hudson.model.Descriptor;
-import hudson.model.Hudson;
+import jenkins.model.Jenkins;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * An extension point for providing {@link KPPProvisioningProfile}
@@ -107,14 +108,14 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
      * @return all the registered {@link KPPKeychain} descriptors.
      */
     public static DescriptorExtensionList<KPPProvisioningProfile, Descriptor<KPPProvisioningProfile>> allProvisioningProfileDescriptors() {
-        return Hudson.getInstance().getDescriptorList(KPPProvisioningProfile.class);
+        return Jenkins.getInstance().getDescriptorList(KPPProvisioningProfile.class);
     }
     
     /**
      * @return All registered {@link KPPBaseProvisioningProfilesProvider}s.
      */
     public static ExtensionList<KPPBaseProvisioningProfilesProvider> all() {
-        return Hudson.getInstance().getExtensionList(KPPBaseProvisioningProfilesProvider.class);
+        return Jenkins.getInstance().getExtensionList(KPPBaseProvisioningProfilesProvider.class);
     }
     
     /**

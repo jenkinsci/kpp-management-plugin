@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildWrapper;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -111,8 +112,8 @@ public class KPPProvisioningProfilesBuildWrapper extends SimpleBuildWrapper impl
      */
     private void copyProvisioningProfiles(FilePath projectWorkspace, String nodeStr) throws IOException, InterruptedException {
         
-        Hudson hudson = Hudson.getInstance();
-        FilePath hudsonRoot = hudson.getRootPath();
+        Jenkins jenkins = Jenkins.getInstance();
+        FilePath hudsonRoot = jenkins.getRootPath();
         VirtualChannel channel;
         String toProvisioningProfilesDirectoryPath = null;
 
@@ -125,7 +126,7 @@ public class KPPProvisioningProfilesBuildWrapper extends SimpleBuildWrapper impl
             isMaster = true;
         } else {
             // build on slave
-            Node node = hudson.getNode(nodeStr);;
+            Node node = jenkins.getNode(nodeStr);;
             channel = node.getChannel();
             KPPNodeProperty nodeProperty = KPPNodeProperty.getCurrentNodeProperties(node);
             if (nodeProperty != null) {
@@ -144,7 +145,7 @@ public class KPPProvisioningProfilesBuildWrapper extends SimpleBuildWrapper impl
             throw new IOException(message);
         }
         
-        // remove file seperator char at the end of the path
+        // remove file separator char at the end of the path
         if (toProvisioningProfilesDirectoryPath.endsWith(File.separator)) {
             toProvisioningProfilesDirectoryPath = toProvisioningProfilesDirectoryPath.substring(0, toProvisioningProfilesDirectoryPath.length()-1);
         }

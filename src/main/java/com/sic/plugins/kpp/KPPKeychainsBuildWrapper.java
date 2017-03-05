@@ -30,9 +30,14 @@ import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.*;
-import hudson.tasks.BuildWrapper;
+import hudson.model.AbstractProject;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.tasks.BuildWrapperDescriptor;
+import jenkins.model.Jenkins;
+import jenkins.tasks.SimpleBuildWrapper;
+import org.kohsuke.stapler.DataBoundConstructor;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -40,9 +45,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import jenkins.tasks.SimpleBuildWrapper;
-import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Build wrapper for keychains
@@ -53,7 +55,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper implements Seri
     private List<KPPKeychainCertificatePair> keychainCertificatePairs = new ArrayList<KPPKeychainCertificatePair>();
     private boolean deleteKeychainsAfterBuild;
     private boolean overwriteExistingKeychains;
-    private transient List<FilePath>copiedKeychains;
+    private transient List<FilePath> copiedKeychains;
 
     /**
      * Constructor
@@ -108,8 +110,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper implements Seri
      * @throws InterruptedException
      */
     private void copyKeychainsToWorkspace(FilePath projectWorkspace) throws IOException, InterruptedException {
-        Hudson hudson = Hudson.getInstance();
-        FilePath hudsonRoot = hudson.getRootPath();
+        FilePath jenkinsRoot = Jenkins.getInstance().getRootPath();
 
         if (copiedKeychains == null) {
             copiedKeychains = new ArrayList<FilePath>();
@@ -118,7 +119,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper implements Seri
         }
 
         for (KPPKeychainCertificatePair pair : keychainCertificatePairs) {
-            FilePath from = new FilePath(hudsonRoot, pair.getKeychainFilePath());
+            FilePath from = new FilePath(jenkinsRoot, pair.getKeychainFilePath());
             FilePath to = new FilePath(projectWorkspace, pair.getKeychainFileName());
             if (overwriteExistingKeychains || !to.exists()) {
                 from.copyTo(to);
@@ -152,8 +153,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper implements Seri
     /**
      * Disposer class for cleaning up copied keychains
      */
-    public class KPPKeychainsDisposer extends Disposer
-    {
+    public class KPPKeychainsDisposer extends Disposer {
         @Override
         public void tearDown(Run<?, ?> run, FilePath filePath, Launcher launcher, TaskListener taskListener) throws IOException, InterruptedException {
             if (deleteKeychainsAfterBuild) {
@@ -188,20 +188,20 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper implements Seri
          * @return environment with additional variables
          */
         private Map<String, String> getEnvMap(Map<String, String> env) {
-            Map<String, String> map = new HashMap<String,String>();
+            Map<String, String> map = new HashMap<String, String>();
             for (KPPKeychainCertificatePair pair : keychainCertificatePairs) {
                 KPPKeychain keychain = KPPKeychainCertificatePair.getKeychainFromString(pair.getKeychain());
-                if (keychain!=null) {
+                if (keychain != null) {
                     String fileName = keychain.getFileName();
                     String password = keychain.getPassword();
                     String codeSigningIdentity = pair.getCodeSigningIdentity();
-                    if (fileName!=null && fileName.length()!=0) {
+                    if (fileName != null && fileName.length() != 0) {
                         String keychainPath = String.format("%s%s%s", workspace, File.separator, fileName);
                         map.put(pair.getKeychainVariableName(), keychainPath);
                     }
-                    if (password!=null && password.length()!=0)
+                    if (password != null && password.length() != 0)
                         map.put(pair.getKeychainPasswordVariableName(), keychain.getPassword());
-                    if (codeSigningIdentity!=null && codeSigningIdentity.length()!=0)
+                    if (codeSigningIdentity != null && codeSigningIdentity.length() != 0)
                         map.put(pair.getCodeSigningIdentityVariableName(), codeSigningIdentity);
                 }
             }
