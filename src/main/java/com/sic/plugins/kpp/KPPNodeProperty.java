@@ -57,6 +57,7 @@ public class KPPNodeProperty extends NodeProperty<Node>{
     }
     
     /**
+     * @param node the node
      * Get the {@link KPPNodeProperty}.
      * @return node property
      */

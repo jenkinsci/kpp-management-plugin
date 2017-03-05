@@ -55,7 +55,7 @@ public class KPPCertificate implements Serializable{
     
     /**
      * Set the code singing identity name.
-     * @param codeSigningIdentityName 
+     * @param codeSigningIdentityName name of the code signing identity
      */
     public void setCodeSigningIdentityName(String codeSigningIdentityName) {
         this.codeSigningIdentityName = codeSigningIdentityName;

@@ -94,7 +94,7 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     }
     
     /**
-     * All regsitered {@link KPPBaseKeychainsProvider}s.
+     * @return All registered {@link KPPBaseKeychainsProvider}s.
      */
     public static ExtensionList<KPPBaseKeychainsProvider> all() {
         return Hudson.getInstance().getExtensionList(KPPBaseKeychainsProvider.class);
@@ -103,9 +103,9 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     /**
      * Call this method to update keychains from save action. The keychains from save action are merged into current keychains list. 
      * Then this list is sychnronized with the upload folder.
-     * @param keychainsAfterSave 
+     * @param keychainsFromSave the list of keychains
      */
-    public void updateKeychainsFromSave(List<KPPKeychain>keychainsFromSave) {
+    public void updateKeychainsFromSave(List<KPPKeychain> keychainsFromSave) {
         List<KPPKeychain> ksCurrent = new ArrayList<KPPKeychain>(getKeychains());
         List<KPPKeychain> ksNew = new ArrayList<KPPKeychain>(keychainsFromSave.size());
         
@@ -134,7 +134,7 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     
     /**
      * Checks if a given file item is a keychain file.
-     * @param item
+     * @param item the file to check
      * @return true, if it is a keychain file.
      */
     public boolean isKeychainFile(FileItem item) {

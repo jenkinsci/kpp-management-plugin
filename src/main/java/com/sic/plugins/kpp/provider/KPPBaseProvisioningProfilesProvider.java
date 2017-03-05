@@ -95,7 +95,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     
     /**
      * Set the path to the directory to store provisioning profiles on the master or standalone jenkins instance.
-     * @param provisioningProfilesPath 
+     * @param provisioningProfilesPath the path to store
      */
     public void setProvisioningProfilesPath(String provisioningProfilesPath) {
         this.provisioningProfilesPath = provisioningProfilesPath;
@@ -111,7 +111,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     }
     
     /**
-     * All regsitered {@link KPPBaseProvisioningProfilesProvider}s.
+     * @return All registered {@link KPPBaseProvisioningProfilesProvider}s.
      */
     public static ExtensionList<KPPBaseProvisioningProfilesProvider> all() {
         return Hudson.getInstance().getExtensionList(KPPBaseProvisioningProfilesProvider.class);
@@ -120,9 +120,9 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     /**
      * Call this method to update provisioning profiles from save action. The provisioning profiles from save action are merged into current provisioning profiles list. 
      * Then this list is sychnronized with the upload folder.
-     * @param provisioningProfilesAfterSave 
+     * @param provisioningProfilesFromSave the list of profiles
      */
-    public void updateProvisioningProfilesFromSave(List<KPPProvisioningProfile>provisioningProfilesFromSave) {
+    public void updateProvisioningProfilesFromSave(List<KPPProvisioningProfile> provisioningProfilesFromSave) {
         List<KPPProvisioningProfile> ppsCurrent = new ArrayList<KPPProvisioningProfile>(getProvisioningProfiles());
         List<KPPProvisioningProfile> ppsNew = new ArrayList<KPPProvisioningProfile>(provisioningProfilesFromSave.size());
         
@@ -152,7 +152,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     
     /**
      * Checks if a given file item is a mobile provision profile file.
-     * @param item
+     * @param item the profile to check
      * @return true, if it is a mobile provision profile file.
      */
     public boolean isMobileProvisionProfileFile(FileItem item) {
@@ -161,7 +161,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     
     /**
      * If the fileName contains the uuid at the end, so remove the uuid part.
-     * @param fileName
+     * @param fileName the profile
      * @return fileName without uuid
      */
     public static String removeUUIDFromFileName(String fileName) {
@@ -175,7 +175,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     
     /**
      * Get the filename of the provisioning profile in the shape of uuid.mobileprovision.
-     * @param uuid
+     * @param uuid the UUID
      * @return filename
      */
     public static String getUUIDFileName(String uuid) {

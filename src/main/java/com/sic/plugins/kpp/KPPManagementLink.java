@@ -103,9 +103,9 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
      * 
      * @param req Request
      * @param rsp Response
-     * @throws ServletException
-     * @throws IOException
-     * @throws NoSuchAlgorithmException 
+     * @throws ServletException on server exception
+     * @throws IOException on file error
+     * @throws NoSuchAlgorithmException if algorithm not found
      */
     public void doUploadFile(StaplerRequest req, StaplerResponse rsp) throws
             ServletException,
@@ -138,9 +138,9 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
      * 
      * @param req Request
      * @param rsp Response
-     * @throws ServletException
-     * @throws IOException
-     * @throws NoSuchAlgorithmException 
+     * @throws ServletException on server exception
+     * @throws IOException on file not found
+     * @throws NoSuchAlgorithmException if algorithm not found
      */
     public void doSave(StaplerRequest req, StaplerResponse rsp) throws
             ServletException,

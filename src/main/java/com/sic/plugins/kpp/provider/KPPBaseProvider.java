@@ -44,7 +44,7 @@ import org.apache.commons.fileupload.FileItem;
  */
 public abstract class KPPBaseProvider {
     
-    protected final static Logger LOGGER = Logger.getLogger(KPPBaseProvider.class.getName());
+    final static Logger LOGGER = Logger.getLogger(KPPBaseProvider.class.getName());
     private final static String DEFAULT_UPLOAD_DIRECTORY_PATH = Hudson.getInstance().getRootDir() + File.separator + "kpp_upload";
     private final String defaultConfigXmlFileName;
     
@@ -60,7 +60,11 @@ public abstract class KPPBaseProvider {
         checkAndCreateUploadFolder();
         load();
         merge();
-        save();
+        try {
+            save();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, String.format("Failed to save file %s.", getConfigXmlFileName()), e);
+        }
     }
     
     /**
@@ -91,7 +95,7 @@ public abstract class KPPBaseProvider {
     
     /**
      * Get the default Upload Directory Path for Keychains and Provisioning Profiles files.
-     * @return 
+     * @return path
      */
     public String getUploadDirectoryPath() {
         return DEFAULT_UPLOAD_DIRECTORY_PATH;
@@ -99,9 +103,9 @@ public abstract class KPPBaseProvider {
     
     /**
      * Store uploaded file inside upload directory.
-     * @param fileItemToUpload
-     * @throws FileNotFoundException
-     * @throws IOException 
+     * @param fileItemToUpload the file object
+     * @throws FileNotFoundException if the file isn't found
+     * @throws IOException if the file can't be opened
      */
     public void upload(FileItem fileItemToUpload) throws FileNotFoundException, IOException {
         // save uploaded file
@@ -113,7 +117,7 @@ public abstract class KPPBaseProvider {
     
     /**
      * Get the provider config file.
-     * @return 
+     * @return xmlfile
      */
     public XmlFile getConfigXmlFile() {
         return new XmlFile(new File(Hudson.getInstance().getRootDir(), getConfigXmlFileName()));
@@ -129,9 +133,9 @@ public abstract class KPPBaseProvider {
     
     /**
      * Save provider config xml.
-     * @throws IOException 
+     * @throws IOException if the file can't be opened
      */
-    public final void save() {
+    public final void save() throws IOException {
         try {
             getConfigXmlFile().write(this);
         } catch (IOException ex) {

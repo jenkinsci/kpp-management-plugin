@@ -133,7 +133,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper implements Seri
     }
 
     /**
-     * Descriptor of the {@link KPPKeychainBuildWrapper}.
+     * Descriptor of the {@link KPPKeychainsBuildWrapper}.
      */
     @Extension
     public static final class DescriptorImpl extends BuildWrapperDescriptor {
