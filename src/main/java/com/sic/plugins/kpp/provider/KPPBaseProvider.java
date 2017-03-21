@@ -41,7 +41,6 @@ import java.util.logging.Logger;
 public abstract class KPPBaseProvider {
     
     final static Logger LOGGER = Logger.getLogger(KPPBaseProvider.class.getName());
-    private final static String DEFAULT_UPLOAD_DIRECTORY_PATH = Jenkins.getInstance().getRootDir() + File.separator + "kpp_upload";
     private final String defaultConfigXmlFileName;
     
     /**
@@ -85,7 +84,9 @@ public abstract class KPPBaseProvider {
     protected void checkAndCreateUploadFolder() {
         File uploadFolder = new File((getUploadDirectoryPath()));
         if (!uploadFolder.exists()) {
-            uploadFolder.mkdir();
+            if(!uploadFolder.mkdir()) {
+                LOGGER.log(Level.SEVERE, String.format("Unable to create directory: %s", uploadFolder.getName()));
+            }
         }
     }
     
@@ -94,7 +95,12 @@ public abstract class KPPBaseProvider {
      * @return path
      */
     public String getUploadDirectoryPath() {
-        return DEFAULT_UPLOAD_DIRECTORY_PATH;
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return jenkins.getRootDir() + File.separator + "kpp_upload";
+        }
+
+        return null;
     }
     
     /**
@@ -103,12 +109,19 @@ public abstract class KPPBaseProvider {
      * @throws FileNotFoundException if the file isn't found
      * @throws IOException if the file can't be opened
      */
-    public void upload(FileItem fileItemToUpload) throws FileNotFoundException, IOException {
+    public void upload(FileItem fileItemToUpload) throws IOException {
         // save uploaded file
         byte[] fileData = fileItemToUpload.get();
         File toUploadFile = new File(getUploadDirectoryPath(), fileItemToUpload.getName());
-        OutputStream os = new FileOutputStream(toUploadFile);
-        os.write(fileData);
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(toUploadFile);
+            os.write(fileData);
+        } finally {
+            if (os != null) {
+                os.close();
+            }
+        }
     }
     
     /**
@@ -116,7 +129,12 @@ public abstract class KPPBaseProvider {
      * @return xmlfile
      */
     public XmlFile getConfigXmlFile() {
-        return new XmlFile(new File(Jenkins.getInstance().getRootDir(), getConfigXmlFileName()));
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return new XmlFile(new File(jenkins.getRootDir(), getConfigXmlFileName()));
+        }
+
+        return null;
     }
     
     /**
@@ -197,7 +215,7 @@ public abstract class KPPBaseProvider {
     /**
      * Filename filter to get only files with a special extension.
      */
-    private class FileExtensionFilenameFilter implements FilenameFilter {
+    static private class FileExtensionFilenameFilter implements FilenameFilter {
         
         private final String fileExtension;
         

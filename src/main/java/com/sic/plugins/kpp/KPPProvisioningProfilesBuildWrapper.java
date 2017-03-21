@@ -56,6 +56,7 @@ public class KPPProvisioningProfilesBuildWrapper extends SimpleBuildWrapper impl
     private boolean deleteProfilesAfterBuild;
     private boolean overwriteExistingProfiles;
     private transient List<FilePath> copiedProfiles;
+    private static final long serialVersionUID = 1;
     
     /**
      * Constructor
@@ -113,6 +114,10 @@ public class KPPProvisioningProfilesBuildWrapper extends SimpleBuildWrapper impl
     private void copyProvisioningProfiles(FilePath projectWorkspace, String nodeStr) throws IOException, InterruptedException {
         
         Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins == null) {
+            throw new IOException();
+        }
+
         FilePath hudsonRoot = jenkins.getRootPath();
         VirtualChannel channel;
         String toProvisioningProfilesDirectoryPath = null;
@@ -122,12 +127,25 @@ public class KPPProvisioningProfilesBuildWrapper extends SimpleBuildWrapper impl
         if (buildOn.equals("master")) {
             // build on master
             channel = projectWorkspace.getChannel();
-            toProvisioningProfilesDirectoryPath = KPPProvisioningProfilesProvider.getInstance().getProvisioningProfilesPath();
+
+            KPPProvisioningProfilesProvider instance = KPPProvisioningProfilesProvider.getInstance();
+            if (instance == null) {
+                throw new IOException("Cannot get instance of KPPProvisioningProfilesProvider");
+            }
+            toProvisioningProfilesDirectoryPath = instance.getProvisioningProfilesPath();
             isMaster = true;
         } else {
             // build on slave
-            Node node = jenkins.getNode(nodeStr);;
+            Node node = jenkins.getNode(nodeStr);
+            if (node == null) {
+                throw new IOException(String.format("Cannot find node with name: %s", nodeStr));
+            }
+
             channel = node.getChannel();
+            if (channel == null) {
+                throw new IOException(String.format("Cannot get channel for node with name: %s", nodeStr));
+            }
+
             KPPNodeProperty nodeProperty = KPPNodeProperty.getCurrentNodeProperties(node);
             if (nodeProperty != null) {
                 toProvisioningProfilesDirectoryPath = KPPNodeProperty.getCurrentNodeProperties(node).getProvisioningProfilesPath();

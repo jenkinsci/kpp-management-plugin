@@ -109,7 +109,6 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
      * @return description
      */
     public final String getDescription() {
-        getCertificates();
         return description;
     }
     
@@ -164,8 +163,12 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
      * @return descriptor
      */
     public Descriptor getDescriptor() {
-        Descriptor ds = Jenkins.getInstance().getDescriptorOrDie(getClass());
-        return ds;
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return jenkins.getDescriptorOrDie(getClass());
+        }
+
+        return null;
     }
     
     /**

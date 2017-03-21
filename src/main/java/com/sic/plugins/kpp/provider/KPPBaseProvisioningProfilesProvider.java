@@ -37,6 +37,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * An extension point for providing {@link KPPProvisioningProfile}
@@ -108,14 +109,22 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
      * @return all the registered {@link KPPKeychain} descriptors.
      */
     public static DescriptorExtensionList<KPPProvisioningProfile, Descriptor<KPPProvisioningProfile>> allProvisioningProfileDescriptors() {
-        return Jenkins.getInstance().getDescriptorList(KPPProvisioningProfile.class);
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return jenkins.getDescriptorList(KPPProvisioningProfile.class);
+        }
+        return null;
     }
     
     /**
      * @return All registered {@link KPPBaseProvisioningProfilesProvider}s.
      */
     public static ExtensionList<KPPBaseProvisioningProfilesProvider> all() {
-        return Jenkins.getInstance().getExtensionList(KPPBaseProvisioningProfilesProvider.class);
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return jenkins.getExtensionList(KPPBaseProvisioningProfilesProvider.class);
+        }
+        return null;
     }
     
     /**
@@ -142,8 +151,10 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
             final String folderPath = getUploadDirectoryPath();
             File ppFile;
             for (KPPProvisioningProfile pp : ppsCurrent) {
-                ppFile = new File(folderPath + File.separator +pp.getFileName());
-                ppFile.delete();
+                ppFile = new File(folderPath + File.separator + pp.getFileName());
+                if(!ppFile.delete()) {
+                    LOGGER.log(Level.SEVERE, String.format("Unable to delete file: %s", ppFile.getName()));
+                }
             }
         }
         

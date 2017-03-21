@@ -31,6 +31,8 @@ import hudson.slaves.NodePropertyDescriptor;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import java.io.IOException;
+
 /**
  * Configure Slave Node Properties
  * @author Michael Bär
@@ -61,9 +63,14 @@ public class KPPNodeProperty extends NodeProperty<Node>{
      * @return node property
      */
     public static KPPNodeProperty getCurrentNodeProperties(Node node) {
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins == null) {
+            return null;
+        }
+
         KPPNodeProperty property = node.getNodeProperties().get(KPPNodeProperty.class);
         if(property == null) {
-            property = Jenkins.getInstance().getGlobalNodeProperties().get(KPPNodeProperty.class);
+            property = jenkins.getGlobalNodeProperties().get(KPPNodeProperty.class);
         }
         return property;
     }

@@ -36,6 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * An extension point for providing {@link KPPKeychain}.
@@ -91,14 +92,22 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
      * @return all the registered {@link KPPKeychain} descriptors.
      */
     public static DescriptorExtensionList<KPPKeychain, Descriptor<KPPKeychain>> allKeychainDescriptors() {
-        return Jenkins.getInstance().getDescriptorList(KPPKeychain.class);
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return jenkins.getDescriptorList(KPPKeychain.class);
+        }
+        return null;
     }
     
     /**
      * @return All registered {@link KPPBaseKeychainsProvider}s.
      */
     public static ExtensionList<KPPBaseKeychainsProvider> all() {
-        return Jenkins.getInstance().getExtensionList(KPPBaseKeychainsProvider.class);
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return jenkins.getExtensionList(KPPBaseKeychainsProvider.class);
+        }
+        return null;
     }
     
     /**
@@ -125,8 +134,10 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
             final String ksFolderPath = getUploadDirectoryPath();
             File kFile;
             for (KPPKeychain k : ksCurrent) {
-                kFile = new File(ksFolderPath + File.separator +k.getFileName());
-                kFile.delete();
+                kFile = new File(ksFolderPath + File.separator + k.getFileName());
+                if (!kFile.delete()) {
+                    LOGGER.log(Level.SEVERE, String.format("Unable to delete file: %s", kFile.getName()));
+                }
             }
         }
         

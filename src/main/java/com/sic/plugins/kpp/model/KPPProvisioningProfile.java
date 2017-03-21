@@ -49,6 +49,7 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
     private final String fileName;
     private final String varPrefix; // variable prefix for build step integration
     private transient String uuid;
+    private static final long serialVersionUID = 1;
     
     /**
      * Constructor
@@ -155,8 +156,12 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
      * @return descriptor
      */
     public Descriptor<KPPProvisioningProfile> getDescriptor() {
-        Descriptor ds = Jenkins.getInstance().getDescriptorOrDie(getClass());
-        return ds;
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return jenkins.getDescriptorOrDie(getClass());
+        }
+
+        return null;
     }
     
     /**

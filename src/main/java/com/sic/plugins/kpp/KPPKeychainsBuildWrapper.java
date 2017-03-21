@@ -56,6 +56,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper implements Seri
     private boolean deleteKeychainsAfterBuild;
     private boolean overwriteExistingKeychains;
     private transient List<FilePath> copiedKeychains;
+    private static final long serialVersionUID = 1;
 
     /**
      * Constructor
@@ -110,7 +111,12 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper implements Seri
      * @throws InterruptedException
      */
     private void copyKeychainsToWorkspace(FilePath projectWorkspace) throws IOException, InterruptedException {
-        FilePath jenkinsRoot = Jenkins.getInstance().getRootPath();
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins == null) {
+            throw new IOException();
+        }
+
+        FilePath jenkinsRoot = jenkins.getRootPath();
 
         if (copiedKeychains == null) {
             copiedKeychains = new ArrayList<FilePath>();

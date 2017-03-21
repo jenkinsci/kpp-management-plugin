@@ -10,9 +10,11 @@
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/localizer" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/target/generated-sources/groovy-stubs" />
       <excludeFolder url="file://$MODULE_DIR$/target/javadoc-bundle-options" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-status" />
       <excludeFolder url="file://$MODULE_DIR$/target/site" />
+      <excludeFolder url="file://$MODULE_DIR$/target/work" />
     </content>
-    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.jenkins-ci.plugins.workflow:workflow-job:1.14" level="project" />
     <orderEntry type="library" name="Maven: org.jenkins-ci.plugins.workflow:workflow-support:1.14" level="project" />
