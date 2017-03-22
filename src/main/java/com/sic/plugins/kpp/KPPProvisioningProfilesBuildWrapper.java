@@ -26,35 +26,37 @@ package com.sic.plugins.kpp;
 
 import com.sic.plugins.kpp.model.KPPProvisioningProfile;
 import com.sic.plugins.kpp.provider.KPPProvisioningProfilesProvider;
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
-import hudson.model.Hudson;
-import hudson.model.Node;
+import hudson.model.*;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jenkins.model.Jenkins;
+import jenkins.tasks.SimpleBuildWrapper;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Build wrapper for provisioning profiles
  * @author Michael Bär
  */
-public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
+public class KPPProvisioningProfilesBuildWrapper extends SimpleBuildWrapper implements Serializable {
     
     private List<KPPProvisioningProfile> provisioningProfiles;
     private boolean deleteProfilesAfterBuild;
     private boolean overwriteExistingProfiles;
     private transient List<FilePath> copiedProfiles;
+    private static final long serialVersionUID = 1;
     
     /**
      * Constructor
@@ -93,41 +95,60 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
     public boolean getOverwriteExistingProfiles() {
         return overwriteExistingProfiles;
     }
-    
+
     @Override
-    public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-        copyProvisioningProfiles(build);
-        return new KPPProvisioningProfilesBuildWrapper.EnvironmentImpl(provisioningProfiles);
+    public void setUp(Context context, Run<?, ?> run, FilePath filePath, Launcher launcher, TaskListener taskListener, EnvVars envVars) throws IOException, InterruptedException {
+        copyProvisioningProfiles(filePath, envVars.get("NODE_NAME"));
+        EnvironmentImpl env = new KPPProvisioningProfilesBuildWrapper.EnvironmentImpl(provisioningProfiles);
+        env.buildEnvVars(context.getEnv());
+        context.setDisposer(new KPPProvisioningProfilesDisposer());
     }
-    
+
     /**
      * Copy the provisioning profiles configured for this job to the mobile provisioning profile path of the node or master, where the job is executed.
-     * @param build current build
+     * @param projectWorkspace current workspace
+     * @param nodeStr Name of the execution node
      * @throws IOException
      * @throws InterruptedException 
      */
-    private void copyProvisioningProfiles(AbstractBuild build) throws IOException, InterruptedException {
+    private void copyProvisioningProfiles(FilePath projectWorkspace, String nodeStr) throws IOException, InterruptedException {
         
-        Hudson hudson = Hudson.getInstance();
-        FilePath hudsonRoot = hudson.getRootPath();
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins == null) {
+            throw new IOException("Jenkins instance not available");
+        }
+
+        FilePath hudsonRoot = jenkins.getRootPath();
         VirtualChannel channel;
         String toProvisioningProfilesDirectoryPath = null;
-        
-        String buildOn = build.getBuiltOnStr();
+
+        String buildOn = nodeStr;
         boolean isMaster = false;
-        if (buildOn==null || buildOn.isEmpty()) {
+        if (buildOn.equals("master")) {
             // build on master
-            FilePath projectWorkspace = build.getWorkspace();
             channel = projectWorkspace.getChannel();
-            toProvisioningProfilesDirectoryPath = KPPProvisioningProfilesProvider.getInstance().getProvisioningProfilesPath();
+
+            KPPProvisioningProfilesProvider instance = KPPProvisioningProfilesProvider.getInstance();
+            if (instance == null) {
+                throw new IOException("Cannot get instance of KPPProvisioningProfilesProvider");
+            }
+            toProvisioningProfilesDirectoryPath = instance.getProvisioningProfilesPath();
             isMaster = true;
         } else {
             // build on slave
-            Node node = build.getBuiltOn();
+            Node node = jenkins.getNode(nodeStr);
+            if (node == null) {
+                throw new IOException(String.format("Cannot find node with name: %s", nodeStr));
+            }
+
             channel = node.getChannel();
-            KPPNodeProperty nodeProperty = KPPNodeProperty.getCurrentNodeProperties();
+            if (channel == null) {
+                throw new IOException(String.format("Cannot get channel for node with name: %s", nodeStr));
+            }
+
+            KPPNodeProperty nodeProperty = KPPNodeProperty.getCurrentNodeProperties(node);
             if (nodeProperty != null) {
-                toProvisioningProfilesDirectoryPath = KPPNodeProperty.getCurrentNodeProperties().getProvisioningProfilesPath();
+                toProvisioningProfilesDirectoryPath = KPPNodeProperty.getCurrentNodeProperties(node).getProvisioningProfilesPath();
             }
         }
         
@@ -142,7 +163,7 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
             throw new IOException(message);
         }
         
-        // remove file seperator char at the end of the path
+        // remove file separator char at the end of the path
         if (toProvisioningProfilesDirectoryPath.endsWith(File.separator)) {
             toProvisioningProfilesDirectoryPath = toProvisioningProfilesDirectoryPath.substring(0, toProvisioningProfilesDirectoryPath.length()-1);
         }
@@ -185,7 +206,22 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
             return Messages.KPPProvisioningProfilesBuildWrapper_DisplayName();
         }
     }
-    
+
+    /**
+     * Disposer class for cleaning up copied keychains
+     */
+    public class KPPProvisioningProfilesDisposer extends Disposer
+    {
+        @Override
+        public void tearDown(Run<?, ?> run, FilePath filePath, Launcher launcher, TaskListener taskListener) throws IOException, InterruptedException {
+            if (deleteProfilesAfterBuild) {
+                for (FilePath profilePath : copiedProfiles) {
+                    profilePath.delete();
+                }
+            }
+        }
+    }
+
     /**
      * Environment implementation that adds additional variables to the build.
      */
@@ -220,18 +256,6 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         public void buildEnvVars(Map<String, String> env) {
             env.putAll(getEnvMap());
 	}
-        
-        @Override
-        public boolean tearDown(AbstractBuild build, BuildListener listener)
-                throws IOException, InterruptedException {
-            if (deleteProfilesAfterBuild) {
-                for (FilePath filePath : copiedProfiles) {
-                    filePath.delete();
-                }
-            }
-            return true;
-        }
-        
     }
     
 }

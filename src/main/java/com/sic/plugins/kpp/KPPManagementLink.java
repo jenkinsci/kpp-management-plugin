@@ -24,24 +24,24 @@
 
 package com.sic.plugins.kpp;
 
-import com.sic.plugins.kpp.provider.KPPKeychainsProvider;
 import com.sic.plugins.kpp.model.KPPKeychain;
 import com.sic.plugins.kpp.model.KPPProvisioningProfile;
+import com.sic.plugins.kpp.provider.KPPKeychainsProvider;
 import com.sic.plugins.kpp.provider.KPPProvisioningProfilesProvider;
 import hudson.Extension;
-import hudson.model.Hudson;
 import hudson.model.ManagementLink;
-import static hudson.model.ManagementLink.all;
 import hudson.model.Saveable;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import javax.servlet.ServletException;
+import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.FileItem;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /**
  * Manages the main plugin configuration page for uploading of provisioning profiles and keychains.
@@ -103,15 +103,15 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
      * 
      * @param req Request
      * @param rsp Response
-     * @throws ServletException
-     * @throws IOException
-     * @throws NoSuchAlgorithmException 
+     * @throws ServletException on server exception
+     * @throws IOException on file error
+     * @throws NoSuchAlgorithmException if algorithm not found
      */
     public void doUploadFile(StaplerRequest req, StaplerResponse rsp) throws
             ServletException,
             IOException,
             NoSuchAlgorithmException {
-        Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+        Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
         
         FileItem file = req.getFileItem("file");
         if (file == null || file.getSize() == 0) {
@@ -138,15 +138,15 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
      * 
      * @param req Request
      * @param rsp Response
-     * @throws ServletException
-     * @throws IOException
-     * @throws NoSuchAlgorithmException 
+     * @throws ServletException on server exception
+     * @throws IOException on file not found
+     * @throws NoSuchAlgorithmException if algorithm not found
      */
     public void doSave(StaplerRequest req, StaplerResponse rsp) throws
             ServletException,
             IOException,
             NoSuchAlgorithmException {
-        Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+        Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
         
         JSONObject data = req.getSubmittedForm();
         List<KPPKeychain> keychains = req.bindJSONToList(KPPKeychain.class, data.get("keychain"));
@@ -175,7 +175,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
 
     @Override
     public Object getTarget() {
-        Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+        Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
         KPPKeychainsProvider.getInstance().update();
         KPPProvisioningProfilesProvider.getInstance().update();
         return this;
@@ -183,7 +183,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
 
     @Override
     public void save() throws IOException {
-        Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+        Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
         KPPKeychainsProvider.getInstance().save();
         KPPProvisioningProfilesProvider.getInstance().save();
     }

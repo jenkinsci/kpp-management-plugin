@@ -29,12 +29,14 @@ import hudson.DescriptorExtensionList;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
 import hudson.model.Descriptor;
-import hudson.model.Hudson;
+import jenkins.model.Jenkins;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.lang.StringUtils;
+import java.util.logging.Level;
 
 /**
  * An extension point for providing {@link KPPKeychain}.
@@ -90,22 +92,30 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
      * @return all the registered {@link KPPKeychain} descriptors.
      */
     public static DescriptorExtensionList<KPPKeychain, Descriptor<KPPKeychain>> allKeychainDescriptors() {
-        return Hudson.getInstance().getDescriptorList(KPPKeychain.class);
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return jenkins.getDescriptorList(KPPKeychain.class);
+        }
+        return null;
     }
     
     /**
-     * All regsitered {@link KPPBaseKeychainsProvider}s.
+     * @return All registered {@link KPPBaseKeychainsProvider}s.
      */
     public static ExtensionList<KPPBaseKeychainsProvider> all() {
-        return Hudson.getInstance().getExtensionList(KPPBaseKeychainsProvider.class);
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return jenkins.getExtensionList(KPPBaseKeychainsProvider.class);
+        }
+        return null;
     }
     
     /**
      * Call this method to update keychains from save action. The keychains from save action are merged into current keychains list. 
      * Then this list is sychnronized with the upload folder.
-     * @param keychainsAfterSave 
+     * @param keychainsFromSave the list of keychains
      */
-    public void updateKeychainsFromSave(List<KPPKeychain>keychainsFromSave) {
+    public void updateKeychainsFromSave(List<KPPKeychain> keychainsFromSave) {
         List<KPPKeychain> ksCurrent = new ArrayList<KPPKeychain>(getKeychains());
         List<KPPKeychain> ksNew = new ArrayList<KPPKeychain>(keychainsFromSave.size());
         
@@ -124,8 +134,10 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
             final String ksFolderPath = getUploadDirectoryPath();
             File kFile;
             for (KPPKeychain k : ksCurrent) {
-                kFile = new File(ksFolderPath + File.separator +k.getFileName());
-                kFile.delete();
+                kFile = new File(ksFolderPath + File.separator + k.getFileName());
+                if (!kFile.delete()) {
+                    LOGGER.log(Level.SEVERE, String.format("Unable to delete file: %s", kFile.getName()));
+                }
             }
         }
         
@@ -134,7 +146,7 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     
     /**
      * Checks if a given file item is a keychain file.
-     * @param item
+     * @param item the file to check
      * @return true, if it is a keychain file.
      */
     public boolean isKeychainFile(FileItem item) {

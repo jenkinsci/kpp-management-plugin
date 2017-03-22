@@ -28,11 +28,12 @@ import com.sic.plugins.kpp.Messages;
 import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
-import hudson.model.Hudson;
 import hudson.util.Secret;
+import jenkins.model.Jenkins;
+import org.kohsuke.stapler.DataBoundConstructor;
+
 import java.io.Serializable;
 import java.util.List;
-import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Represents a keychain.
@@ -108,13 +109,12 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
      * @return description
      */
     public final String getDescription() {
-        getCertificates();
         return description;
     }
     
     /**
      * Set description.
-     * @param description 
+     * @param description the user description of the keychain
      */
     public final void setDescription(String description) {
         this.description = description;
@@ -163,8 +163,12 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
      * @return descriptor
      */
     public Descriptor getDescriptor() {
-        Descriptor ds = Hudson.getInstance().getDescriptorOrDie(getClass());
-        return ds;
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return jenkins.getDescriptorOrDie(getClass());
+        }
+
+        return null;
     }
     
     /**

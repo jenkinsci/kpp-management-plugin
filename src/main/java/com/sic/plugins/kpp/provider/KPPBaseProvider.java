@@ -25,18 +25,14 @@
 package com.sic.plugins.kpp.provider;
 
 import hudson.XmlFile;
-import hudson.model.Hudson;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.OutputStream;
+import jenkins.model.Jenkins;
+import org.apache.commons.fileupload.FileItem;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.fileupload.FileItem;
 
 /**
  * Abstract base class for providers.
@@ -44,8 +40,7 @@ import org.apache.commons.fileupload.FileItem;
  */
 public abstract class KPPBaseProvider {
     
-    protected final static Logger LOGGER = Logger.getLogger(KPPBaseProvider.class.getName());
-    private final static String DEFAULT_UPLOAD_DIRECTORY_PATH = Hudson.getInstance().getRootDir() + File.separator + "kpp_upload";
+    final static Logger LOGGER = Logger.getLogger(KPPBaseProvider.class.getName());
     private final String defaultConfigXmlFileName;
     
     /**
@@ -60,7 +55,11 @@ public abstract class KPPBaseProvider {
         checkAndCreateUploadFolder();
         load();
         merge();
-        save();
+        try {
+            save();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, String.format("Failed to save file %s.", getConfigXmlFileName()), e);
+        }
     }
     
     /**
@@ -85,38 +84,57 @@ public abstract class KPPBaseProvider {
     protected void checkAndCreateUploadFolder() {
         File uploadFolder = new File((getUploadDirectoryPath()));
         if (!uploadFolder.exists()) {
-            uploadFolder.mkdir();
+            if(!uploadFolder.mkdir()) {
+                LOGGER.log(Level.SEVERE, String.format("Unable to create directory: %s", uploadFolder.getName()));
+            }
         }
     }
     
     /**
      * Get the default Upload Directory Path for Keychains and Provisioning Profiles files.
-     * @return 
+     * @return path
      */
     public String getUploadDirectoryPath() {
-        return DEFAULT_UPLOAD_DIRECTORY_PATH;
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return jenkins.getRootDir() + File.separator + "kpp_upload";
+        }
+
+        return null;
     }
     
     /**
      * Store uploaded file inside upload directory.
-     * @param fileItemToUpload
-     * @throws FileNotFoundException
-     * @throws IOException 
+     * @param fileItemToUpload the file object
+     * @throws FileNotFoundException if the file isn't found
+     * @throws IOException if the file can't be opened
      */
-    public void upload(FileItem fileItemToUpload) throws FileNotFoundException, IOException {
+    public void upload(FileItem fileItemToUpload) throws IOException {
         // save uploaded file
         byte[] fileData = fileItemToUpload.get();
         File toUploadFile = new File(getUploadDirectoryPath(), fileItemToUpload.getName());
-        OutputStream os = new FileOutputStream(toUploadFile);
-        os.write(fileData);
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(toUploadFile);
+            os.write(fileData);
+        } finally {
+            if (os != null) {
+                os.close();
+            }
+        }
     }
     
     /**
      * Get the provider config file.
-     * @return 
+     * @return xmlfile
      */
     public XmlFile getConfigXmlFile() {
-        return new XmlFile(new File(Hudson.getInstance().getRootDir(), getConfigXmlFileName()));
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            return new XmlFile(new File(jenkins.getRootDir(), getConfigXmlFileName()));
+        }
+
+        return null;
     }
     
     /**
@@ -129,9 +147,9 @@ public abstract class KPPBaseProvider {
     
     /**
      * Save provider config xml.
-     * @throws IOException 
+     * @throws IOException if the file can't be opened
      */
-    public final void save() {
+    public final void save() throws IOException {
         try {
             getConfigXmlFile().write(this);
         } catch (IOException ex) {
@@ -197,7 +215,7 @@ public abstract class KPPBaseProvider {
     /**
      * Filename filter to get only files with a special extension.
      */
-    private class FileExtensionFilenameFilter implements FilenameFilter {
+    static private class FileExtensionFilenameFilter implements FilenameFilter {
         
         private final String fileExtension;
         

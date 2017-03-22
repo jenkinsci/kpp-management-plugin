@@ -25,12 +25,13 @@
 package com.sic.plugins.kpp;
 
 import hudson.Extension;
-import hudson.model.Computer;
-import hudson.model.Hudson;
 import hudson.model.Node;
 import hudson.slaves.NodeProperty;
 import hudson.slaves.NodePropertyDescriptor;
+import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
+
+import java.io.IOException;
 
 /**
  * Configure Slave Node Properties
@@ -57,13 +58,19 @@ public class KPPNodeProperty extends NodeProperty<Node>{
     }
     
     /**
+     * @param node the node
      * Get the {@link KPPNodeProperty}.
      * @return node property
      */
-    public static KPPNodeProperty getCurrentNodeProperties() {
-        KPPNodeProperty property = Computer.currentComputer().getNode().getNodeProperties().get(KPPNodeProperty.class);
+    public static KPPNodeProperty getCurrentNodeProperties(Node node) {
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins == null) {
+            return null;
+        }
+
+        KPPNodeProperty property = node.getNodeProperties().get(KPPNodeProperty.class);
         if(property == null) {
-            property = Hudson.getInstance().getGlobalNodeProperties().get(KPPNodeProperty.class);
+            property = jenkins.getGlobalNodeProperties().get(KPPNodeProperty.class);
         }
         return property;
     }

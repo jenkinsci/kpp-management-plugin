@@ -24,14 +24,10 @@
 
 package com.sic.plugins.kpp.provider;
 
-import static com.sic.plugins.kpp.provider.KPPBaseProvider.LOGGER;
 import hudson.Extension;
 import hudson.ExtensionList;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.logging.Level;
 
 /**
@@ -53,7 +49,7 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
     
     /**
      * Get the file for a given provisioning profile file name.
-     * @param fileName
+     * @param fileName the name of the file
      * @return file
      */
     public File getProvisioningFile(String fileName) {
@@ -72,8 +68,10 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
         BufferedReader br = null;
         try {
             String fileNameWithoutUUID = KPPBaseProvisioningProfilesProvider.removeUUIDFromFileName(fileName);
+
+
             File file = KPPProvisioningProfilesProvider.getInstance().getProvisioningFile(fileNameWithoutUUID);
-            FileReader reader = new FileReader(file);
+            Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
             br = new BufferedReader(reader);
             String line;
             boolean foundUUID = false;
@@ -98,7 +96,9 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
             LOGGER.log(Level.SEVERE, null, ex);
         } finally {
             try {
-                br.close();
+                if (br != null) {
+                    br.close();
+                }
             } catch (IOException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
             }

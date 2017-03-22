@@ -3,12 +3,12 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.509.2</version>
+        <version>2.3</version>
         <relativePath />
     </parent>
 
     <groupId>sic.software</groupId>
-    <name>Keychains and Provisioning Profiles Management</name>
+    <name>Keychains and Provisioning Profiles Management for Pipeline</name>
     <description>This Jenkins plugin integrates a keychains and provisioning profiles managment for iOS and OSX projects build on a mac.</description>
     <artifactId>kpp-management-plugin</artifactId>
     <version>1.0.1-SNAPSHOT</version>
@@ -60,5 +60,29 @@
        </plugin> 
      </plugins> 
    </build> 
+
+	<dependencies>
+		<!-- dependencies on Jenkins Pipeline plugins -->
+		<dependency>
+			<groupId>org.jenkins-ci.plugins.workflow</groupId>
+			<artifactId>workflow-job</artifactId>
+			<version>1.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins.workflow</groupId>
+			<artifactId>workflow-cps</artifactId>
+			<version>1.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins.workflow</groupId>
+			<artifactId>workflow-step-api</artifactId>
+			<version>1.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins.workflow</groupId>
+			<artifactId>workflow-basic-steps</artifactId>
+			<version>2.0</version>
+		</dependency>
+	</dependencies>
     
 </project>
