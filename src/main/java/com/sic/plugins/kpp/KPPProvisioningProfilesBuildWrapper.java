@@ -115,7 +115,7 @@ public class KPPProvisioningProfilesBuildWrapper extends SimpleBuildWrapper impl
         
         Jenkins jenkins = Jenkins.getInstance();
         if (jenkins == null) {
-            throw new IOException();
+            throw new IOException("Jenkins instance not available");
         }
 
         FilePath hudsonRoot = jenkins.getRootPath();

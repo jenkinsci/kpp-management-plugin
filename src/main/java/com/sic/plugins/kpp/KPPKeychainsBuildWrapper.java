@@ -113,7 +113,7 @@ public class KPPKeychainsBuildWrapper extends SimpleBuildWrapper implements Seri
     private void copyKeychainsToWorkspace(FilePath projectWorkspace) throws IOException, InterruptedException {
         Jenkins jenkins = Jenkins.getInstance();
         if (jenkins == null) {
-            throw new IOException();
+            throw new IOException("Jenkins instance not available");
         }
 
         FilePath jenkinsRoot = jenkins.getRootPath();
