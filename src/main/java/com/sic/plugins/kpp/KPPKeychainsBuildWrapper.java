@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -106,7 +108,7 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
     private void copyKeychainsToWorkspace(AbstractBuild build) throws IOException, InterruptedException {
         FilePath projectWorkspace = build.getWorkspace();
 
-        Hudson hudson = Hudson.getInstance();
+        Jenkins hudson = Jenkins.get();
         FilePath hudsonRoot = hudson.getRootPath();
 
         if (copiedKeychains == null) {

@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.509.2</version>
+        <version>4.53</version>
         <relativePath />
     </parent>
 
@@ -11,11 +11,11 @@
     <name>Keychains and Provisioning Profiles Management</name>
     <description>This Jenkins plugin integrates a keychains and provisioning profiles managment for iOS and OSX projects build on a mac.</description>
     <artifactId>kpp-management-plugin</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>${changelist}</version>
     <packaging>hpi</packaging>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Keychains+and+Provisioning+Profiles+Plugin</url>
     <scm>
-        <connection>scm:git:ssh://github.com/jenkinsci/kpp-management-plugin.git</connection>
+        <connection>scm:git:https://github.com/jenkinsci/kpp-management-plugin.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/kpp-management-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/kpp-management-plugin</url>
     </scm>
@@ -27,38 +27,27 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
-    <developers>
-        <developer>
-            <id>michaelb</id>
-            <name>Michael Bär</name>
-            <email>michael.baer@sic-software.com</email>
-        </developer>
-  </developers>
 
     <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
     <repositories>
         <repository>
             <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
+            <url>https://repo.jenkins-ci.org/public/</url>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
             <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
+            <url>https://repo.jenkins-ci.org/public/</url>
         </pluginRepository>
     </pluginRepositories>
-    
-    <build> 
-     <plugins> 
-       <plugin> 
-         <groupId>org.jenkins-ci.tools</groupId> 
-         <artifactId>maven-hpi-plugin</artifactId> 
-         <version>1.95</version> 
-       </plugin> 
-     </plugins> 
-   </build> 
+
+    <properties>
+        <changelist>999999-SNAPSHOT</changelist>
+        <jenkins.version>2.361.4</jenkins.version>
+        <!-- TODO fix violations -->
+        <spotbugs.threshold>High</spotbugs.threshold>
+    </properties>
     
 </project>

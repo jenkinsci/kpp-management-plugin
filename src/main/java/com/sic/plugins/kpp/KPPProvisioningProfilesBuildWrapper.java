@@ -43,6 +43,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -108,8 +110,8 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
      */
     private void copyProvisioningProfiles(AbstractBuild build) throws IOException, InterruptedException {
         
-        Hudson hudson = Hudson.getInstance();
-        FilePath hudsonRoot = hudson.getRootPath();
+        Jenkins jenkins = Jenkins.get();
+        FilePath hudsonRoot = jenkins.getRootPath();
         VirtualChannel channel;
         String toProvisioningProfilesDirectoryPath = null;
         
@@ -235,4 +237,3 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
     }
     
 }
- 
