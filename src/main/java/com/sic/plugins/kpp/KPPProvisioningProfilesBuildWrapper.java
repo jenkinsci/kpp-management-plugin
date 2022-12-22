@@ -43,6 +43,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -103,13 +105,11 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
     /**
      * Copy the provisioning profiles configured for this job to the mobile provisioning profile path of the node or master, where the job is executed.
      * @param build current build
-     * @throws IOException
-     * @throws InterruptedException 
      */
     private void copyProvisioningProfiles(AbstractBuild build) throws IOException, InterruptedException {
         
-        Hudson hudson = Hudson.getInstance();
-        FilePath hudsonRoot = hudson.getRootPath();
+        Jenkins jenkins = Jenkins.get();
+        FilePath hudsonRoot = jenkins.getRootPath();
         VirtualChannel channel;
         String toProvisioningProfilesDirectoryPath = null;
         
@@ -235,4 +235,3 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
     }
     
 }
- 

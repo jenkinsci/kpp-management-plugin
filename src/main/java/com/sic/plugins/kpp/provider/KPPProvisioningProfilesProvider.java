@@ -25,6 +25,8 @@
 package com.sic.plugins.kpp.provider;
 
 import static com.sic.plugins.kpp.provider.KPPBaseProvider.LOGGER;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.ExtensionList;
 import java.io.BufferedReader;
@@ -53,7 +55,6 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
     
     /**
      * Get the file for a given provisioning profile file name.
-     * @param fileName
      * @return file
      */
     public File getProvisioningFile(String fileName) {
@@ -67,6 +68,7 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
      * @param fileName name of the provisioning profile file
      * @return UUID
      */
+    @SuppressFBWarnings(value = "DM_DEFAULT_ENCODING", justification = "Requires triage")
     public static String parseUUIDFromProvisioningProfileFile(String fileName) {
         String uuid = "UUID not found";
         BufferedReader br = null;

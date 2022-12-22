@@ -34,6 +34,9 @@ import hudson.util.ListBoxModel;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
+
+import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -136,7 +139,7 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
             return false;
         }
         final KPPProvisioningProfile other = (KPPProvisioningProfile) obj;
-        if ((this.fileName == null) ? (other.fileName != null) : !this.fileName.equals(other.fileName)) {
+        if (!Objects.equals(this.fileName, other.fileName)) {
             return false;
         }
         return true;
@@ -154,7 +157,7 @@ public class KPPProvisioningProfile implements Describable<KPPProvisioningProfil
      * @return descriptor
      */
     public Descriptor<KPPProvisioningProfile> getDescriptor() {
-        Descriptor ds = Hudson.getInstance().getDescriptorOrDie(getClass());
+        Descriptor ds = Jenkins.get().getDescriptorOrDie(getClass());
         return ds;
     }
     

@@ -161,7 +161,6 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
     
     /**
      * Get the keychain from a given string. The string has to start with the keychain filename.
-     * @param keychainString
      * @return keychain
      */
     public static KPPKeychain getKeychainFromString(String keychainString) {
@@ -186,7 +185,6 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
     
     /**
      * Concatenation keychain filename and keychain description in one string.
-     * @param k
      * @return concatenated keychain string
      */
     private static String getKeychainString(KPPKeychain k) {

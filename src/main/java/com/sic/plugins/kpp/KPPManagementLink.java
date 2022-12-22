@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.servlet.ServletException;
+
+import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.FileItem;
 import org.kohsuke.stapler.StaplerProxy;
@@ -103,15 +105,12 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
      * 
      * @param req Request
      * @param rsp Response
-     * @throws ServletException
-     * @throws IOException
-     * @throws NoSuchAlgorithmException 
      */
     public void doUploadFile(StaplerRequest req, StaplerResponse rsp) throws
             ServletException,
             IOException,
             NoSuchAlgorithmException {
-        Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+        Jenkins.get().checkPermission(Hudson.ADMINISTER);
         
         FileItem file = req.getFileItem("file");
         if (file == null || file.getSize() == 0) {
@@ -138,15 +137,12 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
      * 
      * @param req Request
      * @param rsp Response
-     * @throws ServletException
-     * @throws IOException
-     * @throws NoSuchAlgorithmException 
      */
     public void doSave(StaplerRequest req, StaplerResponse rsp) throws
             ServletException,
             IOException,
             NoSuchAlgorithmException {
-        Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+        Jenkins.get().checkPermission(Hudson.ADMINISTER);
         
         JSONObject data = req.getSubmittedForm();
         List<KPPKeychain> keychains = req.bindJSONToList(KPPKeychain.class, data.get("keychain"));
@@ -175,7 +171,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
 
     @Override
     public Object getTarget() {
-        Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+        Jenkins.get().checkPermission(Hudson.ADMINISTER);
         KPPKeychainsProvider.getInstance().update();
         KPPProvisioningProfilesProvider.getInstance().update();
         return this;
@@ -183,7 +179,7 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
 
     @Override
     public void save() throws IOException {
-        Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+        Jenkins.get().checkPermission(Hudson.ADMINISTER);
         KPPKeychainsProvider.getInstance().save();
         KPPProvisioningProfilesProvider.getInstance().save();
     }

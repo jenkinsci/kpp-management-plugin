@@ -30,6 +30,7 @@ import hudson.model.Hudson;
 import hudson.model.Node;
 import hudson.slaves.NodeProperty;
 import hudson.slaves.NodePropertyDescriptor;
+import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -63,7 +64,7 @@ public class KPPNodeProperty extends NodeProperty<Node>{
     public static KPPNodeProperty getCurrentNodeProperties() {
         KPPNodeProperty property = Computer.currentComputer().getNode().getNodeProperties().get(KPPNodeProperty.class);
         if(property == null) {
-            property = Hudson.getInstance().getGlobalNodeProperties().get(KPPNodeProperty.class);
+            property = Jenkins.get().getGlobalNodeProperties().get(KPPNodeProperty.class);
         }
         return property;
     }

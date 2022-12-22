@@ -95,7 +95,6 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     
     /**
      * Set the path to the directory to store provisioning profiles on the master or standalone jenkins instance.
-     * @param provisioningProfilesPath 
      */
     public void setProvisioningProfilesPath(String provisioningProfilesPath) {
         this.provisioningProfilesPath = provisioningProfilesPath;
@@ -120,7 +119,6 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     /**
      * Call this method to update provisioning profiles from save action. The provisioning profiles from save action are merged into current provisioning profiles list. 
      * Then this list is sychnronized with the upload folder.
-     * @param provisioningProfilesAfterSave 
      */
     public void updateProvisioningProfilesFromSave(List<KPPProvisioningProfile>provisioningProfilesFromSave) {
         List<KPPProvisioningProfile> ppsCurrent = new ArrayList<KPPProvisioningProfile>(getProvisioningProfiles());
@@ -152,7 +150,6 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     
     /**
      * Checks if a given file item is a mobile provision profile file.
-     * @param item
      * @return true, if it is a mobile provision profile file.
      */
     public boolean isMobileProvisionProfileFile(FileItem item) {
@@ -161,7 +158,6 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     
     /**
      * If the fileName contains the uuid at the end, so remove the uuid part.
-     * @param fileName
      * @return fileName without uuid
      */
     public static String removeUUIDFromFileName(String fileName) {
@@ -175,7 +171,6 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     
     /**
      * Get the filename of the provisioning profile in the shape of uuid.mobileprovision.
-     * @param uuid
      * @return filename
      */
     public static String getUUIDFileName(String uuid) {

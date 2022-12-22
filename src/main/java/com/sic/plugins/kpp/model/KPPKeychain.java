@@ -32,6 +32,8 @@ import hudson.model.Hudson;
 import hudson.util.Secret;
 import java.io.Serializable;
 import java.util.List;
+
+import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -114,7 +116,6 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
     
     /**
      * Set description.
-     * @param description 
      */
     public final void setDescription(String description) {
         this.description = description;
@@ -163,7 +164,7 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
      * @return descriptor
      */
     public Descriptor getDescriptor() {
-        Descriptor ds = Hudson.getInstance().getDescriptorOrDie(getClass());
+        Descriptor ds = Jenkins.get().getDescriptorOrDie(getClass());
         return ds;
     }
     
