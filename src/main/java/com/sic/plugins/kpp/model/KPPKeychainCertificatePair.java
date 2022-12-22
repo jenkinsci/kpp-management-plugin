@@ -185,7 +185,6 @@ public class KPPKeychainCertificatePair extends AbstractDescribableImpl<KPPKeych
     
     /**
      * Concatenation keychain filename and keychain description in one string.
-     * @param k
      * @return concatenated keychain string
      */
     private static String getKeychainString(KPPKeychain k) {

@@ -55,7 +55,6 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
     
     /**
      * Get the file for a given provisioning profile file name.
-     * @param fileName
      * @return file
      */
     public File getProvisioningFile(String fileName) {

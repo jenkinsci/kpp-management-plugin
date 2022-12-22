@@ -103,7 +103,6 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     /**
      * Call this method to update keychains from save action. The keychains from save action are merged into current keychains list. 
      * Then this list is sychnronized with the upload folder.
-     * @param keychainsAfterSave 
      */
     public void updateKeychainsFromSave(List<KPPKeychain>keychainsFromSave) {
         List<KPPKeychain> ksCurrent = new ArrayList<KPPKeychain>(getKeychains());
@@ -134,7 +133,6 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
     
     /**
      * Checks if a given file item is a keychain file.
-     * @param item
      * @return true, if it is a keychain file.
      */
     public boolean isKeychainFile(FileItem item) {

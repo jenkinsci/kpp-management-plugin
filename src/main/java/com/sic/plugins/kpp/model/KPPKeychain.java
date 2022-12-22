@@ -116,7 +116,6 @@ public final class KPPKeychain implements Describable<KPPKeychain>, Serializable
     
     /**
      * Set description.
-     * @param description 
      */
     public final void setDescription(String description) {
         this.description = description;
