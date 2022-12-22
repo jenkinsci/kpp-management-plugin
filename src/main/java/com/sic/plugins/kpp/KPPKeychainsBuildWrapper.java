@@ -102,8 +102,6 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
     /**
      * Copy the keychains configured for this build job to the workspace of the job.
      * @param build the current build
-     * @throws IOException
-     * @throws InterruptedException 
      */
     private void copyKeychainsToWorkspace(AbstractBuild build) throws IOException, InterruptedException {
         FilePath projectWorkspace = build.getWorkspace();
@@ -133,7 +131,7 @@ public class KPPKeychainsBuildWrapper extends BuildWrapper {
     }
     
     /**
-     * Descriptor of the {@link KPPKeychainBuildWrapper}.
+     * Descriptor of the KPPKeychainBuildWrapper.
      */
     @Extension
     public static final class DescriptorImpl extends BuildWrapperDescriptor {

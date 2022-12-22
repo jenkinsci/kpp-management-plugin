@@ -105,8 +105,6 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
     /**
      * Copy the provisioning profiles configured for this job to the mobile provisioning profile path of the node or master, where the job is executed.
      * @param build current build
-     * @throws IOException
-     * @throws InterruptedException 
      */
     private void copyProvisioningProfiles(AbstractBuild build) throws IOException, InterruptedException {
         

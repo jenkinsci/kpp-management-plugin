@@ -99,9 +99,6 @@ public abstract class KPPBaseProvider {
     
     /**
      * Store uploaded file inside upload directory.
-     * @param fileItemToUpload
-     * @throws FileNotFoundException
-     * @throws IOException 
      */
     public void upload(FileItem fileItemToUpload) throws FileNotFoundException, IOException {
         // save uploaded file
@@ -129,7 +126,6 @@ public abstract class KPPBaseProvider {
     
     /**
      * Save provider config xml.
-     * @throws IOException 
      */
     public final void save() {
         try {

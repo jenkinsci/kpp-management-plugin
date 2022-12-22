@@ -105,9 +105,6 @@ public class KPPManagementLink extends ManagementLink implements StaplerProxy, S
      * 
      * @param req Request
      * @param rsp Response
-     * @throws ServletException
-     * @throws IOException
-     * @throws NoSuchAlgorithmException 
      */
     public void doUploadFile(StaplerRequest req, StaplerResponse rsp) throws
             ServletException,
