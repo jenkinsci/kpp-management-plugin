@@ -139,7 +139,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
             final String folderPath = getUploadDirectoryPath();
             File ppFile;
             for (KPPProvisioningProfile pp : ppsCurrent) {
-                ppFile = new File(folderPath + File.separator +pp.getFileName());
+                ppFile = new File(folderPath + "/" + pp.getFileName());
                 ppFile.delete();
             }
         }

@@ -143,7 +143,7 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         }
         
         // remove file seperator char at the end of the path
-        if (toProvisioningProfilesDirectoryPath.endsWith(File.separator)) {
+        if (toProvisioningProfilesDirectoryPath.endsWith("/")) {
             toProvisioningProfilesDirectoryPath = toProvisioningProfilesDirectoryPath.substring(0, toProvisioningProfilesDirectoryPath.length()-1);
         }
         
@@ -155,7 +155,7 @@ public class KPPProvisioningProfilesBuildWrapper extends BuildWrapper {
         
         for (KPPProvisioningProfile pp : provisioningProfiles) {
             FilePath from = new FilePath(hudsonRoot, pp.getProvisioningProfileFilePath());
-            String toPPPath = String.format("%s%s%s", toProvisioningProfilesDirectoryPath, File.separator, KPPProvisioningProfilesProvider.getUUIDFileName(pp.getUuid()));
+            String toPPPath = String.format("%s/%s", toProvisioningProfilesDirectoryPath, KPPProvisioningProfilesProvider.getUUIDFileName(pp.getUuid()));
             FilePath to = new FilePath(channel, toPPPath);
             if (overwriteExistingProfiles || !to.exists()) {
                 from.copyTo(to);

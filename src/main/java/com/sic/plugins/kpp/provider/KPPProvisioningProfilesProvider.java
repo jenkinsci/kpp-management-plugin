@@ -58,7 +58,7 @@ public class KPPProvisioningProfilesProvider extends KPPBaseProvisioningProfiles
      * @return file
      */
     public File getProvisioningFile(String fileName) {
-        String path = String.format("%s%s%s", getUploadDirectoryPath(), File.separator, fileName);
+        String path = String.format("%s/%s", getUploadDirectoryPath(), fileName);
         File file = new File(path);
         return file;
     }
