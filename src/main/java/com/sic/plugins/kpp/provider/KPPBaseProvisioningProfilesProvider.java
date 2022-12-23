@@ -46,6 +46,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     private static String FILE_EXTENSION = ".mobileprovision";
     private List<KPPProvisioningProfile> provisioningProfiles;
     private String provisioningProfilesPath;
+    private boolean useMasterPPPAsDefault;
     
     @Override
     public void update() {
@@ -99,6 +100,15 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
     public void setProvisioningProfilesPath(String provisioningProfilesPath) {
         this.provisioningProfilesPath = provisioningProfilesPath;
     }
+
+    public void setUseMasterPPPAsDefault(boolean useMasterPPPAsDefault) {
+        this.useMasterPPPAsDefault = useMasterPPPAsDefault;
+    }
+
+    public boolean isUseMasterPPPAsDefault() {
+        return useMasterPPPAsDefault;
+    }
+
     
     /**
      * Get all the registered {@link KPPKeychain} descriptors.
