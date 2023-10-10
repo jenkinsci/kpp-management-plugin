@@ -37,34 +37,28 @@ THE SOFTWARE.
             <j:if test="${!empty(error)}">
                 <div style="font-size: 1.2em; background-color: red; padding: 5px; color: white;">${%error} ${error}</div>
             </j:if>
-            <table width="100%">
-                <f:section title="${%upload_title}"></f:section>
-                <f:block>
-                    <f:form method="post" action="uploadFile">
-                        <f:block>
-                            <input type="file" name="file"/>
-                        </f:block>
-                        <f:block>
-                            <f:submit value="${%upload_btn}"/>
-                        </f:block>
-                    </f:form>
-                </f:block>
-            </table>
+            <f:section title="${%upload_title}"></f:section>
+            <f:block>
+                <f:form method="post" action="uploadFile">
+                    <f:block>
+                        <input type="file" name="file"/>
+                    </f:block>
+                    <f:block>
+                        <f:submit value="${%upload_btn}"/>
+                    </f:block>
+                </f:form>
+            </f:block>
             <f:form method="post" action="save">
-                <table width="100%">
-                    <f:section title="${%keychain_title}"></f:section>
-                </table>
+                <f:section title="${%keychain_title}"></f:section>
                 <f:repeatable var="keychain" items="${it.keychains}" minimum="0" noAddButton="true" header="">
                     <j:if test="${!empty(keychain)}">
                         <st:include it="${keychain}" page="config.jelly"/>
                     </j:if>
                 </f:repeatable>
-                <table width="100%">
-                    <f:section title="${%profiles_title}"></f:section>
-                    <f:entry title="${%profiles_path}" field="provisioningProfilesPath" help="/plugin/kpp-management-plugin/KPPManagementLink/help-provisioningProfilesPath.jelly">
-                        <f:textbox value="${it.provisioningProfilesPath}"/>
-                    </f:entry>
-                </table>
+                <f:section title="${%profiles_title}"></f:section>
+                <f:entry title="${%profiles_path}" field="provisioningProfilesPath" help="/plugin/kpp-management-plugin/KPPManagementLink/help-provisioningProfilesPath.jelly">
+                    <f:textbox value="${it.provisioningProfilesPath}"/>
+                </f:entry>
                 <f:repeatable var="profile" items="${it.provisioningProfiles}" minimum="0" noAddButton="true" header="">
                     <j:if test="${!empty(profile)}">
                         <st:include it="${profile}" page="config.jelly"/>
