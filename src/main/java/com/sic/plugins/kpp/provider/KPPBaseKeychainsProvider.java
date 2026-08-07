@@ -28,13 +28,13 @@ import com.sic.plugins.kpp.model.KPPKeychain;
 import hudson.DescriptorExtensionList;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
+import hudson.Util;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * An extension point for providing {@link KPPKeychain}.
@@ -67,7 +67,7 @@ public abstract class KPPBaseKeychainsProvider extends KPPBaseProvider implement
         File[] keychainFiles = getFilesFromUploadDirectory(FILE_EXTENSION);
         for(File keychainFile : keychainFiles) {
             KPPKeychain keychain = new KPPKeychain(keychainFile.getName());
-            if(StringUtils.isBlank(keychain.getFileName())) {
+            if(Util.fixEmptyAndTrim(keychain.getFileName()) == null) {
             break;
             }
             ks.add(keychain);
