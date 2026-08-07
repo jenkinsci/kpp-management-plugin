@@ -29,13 +29,13 @@ import com.sic.plugins.kpp.model.KPPProvisioningProfile;
 import hudson.DescriptorExtensionList;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
+import hudson.Util;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * An extension point for providing {@link KPPProvisioningProfile}
@@ -65,7 +65,7 @@ public abstract class KPPBaseProvisioningProfilesProvider extends KPPBaseProvide
         File[] ppsFiles = getFilesFromUploadDirectory(FILE_EXTENSION);
         for(File ppFile : ppsFiles) {
             KPPProvisioningProfile pp = new KPPProvisioningProfile(ppFile.getName(), null);
-            if(StringUtils.isBlank(pp.getFileName())) {
+            if(Util.fixEmptyAndTrim(pp.getFileName()) == null) {
                 break;
             }
             pps.add(pp);
